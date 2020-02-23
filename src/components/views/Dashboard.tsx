@@ -40,6 +40,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Menu from "./CategoryMenu";
 import ListingProduct from "./ListingProduct/ListingProduct";
 import ListingAds from "./ListingAds/ListingAds";
+import Pagination from '@material-ui/lab/Pagination';
 import "../../App.css";
 import "./Dashboard.css";
 
@@ -125,6 +126,11 @@ const CustomRadioButton = withStyles((theme: Theme) => ({
 }))(Radio);
 
 const theme = createMuiTheme({
+  palette: {
+    primary: {
+        main: "#134B8E",
+    },
+  },
   overrides: {
     MuiFormControlLabel: {
       label: {
@@ -445,7 +451,7 @@ const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
         <br />
-        <Grid container spacing={1} direction="row">
+        <Grid container spacing={1} direction="row" style={{ marginBottom: "50px" }}>
           <Grid item lg={8} md={8} xs={12}>
             <Grid container spacing={2} direction="row">
               {["", "", "", ""].map((prod: any, index: any) => {
@@ -455,6 +461,16 @@ const Dashboard: React.FC = () => {
                   </Grid>
                 );
               })}
+            </Grid>
+            <Grid container spacing={2} direction="row">
+              <Grid item lg={12} md={12} xs={12}>
+                <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> Save Search</Button>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} direction="row">
+              <Grid item lg={12} md={12} xs={12}>
+                <Pagination count={19} color="primary" shape="rounded" boundaryCount={10}  />
+              </Grid>
             </Grid>
           </Grid>
           <Grid item lg={4} md={4} xs={12}>

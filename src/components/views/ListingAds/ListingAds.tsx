@@ -12,7 +12,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import StarIcon from "@material-ui/icons/Star";
+// import StarIcon from "@material-ui/icons/Star";
 import Mask from "../../../assets/Mask.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import "./Listing.css";
@@ -95,7 +95,7 @@ const ListingAds: React.FC = () => {
                 27 Feb - 13:37 - 5 Photos
               </Typography>
             </div>
-            <div>
+            {/* <div>
               <Typography
                 gutterBottom={!fullScreen}
                 variant="caption"
@@ -106,7 +106,7 @@ const ListingAds: React.FC = () => {
               >
                 <StarIcon /> &nbsp; &nbsp;Urgent
               </Typography>
-            </div>
+            </div> */}
           </Grid>
         </CardContent>
       </Card>

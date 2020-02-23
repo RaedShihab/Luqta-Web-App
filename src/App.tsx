@@ -4,6 +4,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withRoot from './withRoot';
 import Layout from './components/layout/Layout';
+import './components/common.css';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 const styles = (theme: Theme) =>

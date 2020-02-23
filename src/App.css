@@ -48,10 +48,9 @@
 .backColorInnerCss {
   left: -5%; 
   width: 110%; 
-  height: 7rem; 
+  height: 8rem; 
   position: relative; 
-  border-radius: 0 0 600px 600px/0 0 100px 100px; 
-  background-color: #f56b2a
+  background-color: #134B8E;
 }
 
 .cardbuttoncss{
@@ -59,13 +58,25 @@
   justify-content: center;
   left: 0; 
   right: 0; 
-  position: "absolute";
+  position: absolute;
 }
 .cardbutton {
   position: relative;
-  width: auto
+  width: auto;
 }
-.cardbutton::after {
+.cardbutton Button {
+  background: rgb(250, 0, 0);
+  padding: 14px 34px;
+  font-weight: 600;
+  text-transform: none;
+}
+.cardbutton Button:hover {
+  background: rgb(250, 0, 0);
+}
+.MuiFormControlLabel-label-162 {
+  margin-left: 8px !important;
+}
+/* .cardbutton::after {
   content: "";
   background: red;
   position: absolute;
@@ -75,4 +86,4 @@
   top: 50%;
   border-radius: 0 0 4px 4px;
   z-index: -1;
-}
+} */

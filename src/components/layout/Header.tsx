@@ -1,16 +1,22 @@
-import React from 'react';
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
-import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import CommentIcon from '@material-ui/icons/Comment';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import React from "react";
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  withStyles,
+  useTheme
+} from "@material-ui/core/styles";
+import { Container, useMediaQuery } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
+import ForumIcon from "@material-ui/icons/Forum";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import CommentIcon from "@material-ui/icons/Comment";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,132 +25,151 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       backgroundColor: "#fff"
     },
-    title: {
-      fontWeight: 600,
-      marginRight: "2rem",
-      color: "#ff6600"
+    logo: {
+      width: "95px",
+      height: "69px"
     },
     IconCss: {
       height: "2.4rem",
-      marginRight: "5px",
       position: "relative",
-      textAlign: "center",
-      width: "2rem",
+      textAlign: "center"
     },
     resercher: {
       height: "100%",
       display: "flex",
       alignItems: "normal",
-      borderBottom: "3px solid #f56b2a",
+      borderBottom: "3px solid #f56b2a"
     },
     otherIcons: {
-      height: "100%",
-      color: "#000",
       display: "flex",
       flexDirection: "column",
       fontSize: "11px",
       textAlign: "center",
-      '&:hover': {
-        borderBottom: "3px solid #f56b2a"
-      },
+      backgroundColor: "#DFE4E8",
+      marginRight: "20px",
+      width: "50px",
+      height: "50px",
+      background: "#DFE4E8 0% 0% no-repeat padding-box",
+      borderRadius: "10px",
+      opacity: "1",
+      justifyContent: "center"
     }
-  }),
+  })
 );
 
 const CustomButton = withStyles((theme: Theme) => ({
   root: {
-    height: "auto",
-    padding: "0px 10px",
+    height: "45px",
+    padding: "2px 10px",
     color: "#fff",
-    fontSize: "1rem",
-    backgroundColor: "#f56b2a",
+    fontSize: "14px",
+    backgroundColor: "#FF0000",
     textTransform: "none",
     fontWeight: 550,
-    marginRight: "10px",
-    '&:hover': {
-      background: "#c0562a",
+    borderRadius: "8px",
+    marginLeft: "40px",
+    opacity: 1,
+    "&:hover": {
+      background: "#FF0000",
       transition: "all 1s"
-    },
-  },
+    }
+  }
 }))(Button);
 
 const CustomLinkButton = withStyles((theme: Theme) => ({
   root: {
     height: "auto",
-    padding: "0px 10px",
-    color: "#000",
-    fontSize: "1rem",
+    padding: "2px 10px",
+    color: "#151965",
+    fontSize: "12px",
     textTransform: "none",
     fontWeight: 550,
-    marginRight: "10px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    // position: "relative",
-    '&:hover': {
-      background: "#fff",
-    },
+    minWidth: "40px",
+    display: "flex"
   },
   label: {
-    alignItems: "flex-end",
+    alignItems: "flex-end"
   }
 }))(Button);
 
+const theme = createMuiTheme({
+  overrides: {
+    MuiAppBar: {
+      root: {
+        height: "112px"
+      }
+    },
+    MuiContainer: {
+      root: {
+        height: "112px"
+      }
+    }
+  }
+});
+
 const Header: React.FC = () => {
   const classes = useStyles();
+  const muitheme = useTheme();
+  const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
   return (
+    <MuiThemeProvider theme={theme}>
       <AppBar position="fixed" className={classes.root}>
-        <Container fixed style={{ display: "flex"}}>
+        <Container
+          fixed
+          className="display-flex"
+          style={{ alignItems: "center" }}
+        >
           <Toolbar style={{ flexGrow: 1 }}>
-            <Typography variant="h4" className={classes.title}>
-              Leboncoin
-            </Typography>
-            <CustomButton variant="contained" color="primary" href="#contained-buttons">
-              <AddBoxOutlinedIcon className={classes.IconCss} /> Déposer une annonce
-            </CustomButton>
-            <div className={classes.resercher}>
-              <CustomLinkButton href="#contained-buttons">
-                <SearchOutlinedIcon className={classes.IconCss} /> 
-                <span>Rechercher</span>
-              </CustomLinkButton>
-            </div>
+            <img src={"./brand.svg"} className={classes.logo} alt="luqta" />
+            {!fullScreen ? (
+              <CustomButton
+                variant="contained"
+                size="small"
+                color="primary"
+                href="#contained-buttons"
+              >
+                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post
+                and ad
+              </CustomButton>
+            ) : null}
           </Toolbar>
-          <Toolbar style={{ flexGrow: 1 }}>
-             <div className={classes.otherIcons}>
+          {!fullScreen ? (
+            <Toolbar
+              className="display-flex-grow-1"
+              style={{ justifyContent: "flex-end" }}
+            >
+              <div className={classes.otherIcons}>
                 <CustomLinkButton href="#contained-notify">
-                  <NotificationsNoneIcon className={classes.IconCss} />                  
+                  <ForumIcon className={classes.IconCss} />
                 </CustomLinkButton>
-                <span>Mes recherches</span>
-             </div>
-             <div className={classes.otherIcons}>
+              </div>
+              <div className={classes.otherIcons}>
                 <CustomLinkButton href="#contained-notify">
-                  <FavoriteBorderIcon className={classes.IconCss} />                  
+                  <NotificationsNoneIcon className={classes.IconCss} />
                 </CustomLinkButton>
-                <span>Favoris</span>
-             </div>
-             <div className={classes.otherIcons}>
+              </div>
+              <div className={classes.otherIcons}>
                 <CustomLinkButton href="#contained-notify">
-                  <NotificationsNoneIcon className={classes.IconCss} />                  
+                  <FavoriteBorderIcon className={classes.IconCss} />
                 </CustomLinkButton>
-                <span>Mes recherches</span>
-             </div>
-             <div className={classes.otherIcons}>
+              </div>
+              <div className={classes.otherIcons}>
                 <CustomLinkButton href="#contained-notify">
-                  <CommentIcon className={classes.IconCss} />                  
+                  <CommentIcon className={classes.IconCss} />
                 </CustomLinkButton>
-                <span>Messages</span>
-             </div>
-            <div className={classes.otherIcons}>
+              </div>
+              <div className={classes.otherIcons}>
                 <CustomLinkButton href="#contained-notify">
-                  <PermIdentityIcon className={classes.IconCss} />                  
+                  <PermIdentityIcon className={classes.IconCss} />
                 </CustomLinkButton>
-                <span>User</span>
-             </div>
-          </Toolbar>
-          </Container>
-        </AppBar>
+              </div>
+            </Toolbar>
+          ) : null}
+        </Container>
+      </AppBar>
+    </MuiThemeProvider>
   );
-}
+};
 
 export default Header;

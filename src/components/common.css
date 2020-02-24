@@ -7,6 +7,9 @@
 .display-flex-grow-1 {
     flex-grow: 1;
 }
+.mt-10 {
+    margin-top: 10px !important;
+}
 .mr-10 {
     margin-right: 10px !important;
 }

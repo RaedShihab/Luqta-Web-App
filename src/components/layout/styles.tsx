@@ -6,6 +6,13 @@ export const styles = (theme: Theme) =>
     root: {
       display: "flex"
     },
+    smToolbar: {
+      minHeight: "90px"
+    },
+    menuButton: {
+      marginLeft: -12,
+      marginRight: 20
+    },
     toolbar: {
       minHeight: "40px",
       paddingRight: 0 // keep right padding when drawer closed

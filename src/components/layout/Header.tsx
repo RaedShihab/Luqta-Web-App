@@ -6,6 +6,7 @@ import {
   withStyles,
   useTheme
 } from "@material-ui/core/styles";
+import classNames from 'classnames';
 import { Container, useMediaQuery } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,6 +17,9 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import CommentIcon from "@material-ui/icons/Comment";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexGrow: 1,
       backgroundColor: "#fff"
+    },
+    smAppbar: {
+      height: "90px"
     },
     logo: {
       width: "95px",
@@ -107,20 +114,39 @@ const theme = createMuiTheme({
   }
 });
 
-const Header: React.FC = () => {
+interface ISidebarProps {
+  leftDrawerOpen: any;
+  setLeftDrawerOpen: any;
+}
+
+const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen }) => {
   const classes = useStyles();
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
   return (
     <MuiThemeProvider theme={theme}>
-      <AppBar position="fixed" className={classes.root}>
+      <AppBar position="fixed"
+       className={classNames(
+        classes.root,
+        fullScreen && classes.smAppbar
+      )}>
         <Container
           fixed
           className="display-flex"
           style={{ alignItems: "center" }}
         >
           <Toolbar style={{ flexGrow: 1 }}>
+          {fullScreen ?
+            <IconButton
+              color="primary"
+              aria-label="Open drawer"
+              onClick={() => setLeftDrawerOpen(!leftDrawerOpen)}
+              style={{ marginLeft: -12, marginRight: 20 }}
+            >
+              <MenuIcon />
+            </IconButton> 
+            : null }
             <img src={"./brand.svg"} className={classes.logo} alt="luqta" />
             {!fullScreen ? (
               <CustomButton
@@ -129,8 +155,7 @@ const Header: React.FC = () => {
                 color="primary"
                 href="#contained-buttons"
               >
-                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post
-                and ad
+                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post and ad
               </CustomButton>
             ) : null}
           </Toolbar>
@@ -140,27 +165,27 @@ const Header: React.FC = () => {
               style={{ justifyContent: "flex-end" }}
             >
               <div className={classes.otherIcons}>
-                <CustomLinkButton href="#contained-notify">
+                <CustomLinkButton>
                   <ForumIcon className={classes.IconCss} />
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>
-                <CustomLinkButton href="#contained-notify">
+                <CustomLinkButton>
                   <NotificationsNoneIcon className={classes.IconCss} />
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>
-                <CustomLinkButton href="#contained-notify">
+                <CustomLinkButton>
                   <FavoriteBorderIcon className={classes.IconCss} />
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>
-                <CustomLinkButton href="#contained-notify">
+                <CustomLinkButton>
                   <CommentIcon className={classes.IconCss} />
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>
-                <CustomLinkButton href="#contained-notify">
+                <CustomLinkButton>
                   <PermIdentityIcon className={classes.IconCss} />
                 </CustomLinkButton>
               </div>

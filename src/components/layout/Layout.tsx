@@ -44,7 +44,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
             <Dashboard />
           </main>
         </Box>
-        <Box flexGrow={1} style={{ height: "100%", background: "#f4f6f7" }}>
+        <Box flexGrow={1} style={{ height: "100%" }}>
           <Container>
             <FooterCategory />
           </Container>

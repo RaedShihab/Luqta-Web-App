@@ -17,7 +17,7 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import CommentIcon from "@material-ui/icons/Comment";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";

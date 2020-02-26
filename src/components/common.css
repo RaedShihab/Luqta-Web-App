@@ -65,7 +65,7 @@ ul{
     margin-bottom: 10px;
 }
 .footerMenu li a:hover {
-    color: #f56b2a;
+    /* color: #f56b2a; */
     cursor: pointer;
 }
 .footerLuqta {

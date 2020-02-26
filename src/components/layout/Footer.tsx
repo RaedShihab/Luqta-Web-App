@@ -1,11 +1,6 @@
 import React from "react";
-import classNames from "classnames";
-import { MuiThemeProvider, createMuiTheme, useMediaQuery, Grid } from "@material-ui/core";
+import { MuiThemeProvider, useMediaQuery, Grid, Link, createMuiTheme } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
-import { CssBaseline, Toolbar } from "@material-ui/core";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import Dashboard from "../views/Dashboard";
 import Box from "@material-ui/core/Box";
 import withRoot from "../../withRoot";
 import { styles } from "./styles";
@@ -16,47 +11,57 @@ const Footer: React.FC = () => {
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
+  const theme = createMuiTheme({
+    overrides: {
+      MuiLink: {
+        root: {
+          color: "#FFF"
+        }
+      }
+    }
+  });
+
   return (
-    <MuiThemeProvider theme={muitheme}>
+    <MuiThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" bgcolor="#474747" color="#fff">
         {!fullScreen ? 
           <>
           <Grid container spacing={2}>
           <Grid item lg={3} md={3} xs={12}>
             <ul className="footerMenu">
-              <li> <a>à propos du boncoin</a> </li>
-              <li><a>Qui sommes-nous ?</a></li>
-              <li><a>Nous rejoindre</a></li>
+              <li><Link href="#">à propos du boncoin</Link> </li>
+              <li><Link href="#">Qui sommes-nous ?</Link></li>
+              <li><Link href="#">Nous rejoindre</Link></li>
             </ul>
           </Grid>
           <Grid item lg={3} md={3} xs={12}>
           <ul className="footerMenu">
-              <li> <a>INFORMATIONS LÉGALES</a> </li>
-              <li><a>Conditions générales d’utilisation</a></li>
-              <li><a>Règles de diffusion, de référencement et de déréférencement</a></li>
-              <li><a>Conditions Générales de Vente</a></li>
-              <li><a>Vie privée / cookies</a></li>
-              <li><a>Vos droits et obligations</a></li>
-              <li><a>Critères de classement</a></li>
+              <li> <Link href="#">INFORMATIONS LÉGALES</Link> </li>
+              <li><Link href="#">Conditions générales d’utilisation</Link></li>
+              <li><Link href="#">Règles de diffusion, de référencement et de déréférencement</Link></li>
+              <li><Link href="#">Conditions Générales de Vente</Link></li>
+              <li><Link href="#">Vie privée / cookies</Link></li>
+              <li><Link href="#">Vos droits et obligations</Link></li>
+              <li><Link href="#">Critères de classement</Link></li>
             </ul>
           </Grid>
           <Grid item lg={3} md={3} xs={12}>
             <ul className="footerMenu">
-              <li> <a>NOS SOLUTIONS PROS</a> </li>
-              <li><a>Publicité</a></li>
-              <li><a>Professionnels de l’immobilier</a></li>
-              <li><a>Vos recrutements</a></li>
-              <li><a>Professionnels de l’auto</a></li>
-              <li><a>Autres solutions professionnelles</a></li>
-              <li><a>Annuaire des professionnels</a></li>
+              <li><Link href="#">NOS SOLUTIONS PROS</Link> </li>
+              <li><Link href="#">Publicité</Link></li>
+              <li><Link href="#">Professionnels de l’immobilier</Link></li>
+              <li><Link href="#">Vos recrutements</Link></li>
+              <li><Link href="#">Professionnels de l’auto</Link></li>
+              <li><Link href="#">Autres solutions professionnelles</Link></li>
+              <li><Link href="#">Annuaire des professionnels</Link></li>
             </ul>
           </Grid>
           <Grid item lg={3} md={3} xs={12}>
             <ul className="footerMenu">
-              <li> <a>DES QUESTIONS ?</a> </li>
-              <li><a>Aide</a></li>
-              <li><a>Le service de paiement sécurisé et la livraison</a></li>
-              <li><a>Demandez conseil à la Communauté</a></li>
+              <li> <Link href="#">DES QUESTIONS ?</Link> </li>
+              <li><Link href="#">Aide</Link></li>
+              <li><Link href="#">Le service de paiement sécurisé et la livraison</Link></li>
+              <li><Link href="#">Demandez conseil à la Communauté</Link></li>
              </ul>
           </Grid>
         </Grid>

@@ -265,10 +265,10 @@ const Dashboard: React.FC = () => {
                       className={classes.categoryLink}
                       onClick={openCategoryMenu}
                     >
-                      {selectedCategory === "Categories" ? (
+                      {/* {selectedCategory === "Categories" ? ( */}
                         <AppsIcon style={{ marginRight: "5px" }} />
-                      ) : null}
-                      <span style={{ flexGrow: 1 }}>{selectedCategory}</span>
+                      {/* ) : null} */}
+                      <span style={{ flexGrow: 1 }}>{"Categories"}</span>
                       <KeyboardArrowDownOutlinedIcon />
                     </div>
 

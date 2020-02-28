@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Popover from '@material-ui/core/Popover';
 import { MenuContent } from './styles/Elements';
 import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import {  Grid, createMuiTheme } from '@material-ui/core';
+import {  Grid, createMuiTheme, Icon } from '@material-ui/core';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -91,6 +91,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 
 	const classes = useStyles();	
 
+	const [selectedSubCategory, setSelectedSubCategory]: any = useState([]);
 	useEffect(() => {
 	}, []);
 
@@ -99,7 +100,8 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	};
 
 	const onListItemClick = (value: any) => {
-		setSelectedCategory(value);
+		setSelectedCategory(value.name);
+		setSelectedSubCategory(value.subcategories);
 		// setMenuAnchor(null);
 	}
 
@@ -135,13 +137,21 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 				<hr />
 				<List component="nav" style={{ background: "#f4f6f7" }} >
 					{
-						["VACATION", "VEHICALS", "IMMOVABLE", "HOBBIES", "VACATION", "VEHICALS1", "IMMOVABLE", "HOBBIES",].map((category: any, index: any) => {
-							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onClick={() => {onListItemClick(category)}}>
-									{category=== "HOBBIES"? <SportsEsportsIcon className={classes.cateIcon} /> : category === "VACATION"? <EmojiPeopleIcon className={classes.cateIcon} /> : category === "VEHICALS"? <DriveEtaIcon className={classes.cateIcon} /> :  <ListOutlinedIcon className={classes.cateIcon}/> }
-									<span style={{ flexGrow: 1 }}>{category}</span>
+						category.categories.data.map((category: any, index: any) => {
+							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onMouseOver={() => {onListItemClick(category)}}>
+									<Icon>{category.icon}</Icon>
+									&nbsp; &nbsp;
+									<span style={{ flexGrow: 1 }}>{category.name.en}</span>
 								</ListItem>	
 							);
 						})
+						// ["VEHICALS", "VACATION", "FASION", "MULTIMEDIA", "HOUSE", "SERVICES", "IMMOVABLE", "VARIOUS",].map((category: any, index: any) => {
+						// 	return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onMouseOver={() => {onListItemClick(category)}}>
+						// 			{/* <Icon>directions_car</Icon> */}
+						// 			<span style={{ flexGrow: 1 }}>{category}</span>
+						// 		</ListItem>	
+						// 	);
+						// })
 					}
 				</List>
                 
@@ -153,19 +163,19 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 						</ListItem>
 					</List>
 					<hr />
-					{selectedCategory === "VEHICALS" ? 
-						<List component="nav" >
-							{
-								category.categories.data.map((category: any, index: any) => {
+					<List component="nav" >
+						{
+							selectedSubCategory && selectedSubCategory.length ?
+								selectedSubCategory.map((subCate: any, index: any) => {
+									let subCategory: any = category.subcategories.data.find(x => x.id === subCate.toString());
+									debugger
 									return (<ListItem className={classes.subCategoryList} key={index}>
-											<span style={{ flexGrow: 1 }}>{category.name.en}</span>
-										</ListItem>	
-									);
+									<span style={{ flexGrow: 1 }}>{subCategory.name.en}</span>
+								</ListItem>)	
 								})
-							}
-						</List>
-					: null}
-					
+							: null							
+						}
+					</List>
               </Grid>
 			  <Grid item xs={3}>
 					<List component="nav">

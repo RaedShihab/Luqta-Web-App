@@ -204,7 +204,8 @@ const Dashboard: React.FC = () => {
 
   const openCategoryMenu = (e: any) => {
     setOpenMenu(true);
-    setMenuAnchor(e.currentTarget);
+    let ele: any = document.getElementById("seachCategory"); 
+    setMenuAnchor(ele);
   };
 
   const [sortBy, setSortBy] = React.useState("Most Recent");
@@ -259,7 +260,7 @@ const Dashboard: React.FC = () => {
                     </RadioGroup>
                   </FormControl>
 
-                  <div style={{ display: "flex", cursor: "pointer" }}>
+                  <div style={{ display: "flex", cursor: "pointer" }} id="seachCategory">
                     <div
                       className={classes.categoryLink}
                       onClick={openCategoryMenu}
@@ -311,6 +312,7 @@ const Dashboard: React.FC = () => {
                     <Menu
                       menuAnchor={menuAnchor}
                       setMenuAnchor={setMenuAnchor}
+                      selectedCategory={selectedCategory}
                       setSelectedCategory={setSelectedCategory}
                     />
                   ) : null}

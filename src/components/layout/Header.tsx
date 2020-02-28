@@ -70,14 +70,14 @@ const CustomButton = withStyles((theme: Theme) => ({
     padding: "2px 10px",
     color: "#fff",
     fontSize: "14px",
-    backgroundColor: "#FF0000",
+    backgroundColor: "#134B8E",
     textTransform: "none",
     fontWeight: 550,
     borderRadius: "8px",
     marginLeft: "40px",
     opacity: 1,
     "&:hover": {
-      background: "#FF0000",
+      background: "#134B8E",
       transition: "all 1s"
     }
   }

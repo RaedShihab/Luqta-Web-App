@@ -7,6 +7,10 @@ import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import { category } from './Categoty';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,8 +20,30 @@ const useStyles = makeStyles((theme: Theme) =>
             width:'100%',
         },
         boxcss: {
-            display: "flex"
+			display: "flex",
+			alignItems: "center",
+			padding: "2px",
+			fontWeight: 600
 		},
+		boxHeader: {
+			display: "flex",
+			alignItems: "center",
+			color: "#134B8E", 
+			fontWeight: 500,
+			padding: "0 0 0 10px",
+		},
+		categoryList: {
+			fontSize: "14px",
+		},
+		subCategoryList: {
+			fontSize: "14px",
+			color: "#141414",
+			opacity: 0.55,
+			fontWeight: 500,
+		},
+		cateIcon: {
+			marginRight: "5px",
+		}
     }),
 );
 
@@ -25,7 +51,7 @@ const theme = createMuiTheme({
 	overrides: {
 		MuiPopover: {
 			paper: {
-				minWidth: "60%",
+				minWidth: "62%",
 				overflow: "hidden"
 			}
 		},
@@ -36,16 +62,18 @@ const theme = createMuiTheme({
 		},
 		MuiListItem: {
 			root: {
-				fontSize: "12px",
+				fontSize: "14px",
 				'&:hover': {
-					background: "#fef0e9",
-					color: "#f56b2a",
+					background: "#FFF",
+					color: "#134B8E",
 					borderRadius: "4px",
-
 				},
+				"&$selected": {
+					background: "#fff"
+				}
 			},
 			gutters: {
-				padding: "2px 10px",
+				padding: "10px 10px",
 			}
 		}
 	}
@@ -55,10 +83,11 @@ const theme = createMuiTheme({
 interface IMenuProps {
 	menuAnchor: any;
 	setMenuAnchor: any;
+	selectedCategory: any;
 	setSelectedCategory: any;
   }
 
-const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, setSelectedCategory }) => {
+const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory }) => {
 
 	const classes = useStyles();	
 
@@ -71,7 +100,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, setSelectedCat
 
 	const onListItemClick = (value: any) => {
 		setSelectedCategory(value);
-		setMenuAnchor(null);
+		// setMenuAnchor(null);
 	}
 
 	const open = Boolean(menuAnchor);
@@ -86,62 +115,87 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, setSelectedCat
 			onClose={handleClose}
 			anchorOrigin={{
 			vertical: 'bottom',
-			horizontal: 'left',
+			horizontal: 'center',
 			}}
 			transformOrigin={{
 			vertical: 'top',
-			horizontal: 'left',
+			horizontal: 'center',
 			}}
+			style={{ marginTop: "10px" }}
 		>
 			<MenuContent>
-			<Grid container spacing={3}>
-              <Grid item xs={4}>
+			<Grid container spacing={2}>
+              <Grid item xs={3}>
 				<List component="nav">
-					<div className={classes.boxcss} onClick={() => onListItemClick("Catégories")}>
-						<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-						<span style={{ flexGrow: 1 }}>TOUTES CATÉGORIES</span>
-					</div>
-					<hr />
-					<ListItem onClick={() => {onListItemClick("Offres Category")}}>
-						<ListItemText primary="Offres Category" />
-					</ListItem>		
-					<ListItem onClick={() => {onListItemClick("Testing 1")}}>
-						<ListItemText primary="Testing 1" />
-					</ListItem>
+						<ListItem className={classes.boxHeader} onClick={() => onListItemClick("Catégories")}>
+							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
+							<span style={{ flexGrow: 1 }}>ALL CATEGORIES</span>
+						</ListItem>
+				</List>
+				<hr />
+				<List component="nav" style={{ background: "#f4f6f7" }} >
+					{
+						["VACATION", "VEHICALS", "IMMOVABLE", "HOBBIES", "VACATION", "VEHICALS1", "IMMOVABLE", "HOBBIES",].map((category: any, index: any) => {
+							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onClick={() => {onListItemClick(category)}}>
+									{category=== "HOBBIES"? <SportsEsportsIcon className={classes.cateIcon} /> : category === "VACATION"? <EmojiPeopleIcon className={classes.cateIcon} /> : category === "VEHICALS"? <DriveEtaIcon className={classes.cateIcon} /> :  <ListOutlinedIcon className={classes.cateIcon}/> }
+									<span style={{ flexGrow: 1 }}>{category}</span>
+								</ListItem>	
+							);
+						})
+					}
 				</List>
                 
               </Grid>
-              <Grid item xs={4}>
-			 	 <List component="nav">
-					<div className={classes.boxcss} onClick={() => onListItemClick("Catégories")}>
-						<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-						<span style={{ flexGrow: 1 }}>TOUTES CATÉGORIES</span>
-					</div>
-					<hr />
-					<ListItem onClick={() => onListItemClick("Testing Case")}>
-						<ListItemText primary="Testing Case" />
-					</ListItem>		
-					<ListItem onClick={() => onListItemClick("Another Testing")}>
-						<ListItemText primary="Another Testing" />
-					</ListItem>
-				</List>
-              </Grid>
-			  <Grid item xs={4}>
+              <Grid item xs={3}>
 					<List component="nav">
-						<div className={classes.boxcss} onClick={() => onListItemClick("Catégories")}>
-							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-							<span style={{ flexGrow: 1 }}>TOUTES CATÉGORIES</span>
-						</div>
-						<hr />
-						<ListItem onClick={() => onListItemClick("Testing One")}>
-							<ListItemText primary="Testing One" />
-						</ListItem>		
-						<ListItem onClick={() => onListItemClick("Another Test")}>
-							<ListItemText primary="Another Test" />
+						<ListItem className={classes.boxcss}>
+							<span style={{ flexGrow: 1 }}>Sub Categories</span>
 						</ListItem>
 					</List>
+					<hr />
+					{selectedCategory === "VEHICALS" ? 
+						<List component="nav" >
+							{
+								category.categories.data.map((category: any, index: any) => {
+									return (<ListItem className={classes.subCategoryList} key={index}>
+											<span style={{ flexGrow: 1 }}>{category.name.en}</span>
+										</ListItem>	
+									);
+								})
+							}
+						</List>
+					: null}
+					
+              </Grid>
+			  <Grid item xs={3}>
+					<List component="nav">
+						<div className={classes.boxcss} >
+							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
+							<span style={{ flexGrow: 1 }}>&nbsp;</span>
+						</div>						
+					</List>
+					<hr/>
 				</Grid>
-            </Grid>
+			  <Grid item xs={3}>
+			  		<List component="nav">
+						<div className={classes.boxcss} >
+							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
+							<span style={{ flexGrow: 1 }}>Top Brands</span>
+						</div>						
+					</List>
+					<hr/>
+					<List component="nav" >
+							{
+								category.brands.data.map((category: any, index: any) => {
+									return (<ListItem className={classes.subCategoryList} key={index}>
+											<span style={{ flexGrow: 1 }}>{category.name.en}</span>
+										</ListItem>	
+									);
+								})
+							}
+						</List>
+				</Grid>
+		    </Grid>
 			</MenuContent>
 		</Popover>
 		</MuiThemeProvider>

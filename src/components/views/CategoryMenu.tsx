@@ -85,13 +85,16 @@ interface IMenuProps {
 	setMenuAnchor: any;
 	selectedCategory: any;
 	setSelectedCategory: any;
+	selectedSubCategory: any; 
+	setSelectedSubCategory: any;
   }
 
-const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory }) => {
+const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory  }) => {
 
+	const [activeCategory, setActiveCategory]: any = useState(null);
+	const [activeSubCategory, setActiveSubCategory]: any = useState(null);
 	const classes = useStyles();	
 
-	const [selectedSubCategory, setSelectedSubCategory]: any = useState([]);
 	useEffect(() => {
 	}, []);
 
@@ -100,9 +103,22 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	};
 
 	const onListItemClick = (value: any) => {
-		setSelectedCategory(value.name);
-		setSelectedSubCategory(value.subcategories);
+		setActiveCategory(value.name);
+		setActiveSubCategory(value.subcategories);
 		// setMenuAnchor(null);
+	}
+
+	const updateSubWithParentCategory = (subCate: any) => {
+		const subCategory: any = category.subcategories.data.find((cat) => cat.id === subCate.toString());
+		const parentCat = category.categories.data.find((cat) => cat.id === subCategory.parent_id.toString());
+		setSelectedCategory(parentCat);
+		setSelectedSubCategory(subCategory);
+		setMenuAnchor(null);
+	}
+
+	const updateParentCategory = (cate: any) => {
+		setSelectedCategory(cate);
+		setSelectedSubCategory(null);
 	}
 
 	const open = Boolean(menuAnchor);
@@ -138,20 +154,13 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 				<List component="nav" style={{ background: "#f4f6f7" }} >
 					{
 						category.categories.data.map((category: any, index: any) => {
-							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onMouseOver={() => {onListItemClick(category)}}>
+							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory && selectedCategory.id === category.id} onClick={() => { updateParentCategory(category); }} onMouseOver={() => {onListItemClick(category)}}>
 									<Icon>{category.icon}</Icon>
 									&nbsp; &nbsp;
 									<span style={{ flexGrow: 1 }}>{category.name.en}</span>
 								</ListItem>	
 							);
 						})
-						// ["VEHICALS", "VACATION", "FASION", "MULTIMEDIA", "HOUSE", "SERVICES", "IMMOVABLE", "VARIOUS",].map((category: any, index: any) => {
-						// 	return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory === category} onMouseOver={() => {onListItemClick(category)}}>
-						// 			{/* <Icon>directions_car</Icon> */}
-						// 			<span style={{ flexGrow: 1 }}>{category}</span>
-						// 		</ListItem>	
-						// 	);
-						// })
 					}
 				</List>
                 
@@ -165,11 +174,10 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 					<hr />
 					<List component="nav" >
 						{
-							selectedSubCategory && selectedSubCategory.length ?
-								selectedSubCategory.map((subCate: any, index: any) => {
+							activeSubCategory && activeSubCategory.length ?
+								activeSubCategory.map((subCate: any, index: any) => {
 									let subCategory: any = category.subcategories.data.find(x => x.id === subCate.toString());
-									debugger
-									return (<ListItem className={classes.subCategoryList} key={index}>
+									return (<ListItem className={classes.subCategoryList} key={index} onClick={() => { updateSubWithParentCategory(subCate); }}>
 									<span style={{ flexGrow: 1 }}>{subCategory.name.en}</span>
 								</ListItem>)	
 								})

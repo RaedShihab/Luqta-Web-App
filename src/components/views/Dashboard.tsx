@@ -18,7 +18,8 @@ import {
   Button,
   Select,
   InputLabel,
-  MenuItem
+  MenuItem,
+  Icon
 } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -43,6 +44,7 @@ import ListingAds from "./ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
 import "../../App.css";
 import "./Dashboard.css";
+import Demo from './demo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,7 +84,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "1rem",
       textTransform: "none",
       fontWeight: 100,
-      background: "#f4f6f7"
+      background: "#f4f6f7",
+      alignItems: "center"
     },
     searchbox: {
       flex: "1 0 30%",
@@ -135,7 +138,18 @@ const theme = createMuiTheme({
     MuiFormControlLabel: {
       label: {
         marginLeft: "10px"
-      }
+      },
+    },
+    MuiInputBase: {
+      "root": {
+        "&$focused": {
+          "boxShadow": "0 0 0 0.2rem rgba(0,123,255,.25)"
+        }
+      },
+      // focused:{
+      //   borderColor: "red !important",
+      //   boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)"
+      // }
     }
   }
 });
@@ -177,7 +191,10 @@ const AntSwitch = withStyles((theme: Theme) =>
 )(Switch);
 
 const Dashboard: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Categories");
+  const [selectedCategory, setSelectedCategory]: any = useState(null);
+  
+  const [selectedSubCategory, setSelectedSubCategory]: any = useState(null);
+
   const [value, setValue] = useState("Offers");
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
@@ -191,6 +208,10 @@ const Dashboard: React.FC = () => {
     checkedB: true,
     checkedC: true
   });
+
+  const updateSubCategory = (subCategory: any) => {
+    setSelectedSubCategory(subCategory);
+  }
 
   const handleSwitchChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -265,10 +286,21 @@ const Dashboard: React.FC = () => {
                       className={classes.categoryLink}
                       onClick={openCategoryMenu}
                     >
-                      {/* {selectedCategory === "Categories" ? ( */}
-                        <AppsIcon style={{ marginRight: "5px" }} />
-                      {/* ) : null} */}
-                      <span style={{ flexGrow: 1 }}>{"Categories"}</span>
+                      {!selectedSubCategory ? <>
+                        {!selectedCategory ? (
+                          <AppsIcon style={{ marginRight: "5px" }} />
+                        ) : <Icon>{selectedCategory.icon}</Icon>} 
+                          &nbsp;&nbsp;
+                        <span style={{ flexGrow: 1 }}>
+                          {!selectedCategory ? "Categories" : selectedCategory.name.en}
+                        </span>
+                        </>
+                        : 
+                          <span style={{ flexGrow: 1 }}>
+                            {!selectedSubCategory ? "Categories" : selectedSubCategory.name.en}
+                          </span>
+                       }
+
                       <KeyboardArrowDownOutlinedIcon />
                     </div>
 
@@ -277,7 +309,7 @@ const Dashboard: React.FC = () => {
                       orientation="vertical"
                     />
 
-                    <div className={classes.searchbox}>
+                    <div className={classes.searchbox + " display-flex"}>
                       <IconButton
                         type="submit"
                         className={classes.iconButton}
@@ -285,11 +317,12 @@ const Dashboard: React.FC = () => {
                       >
                         <SearchIcon />
                       </IconButton>
-                      <InputBase
+                      {/* <InputBase
                         className={classes.inputCSS}
                         placeholder="Search for anything.."
                         inputProps={{ "aria-label": "search google maps" }}
-                      />
+                      /> */}
+                      <Demo  className="display-flex-grow-1"/>
                     </div>
 
                     <div className={classes.searchbox}>
@@ -314,6 +347,8 @@ const Dashboard: React.FC = () => {
                       setMenuAnchor={setMenuAnchor}
                       selectedCategory={selectedCategory}
                       setSelectedCategory={setSelectedCategory}
+                      selectedSubCategory={selectedSubCategory}
+                      setSelectedSubCategory={setSelectedSubCategory}
                     />
                   ) : null}
 

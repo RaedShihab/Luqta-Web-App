@@ -103,7 +103,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	};
 
 	const onListItemClick = (value: any) => {
-		setActiveCategory(value.name);
+		setActiveCategory(value.name.en);
 		setActiveSubCategory(value.subcategories);
 		// setMenuAnchor(null);
 	}
@@ -143,7 +143,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 		>
 			<MenuContent>
 			<Grid container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
 				<List component="nav">
 						<ListItem className={classes.boxHeader} onClick={() => onListItemClick("Catégories")}>
 							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
@@ -165,10 +165,10 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 				</List>
                 
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
 					<List component="nav">
 						<ListItem className={classes.boxcss}>
-							<span style={{ flexGrow: 1 }}>Sub Categories</span>
+							<span style={{ flexGrow: 1 }}>{activeCategory}</span>
 						</ListItem>
 					</List>
 					<hr />
@@ -185,16 +185,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 						}
 					</List>
               </Grid>
-			  <Grid item xs={3}>
-					<List component="nav">
-						<div className={classes.boxcss} >
-							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
-							<span style={{ flexGrow: 1 }}>&nbsp;</span>
-						</div>						
-					</List>
-					<hr/>
-				</Grid>
-			  <Grid item xs={3}>
+			  <Grid item xs={4}>
 			  		<List component="nav">
 						<div className={classes.boxcss} >
 							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}

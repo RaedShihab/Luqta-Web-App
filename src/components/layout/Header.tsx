@@ -34,12 +34,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       width: "95px",
-      height: "69px"
+      height: "69px",
+      cursor: "pointer"
     },
     IconCss: {
       height: "2.4rem",
       position: "relative",
       textAlign: "center"
+    },
+    iconRtl: {
+      marginRight: "40px"
     },
     resercher: {
       height: "100%",
@@ -117,12 +121,21 @@ const theme = createMuiTheme({
 interface ISidebarProps {
   leftDrawerOpen: any;
   setLeftDrawerOpen: any;
+  direction: any;
+  setDirection: any;
 }
 
-const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen }) => {
+const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, direction, setDirection }) => {
   const classes = useStyles();
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
+  
+  const updateMirrorView = () => {
+    if (direction === "ltr") 
+        setDirection("rtl");
+    else  
+        setDirection("ltr");
+  }
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -147,13 +160,16 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen }) 
               <MenuIcon />
             </IconButton> 
             : null }
-            <img src={"./brand.svg"} className={classes.logo} alt="luqta" />
+            <img src={"./brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
+               updateMirrorView();
+              }} />
             {!fullScreen ? (
               <CustomButton
                 variant="contained"
                 size="small"
                 color="primary"
                 href="#contained-buttons"
+                style={{ marginRight: "40px"}}
               >
                 <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post and ad
               </CustomButton>

@@ -46,7 +46,7 @@
 }
 
 .backColorInnerCss {
-  left: -5%; 
+  /* left: -5%;  */
   width: 110%; 
   height: 8rem; 
   position: relative; 

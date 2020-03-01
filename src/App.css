@@ -65,13 +65,13 @@
   width: auto;
 }
 .cardbutton Button {
-  background: rgb(250, 0, 0);
+  background: #E80000;
   padding: 14px 34px;
   font-weight: 600;
   text-transform: none;
 }
 .cardbutton Button:hover {
-  background: rgb(250, 0, 0);
+  background: #E80000;
 }
 .MuiFormControlLabel-label-162 {
   margin-left: 8px !important;

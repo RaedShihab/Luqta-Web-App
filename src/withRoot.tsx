@@ -6,17 +6,24 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 // A theme with custom primary and secondary color.
 // It's optional.
+// const theme = createMuiTheme({
+//   // palette: {
+//   //   primary: purple,
+//   //   secondary: green
+//   // },
+//   typography: {
+//    // useNextVariants: true
+//   }
+// });
+
 const theme = createMuiTheme({
-  // palette: {
-  //   primary: purple,
-  //   secondary: green
-  // },
   typography: {
-   // useNextVariants: true
+    fontFamily: 'Roboto',
   }
 });
 
 function withRoot<P>(Component: React.ComponentType<P>) {
+  
   function WithRoot(props: P) {
     // MuiThemeProvider makes the theme available down the React tree
     // thanks to React context.

@@ -30,29 +30,37 @@ interface ILayoutProps {
   classes: any;
 }
 
-const theme = createMuiTheme({
-  direction: 'ltr',
-  overrides: {
-    MuiToolbar: {
-      dense: {
-        minHeight: "112px"
-      }
-    }
-  }
-});
+
 const Layout: React.FC<ILayoutProps> = ({ classes }) => {
   const [leftDrawerOpen, setLeftDrawerOpen] = React.useState(false);
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
   const [direction, setDirection] = React.useState("ltr");
 
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        direction: direction === "ltr" ? "ltr" : "rtl",
+        overrides: {
+          MuiToolbar: {
+            dense: {
+              minHeight: "112px"
+            }
+          }
+        }
+      }),
+    [direction],
+  );
+
   useEffect(() => {
     if (direction) {
+      debugger
       let body: any = document.getElementsByTagName("body");
       body[0].style.direction = direction;
     }
   }, [direction])
   return (
+    <RTL>
     <MuiThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" bgcolor="background.paper">
         <CssBaseline />
@@ -78,6 +86,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
         </Box>
       </Box>
     </MuiThemeProvider>
+    </RTL>
   );
 };
 

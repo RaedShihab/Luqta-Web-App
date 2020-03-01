@@ -15,7 +15,6 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 // import StarIcon from "@material-ui/icons/Star";
 import Mask from "../../../assets/Mask.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import "./Listing.css";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -31,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     adSubTitle: {
       marginLeft: "10px",
-      opacity: 0.6
+      opacity: 0.6,
+      fontWeight: 400
     },
     adCaptionTitle: {
       marginLeft: "10px",

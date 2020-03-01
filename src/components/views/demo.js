@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { category } from './Categoty';
+import './Dashboard.css';
 
 const parentCategory = category.categories.data;
 const suggestions = category.subcategories.data;
@@ -26,7 +27,7 @@ function renderInputComponent(inputProps) {
           inputRef(node);
         },
         classes: {
-          input: classes.input + " " + classes.inputCSS,
+          input: classes.input + " " + classes.inputCSS + " categoryCss",
           underline: classes.underline
         },
       }}

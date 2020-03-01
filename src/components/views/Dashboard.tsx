@@ -115,16 +115,8 @@ const CustomRadioButton = withStyles((theme: Theme) => ({
   root: {
     padding: "5px"
   },
-  colorPrimary: {
-    color: "#2a368f",
-    borderColor: "#2a368f"
-  },
-  colorSecondary: {
-    color: "#2a368f",
-    borderColor: "#2a368f"
-  },
   checked: {
-    color: "#2a368f !important"
+    color: "#134B8E !important",
   }
 }))(Radio);
 
@@ -137,7 +129,10 @@ const theme = createMuiTheme({
   overrides: {
     MuiFormControlLabel: {
       label: {
-        marginLeft: "10px"
+        marginLeft: "5px",
+        fontSize: "12px",
+        // color: "#134B8E",
+        fontWeight: 500,
       },
     },
     MuiInputBase: {
@@ -157,8 +152,8 @@ const theme = createMuiTheme({
 const AntSwitch = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: 28,
-      height: 16,
+      width: 36,
+      height: 22,
       padding: 0,
       display: "flex"
     },
@@ -176,13 +171,13 @@ const AntSwitch = withStyles((theme: Theme) =>
       }
     },
     thumb: {
-      width: 12,
-      height: 12,
+      width: 18,
+      height: 18,
       boxShadow: "none"
     },
     track: {
       border: `1px solid ${theme.palette.grey[500]}`,
-      borderRadius: 18 / 2,
+      borderRadius: 20 / 2,
       opacity: 1,
       backgroundColor: theme.palette.common.white
     },
@@ -266,7 +261,7 @@ const Dashboard: React.FC = () => {
                     >
                       <FormControlLabel
                         value="Offers"
-                        style={{ marginLeft: "0px" }}
+                        style={{ marginLeft: "0px", color: "#134B8E" }}
                         control={
                           <CustomRadioButton className={classes.radiocss} />
                         }
@@ -274,16 +269,17 @@ const Dashboard: React.FC = () => {
                       />
                       <FormControlLabel
                         value="Requests"
-                        style={{ marginLeft: "0px" }}
+                        style={{ marginLeft: "0px", color: "#134B8E" }}
                         control={<CustomRadioButton />}
+                        
                         label="Requests"
                       />
                     </RadioGroup>
                   </FormControl>
 
-                  <div style={{ display: "flex", cursor: "pointer" }} id="seachCategory">
+                  <div style={{ display: "flex", cursor: "pointer" }} >
                     <div
-                      className={classes.categoryLink}
+                      className={classes.categoryLink + " categoryCss"}
                       onClick={openCategoryMenu}
                     >
                       {!selectedSubCategory ? <>
@@ -312,7 +308,7 @@ const Dashboard: React.FC = () => {
                     <div className={classes.searchbox + " display-flex"}>
                       <IconButton
                         type="submit"
-                        className={classes.iconButton}
+                        className={classes.iconButton + " categoryCss"}
                         aria-label="search"
                       >
                         <SearchIcon />
@@ -322,10 +318,10 @@ const Dashboard: React.FC = () => {
                         placeholder="Search for anything.."
                         inputProps={{ "aria-label": "search google maps" }}
                       /> */}
-                      <Demo  className="display-flex-grow-1"/>
+                      <Demo />
                     </div>
 
-                    <div className={classes.searchbox}>
+                    <div className={classes.searchbox + " display-flex"}>
                       <IconButton
                         type="submit"
                         className={classes.iconButton}
@@ -334,7 +330,8 @@ const Dashboard: React.FC = () => {
                         <LocationOnOutlinedIcon />
                       </IconButton>
                       <InputBase
-                        className={classes.inputCSS}
+                        style={{ paddingLeft:"10px", paddingRight:"10px", }}
+                        className={classes.inputCSS + " categoryCss display-flex-grow-1"}
                         placeholder="Saisissez une ville et un rayon"
                         inputProps={{ "aria-label": "search google maps" }}
                       />
@@ -357,7 +354,7 @@ const Dashboard: React.FC = () => {
                       {value === "Offers" ? (
                         <>
                           <FormControlLabel
-                            style={{ marginLeft: "0px" }}
+                            style={{ marginLeft: "0px", marginRight: "0px", color: "#555E67" }}
                             control={
                               <AntSwitch
                                 checked={state.checkedC}
@@ -385,9 +382,9 @@ const Dashboard: React.FC = () => {
                         color="primary"
                         aria-label="search"
                       >
-                        <NotificationsIcon style={{ color: "#2a368f" }} />
+                        <NotificationsIcon style={{ color: "#134B8E" }} />
                       </IconButton>
-                      <span>Save Search</span>
+                      <span style={{ color: "#7985A2", fontSize: "12px", fontWeight:500, marginRight: "10px" }}>Save Search</span>
                     </div>
                   </div>
                 </div>
@@ -423,7 +420,7 @@ const Dashboard: React.FC = () => {
           <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
             <Checkbox
               size="small"
-              style={{ padding: "0px" }}
+              style={{ padding: "0px", background: "#fff" }}
               className="mr-10"
               value={checkedIndividual}
               color="primary"
@@ -437,7 +434,7 @@ const Dashboard: React.FC = () => {
           <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
             <Checkbox
               size="small"
-              style={{ padding: "0px" }}
+              style={{ padding: "0px", background: "#fff" }}
               className="mr-10"
               value={checkedProfessional}
               color="primary"
@@ -451,7 +448,7 @@ const Dashboard: React.FC = () => {
           <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
             <Checkbox
               size="small"
-              style={{ padding: "0px" }}
+              style={{ padding: "0px", background: "#fff" }}
               className="mr-10"
               value={checkedUrgent}
               color="primary"

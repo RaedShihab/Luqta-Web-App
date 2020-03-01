@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -8,6 +8,8 @@ import {
   useTheme
 } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
+import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -20,6 +22,7 @@ import Product from "../../../assets/product.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import CallIcon from "@material-ui/icons/Call";
+import Avatar from '@material-ui/core/Avatar';
 import "./Listing.css";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,14 +71,20 @@ const ListingProduct: React.FC = () => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [dispImage, setDispImage]: any = useState(false);
   return (
     <div className={classes.root}>
-      <Card className={classes.cardHover}>
+      <Card className={classes.cardHover} onMouseOver={() => { setDispImage(true);  }} onMouseLeave={() => { setDispImage(false);  }}>
         <CardContent className={classNames(fullScreen && "rescardContent")}>
           <Grid container spacing={2}>
             <Grid item lg={3} md={3} xs={4}>
-              <ButtonBase style={{ width: "auto" }}>
+              <ButtonBase style={{ width: "auto", position: "relative" }} >
                 <img className={classes.img} alt="listProduct" src={Product} />
+                <span className={dispImage ? "topLeft" : "display-none"}>
+                  <Icon className={"circle-icon "}>
+                    near_me
+                  </Icon>
+                  </span>
               </ButtonBase>
             </Grid>
             <Grid item lg={9} md={9} xs={8} sm container>
@@ -89,7 +98,7 @@ const ListingProduct: React.FC = () => {
                   >
                     <div>
                       <Typography
-                        gutterBottom={!fullScreen}
+                        style={{ fontWeight: 500 }}
                         variant="subtitle1"
                       >
                         New house open view not overlooked
@@ -113,6 +122,7 @@ const ListingProduct: React.FC = () => {
                     &nbsp;&nbsp; 12:00 AM
                   </span>
                 </div>
+                <br />
                 <Grid container>
                   <Grid item md={2} xs={4}>
                     <div
@@ -164,20 +174,26 @@ const ListingProduct: React.FC = () => {
                   </Grid>
                 </Grid>
                 <Grid container style={{ marginTop: "10px" }}>
-                  <Grid item lg={2} md={2} xs={4}>
+                  <Grid item lg={1} md={2} xs={4}>
                     <IconButton className={classes.iconButton}>
                       <FavoriteIcon />
                     </IconButton>
                   </Grid>
-                  <Grid item lg={2} md={2} xs={4}>
+                  <Box m={2} />
+                  <Grid item lg={1} md={2} xs={4}>
                     <IconButton className={classes.iconButton}>
                       <ShareIcon />
                     </IconButton>
                   </Grid>
-                  <Grid item lg={2} md={2} xs={4}>
+                  <Box m={2} />
+                  <Grid item lg={1} md={2} xs={4}>
                     <IconButton className={classes.iconButton}>
                       <CallIcon />
                     </IconButton>
+                  </Grid>
+                  <Box m={2} />
+                  <Grid item container alignContent="flex-end" justify="flex-end" direction="row" lg={7} md={2} xs={4}>
+                    <Avatar style={{ background: "#134B8E" }} alt="Remy Sharp">DC</Avatar>
                   </Grid>
                 </Grid>
               </Grid>

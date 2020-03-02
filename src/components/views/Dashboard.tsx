@@ -277,7 +277,7 @@ const Dashboard: React.FC = () => {
                     </RadioGroup>
                   </FormControl>
 
-                  <div style={{ display: "flex", cursor: "pointer" }} >
+                  <div style={{ display: "flex", cursor: "pointer" }} id="seachCategory">
                     <div
                       className={classes.categoryLink + " categoryCss"}
                       onClick={openCategoryMenu}

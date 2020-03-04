@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { MuiThemeProvider, createMuiTheme, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, useMediaQuery } from '@material-ui/core';
 import { Link as Rlink, RouteComponentProps } from "react-router-dom";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -156,39 +156,59 @@ const SignUp: React.FC = () => {
   const classes = useStyles();
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));  
+  const [direction, setDirection] = React.useState("ltr");
 
-  const theme = createMuiTheme({
-    palette: {
-      primary: {
-          main: "#134B8E",
-      },
-    },
-    overrides: {
-      MuiAppBar: {
-        root: {
-          height: "85px",
-          boxShadow: "0px 1px 12px #0000001C"
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        direction: direction === "ltr" ? "ltr" : "rtl",
+        palette: {
+          primary: {
+              main: "#134B8E",
+          },
+        },
+        overrides: {
+          MuiAppBar: {
+            root: {
+              height: "85px",
+              boxShadow: "0px 1px 12px #0000001C"
+            }
+          },
+          MuiContainer: {
+            root: {
+              height: "112px"
+            }
+          },
+          MuiToolbar: {
+            dense: {
+              minHeight: "112px"
+            }
+          },
+          MuiFormControlLabel: {
+            label:{
+              fontSize: "12px",
+              // color: "#134B8E",
+              opacity: 0.82
+            }
+          }
         }
-      },
-      MuiContainer: {
-        root: {
-          height: "112px"
-        }
-      },
-      MuiToolbar: {
-        dense: {
-          minHeight: "112px"
-        }
-      },
-      MuiFormControlLabel: {
-        label:{
-          fontSize: "12px",
-          // color: "#134B8E",
-          opacity: 0.82
-        }
-      }
+      }),
+    [direction],
+  );
+
+  const updateMirrorView = () => {
+    if (direction === "ltr") 
+        setDirection("rtl");
+    else  
+        setDirection("ltr");
+  }
+
+  useEffect(() => {
+    if (direction) {
+      let body: any = document.getElementsByTagName("body");
+      body[0].style.direction = direction;
     }
-  });
+  }, [direction])
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -203,7 +223,7 @@ const SignUp: React.FC = () => {
           style={{ alignItems: "center", maxWidth: "100%" }}
         >
           <Toolbar style={{ flexGrow: 1 }}>
-            <img src={"./brand.svg"} className={classes.logo} alt="luqta" />
+            <img src={"./brand.svg"} onClick={() => updateMirrorView() } className={classes.logo} alt="luqta" />
           </Toolbar>
             <Toolbar
               className="display-flex-grow-1"

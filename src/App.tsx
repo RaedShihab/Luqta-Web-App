@@ -3,8 +3,9 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withRoot from './withRoot';
-import Layout from './components/layout/Layout';
+// import Layout from './components/layout/Layout';
 import './components/common.css';
+import MainRoutes from './routes';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 const styles = (theme: Theme) =>
@@ -20,12 +21,13 @@ class Index extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/" render={() => {
+          <MainRoutes />
+          {/* <Route path="/" render={() => {
             return (<Switch>
               <Route exact path="/dashboard" component={Layout} />
               <Redirect to="/dashboard" />
             </Switch>)
-          }} />
+          }} /> */}
           <Route path="*" component={NotFound} />
         </Switch>
       </BrowserRouter>

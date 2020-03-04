@@ -54,7 +54,6 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
 
   useEffect(() => {
     if (direction) {
-      debugger
       let body: any = document.getElementsByTagName("body");
       body[0].style.direction = direction;
     }

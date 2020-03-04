@@ -1,0 +1,42 @@
+.luqta-title {
+    text-align: center;
+    font-family: Roboto;
+    letter-spacing: 0.75px;
+    color: #3A3A3A;
+    opacity: 1;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 10px;
+
+}
+.signbtncss{
+    text-transform: none;
+    font-size: 18px;
+    font-family: Roboto;
+    font-weight: 500;
+}
+.forgatePwd{
+    text-align: end;
+    font-family: Roboto;
+    letter-spacing: 0.12px;
+    color: #848484;
+    opacity: 0.82;
+    font-size: 12px;
+}
+.textwithline {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 0.1em;
+    margin: 10px 0 10px; 
+ } 
+ 
+.textwithline span { 
+    background: #fff;
+    padding: 0 36px;
+    font-family: Roboto;
+    font-weight: 400;
+    letter-spacing: -0.26px;
+    color: #ABABAB;
+    opacity: 1;
+ }

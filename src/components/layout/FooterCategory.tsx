@@ -1,6 +1,6 @@
 import React from "react";
 import { MuiThemeProvider, createMuiTheme, Grid, Link } from "@material-ui/core";
-import { withStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import withRoot from "../../withRoot";
 import { styles } from "./styles";

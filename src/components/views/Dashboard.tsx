@@ -42,6 +42,19 @@ import Menu from "./CategoryMenu";
 import ListingProduct from "./ListingProduct/ListingProduct";
 import ListingAds from "./ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
+
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+import Collapse from '@material-ui/core/Collapse';
+import { category } from './Categoty';
 import "../../App.css";
 import "./Dashboard.css";
 import Demo from './demo';
@@ -145,7 +158,12 @@ const theme = createMuiTheme({
       //   borderColor: "red !important",
       //   boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)"
       // }
-    }
+    },
+    MuiDrawer:{
+      paperAnchorRight:{
+          width: "100%"
+      }
+  }
   }
 });
 
@@ -204,9 +222,121 @@ const Dashboard: React.FC = () => {
     checkedC: true
   });
 
-  const updateSubCategory = (subCategory: any) => {
-    setSelectedSubCategory(subCategory);
-  }
+  const [resCategoryMenu, setResCategoryMenu] = React.useState(false);
+  const [isResFilter, setIsResFilter] = React.useState(false);
+
+  type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
+  const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
+    event: React.KeyboardEvent | React.MouseEvent,
+  ) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+    if (type === "category") {
+      setIsResFilter(false);
+    } else {
+      setIsResFilter(true);
+    }
+    setResCategoryMenu(open);
+  };
+
+  const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(true);
+
+  const handleClick = () => {
+    setOpenResCategorySubMenu(!openResCategorySubMenu);
+  };
+
+  const sideList = (side: DrawerSide) => (
+    <div
+      role="presentation"
+      // onClick={toggleDrawer(side, false)}
+      // onKeyDown={toggleDrawer(side, false)}
+    >
+      {!isResFilter ?
+      <List>
+          <ListItem style={{ paddingTop: "2px", paddingBottom: "2px" }}>
+              <div style={{ width: "100%" }}>
+                  <div style={{ float: "left", width: "90%", textAlign: "center" }}>
+                      <div style={{ float: "left", cursor: "pointer" }} onClick={toggleDrawer(side, false)}>
+                          <Icon fontSize="small">keyboard_arrow_left</Icon>
+                      </div>
+                      <ListItemText primary="Categories" />
+                  </div>
+              </div>
+          </ListItem>
+          <Divider />
+					{
+						category.categories.data.map((cate: any, index: any) => {
+							return (
+              <>
+              <ListItem button onClick={toggleDrawer(side, false)}>
+                <ListItemIcon>
+                  <Icon>{cate.icon}</Icon>
+                </ListItemIcon>
+                <ListItemText primary={cate.name.en} />
+              </ListItem>
+              <Divider />
+              <Collapse in={openResCategorySubMenu} timeout="auto" unmountOnExit>
+                <List component="span" disablePadding>
+                {
+                      cate.subcategories.map((subCate: any, index: any) => {
+                        let subCategory: any = category.subcategories.data.find((x: any) => x.id === subCate.toString());
+                        return(
+                        <ListItem button onClick={toggleDrawer(side, false)}>
+                          <ListItemText primary={subCategory.name.en} />
+                        </ListItem>)
+                      })
+                }
+                </List>
+              </Collapse>
+							<Divider />
+              </>
+              );
+						})
+					}
+      </List>
+      : <List>
+          <ListItem style={{ paddingTop: "2px", paddingBottom: "2px" }}>
+              <div style={{ width: "100%" }}>
+                  <div style={{ float: "left", width: "90%", textAlign: "center" }}>
+                      <div style={{ float: "left", cursor: "pointer" }} onClick={toggleDrawer(side, false)}>
+                          <Icon fontSize="small">keyboard_arrow_left</Icon>
+                      </div>
+                      <ListItemText primary="Filter" />
+                  </div>
+              </div>
+          </ListItem>
+          <Divider />
+          <ListItem>
+              <div className={classes.searchbox + " display-flex"}>
+                  <IconButton
+                    type="submit"
+                    className={classes.iconButton + " categoryCss"}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                  <Demo />
+                </div>
+          </ListItem>
+          <div style={{ bottom: 0, position: "fixed", width: "100%" }}>
+          <Divider />
+          <ListItem style={{ justifyContent:"center" }}>
+            <Button type="button" variant="contained" color="primary" style={{ textTransform: "none" }} onClick={toggleDrawer(side, false)}>
+              Validate
+            </Button>
+          </ListItem>
+          </div>
+        </List>
+      }
+      <Divider />
+    </div>
+  );
+
 
   const handleSwitchChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -236,6 +366,8 @@ const Dashboard: React.FC = () => {
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
   const classes = useStyles();
+
+
   return (
     <MuiThemeProvider theme={theme}>
       {!fullScreen ? (
@@ -408,6 +540,20 @@ const Dashboard: React.FC = () => {
           <Toolbar variant="regular" />
         </>
       ) : null}
+      {fullScreen ? 
+      <Container fixed className="" style={{ alignItems: "center" }}>
+        <Grid container spacing={2} style={{ width: "100%", margin: "auto" }}>
+          <Grid item xs={12}>
+          <Button onClick={toggleDrawer('right', true)} variant="contained" color="primary" style={{ textTransform: "none" }}>Categories</Button>
+          &nbsp;&nbsp;&nbsp;
+          <Button onClick={toggleDrawer('right', true, "Filter")} variant="contained" color="primary" style={{ textTransform: "none" }}>Filter</Button>
+          <Drawer anchor="right" open={resCategoryMenu} onClose={toggleDrawer('right', false)}>
+            {sideList('right')}
+          </Drawer>
+          </Grid>
+          </Grid>
+      </Container>
+      : null }
       <Container fixed className="" style={{ alignItems: "center" }}>
         <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
           <Grid item xs={12}>

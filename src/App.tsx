@@ -6,7 +6,7 @@ import withRoot from './withRoot';
 // import Layout from './components/layout/Layout';
 import './components/common.css';
 import MainRoutes from './routes';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 const styles = (theme: Theme) =>
   createStyles({

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { MuiThemeProvider, createMuiTheme, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, useMediaQuery } from '@material-ui/core';
-import { Link as Rlink, RouteComponentProps } from "react-router-dom";
+import { MuiThemeProvider, createMuiTheme, Button, CssBaseline, TextField, Link, Grid, Typography, Container, useMediaQuery } from '@material-ui/core';
+import { Link as Rlink } from "react-router-dom";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { CircularProgress } from '@material-ui/core';
+// import { CircularProgress } from '@material-ui/core';
 import {
   createStyles,
   makeStyles,
@@ -14,15 +14,6 @@ import {
 import classNames from 'classnames';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
-import ForumIcon from "@material-ui/icons/Forum";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import CommentIcon from "@material-ui/icons/Comment";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-// import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import withRoot from '../../withRoot';
 import './auth.css'
 import SigInImg from '../../assets/signin.png';
@@ -280,7 +271,7 @@ const SignIn: React.FC = () => {
                   // onClick={() => { this.chkLogin() }}
                 >
                   <div style={{ width: "100%" }}>
-                    <img src={GoogleIcon} style={{ float:"left" }} />
+                    <img src={GoogleIcon} style={{ float:"left" }} alt="google"/>
                     <div> Login with Google</div>
                 </div>
               </Button>
@@ -395,7 +386,7 @@ const SignIn: React.FC = () => {
             <Grid item lg={7} md={6} xs={12}>
             <Grid item lg={12} md={12} xs={12}>
                 {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "55px" }} />}
-                <img src={SigInImg}  style={{ width: "100%" }}/>
+                <img src={SigInImg}  style={{ width: "100%" }} alt="luqta-signin"/>
               </Grid>
             </Grid>
             : null}

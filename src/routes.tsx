@@ -1,5 +1,5 @@
-import React, { useEffect, Suspense } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import React, { Suspense } from 'react';
+import { Route, Switch, Redirect } from "react-router-dom";
 
 const Layout = React.lazy(() => import('./components/layout/Layout'));
 const MySignIn = React.lazy(() => import('./components/Auth/SignIn'));
@@ -25,8 +25,8 @@ const MainRoutes: React.FC = () => {
 }
 
 
-const NotFound = () => {
-  return <div>Page Not Found</div>
-}
+// const NotFound = () => {
+//   return <div>Page Not Found</div>
+// }
 
 export default MainRoutes;

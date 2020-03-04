@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { MuiThemeProvider, createMuiTheme, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, useMediaQuery } from '@material-ui/core';
-import { Link as Rlink, RouteComponentProps } from "react-router-dom";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { CircularProgress } from '@material-ui/core';
+import { MuiThemeProvider, createMuiTheme, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, useMediaQuery } from '@material-ui/core';
+import { Link as Rlink } from "react-router-dom";
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
+// import { CircularProgress } from '@material-ui/core';
 import {
   createStyles,
   makeStyles,
@@ -267,7 +267,7 @@ const SignUp: React.FC = () => {
                       // onClick={() => { this.chkLogin() }}
                     >
                       <div style={{ width: "100%" }}>
-                        <img src={GoogleIcon} style={{ float:"left" }} />
+                        <img src={GoogleIcon} style={{ float:"left" }} alt="google" />
                         <div>Register with Google</div>
                     </div>
                   </Button>

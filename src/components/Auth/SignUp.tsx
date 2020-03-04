@@ -228,7 +228,7 @@ const SignUp: React.FC = () => {
           {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
           <Grid container spacing={2} direction="row">
             <Grid item lg={12} md={5} xs={12} direction="row">
-              <Container component="main" maxWidth="xs" style={{ width: "68%" }}>
+              <Container component="main" maxWidth="xs" style={{ width: !fullScreen ? "68%" : "100%" }}>
                 <CssBaseline />
                 <div>
                   <Typography component="h1" variant="h5" className="luqta-title">

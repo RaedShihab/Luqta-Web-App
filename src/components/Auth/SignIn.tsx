@@ -240,7 +240,7 @@ const SignIn: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item lg={5} md={5} xs={12}>
               <Grid item lg={12} md={12} xs={12}>
-              <Container component="main" maxWidth="xs" style={{ width: "68%" }}>
+              <Container component="main" maxWidth="xs" style={{ width: !fullScreen ? "68%" : "100%" }}>
             <CssBaseline />
             <div>
               <Typography component="h1" variant="h5" className="luqta-title">

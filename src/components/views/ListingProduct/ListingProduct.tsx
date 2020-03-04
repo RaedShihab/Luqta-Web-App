@@ -173,26 +173,26 @@ const ListingProduct: React.FC = () => {
                     <span className="locationName"> Car for sale </span>
                   </Grid>
                 </Grid>
-                <Grid container style={{ marginTop: "10px" }}>
-                  <Grid item lg={1} md={2} xs={4}>
+                <Grid container style={{ marginTop: "10px" }} direction="row">
+                  <Grid item lg={1} md={2} xs={3}>
                     <IconButton className={classes.iconButton}>
                       <FavoriteIcon />
                     </IconButton>
                   </Grid>
-                  <Box m={2} />
-                  <Grid item lg={1} md={2} xs={4}>
+                  {!fullScreen && <Box m={2} />}
+                  <Grid item lg={1} md={2} xs={3}>
                     <IconButton className={classes.iconButton}>
                       <ShareIcon />
                     </IconButton>
                   </Grid>
-                  <Box m={2} />
-                  <Grid item lg={1} md={2} xs={4}>
+                  {!fullScreen && <Box m={2} />}
+                  <Grid item lg={1} md={2} xs={3}>
                     <IconButton className={classes.iconButton}>
                       <CallIcon />
                     </IconButton>
                   </Grid>
-                  <Box m={2} />
-                  <Grid item container alignContent="flex-end" justify="flex-end" direction="row" lg={7} md={2} xs={4}>
+                  {!fullScreen && <Box m={2} />}
+                  <Grid item container alignContent="flex-end" justify="flex-end" direction="row" lg={7} md={2} xs={3}>
                     <Avatar style={{ background: "#134B8E" }} alt="Remy Sharp">DC</Avatar>
                   </Grid>
                 </Grid>

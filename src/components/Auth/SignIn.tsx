@@ -236,11 +236,11 @@ const SignIn: React.FC = () => {
       <Toolbar variant="dense"  className={classNames( fullScreen && classes.smAppbar)} />
         <Container style={{ alignItems: "center", maxWidth: "100%" }}>
           <CssBaseline />
-          {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
+          {! fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
           <Grid container spacing={2}>
-            <Grid item lg={5} md={5} xs={12}>
-              <Grid item lg={12} md={12} xs={12}>
-              <Container component="main" maxWidth="xs" style={{ width: !fullScreen ? "68%" : "100%" }}>
+            <Grid item lg={5} md={6} xs={12}>
+              <Grid item lg={12} md={12} xs={12} className="display-flex">
+              <Container component="main" maxWidth="xs" style={{ display:"inline-table" ,width: !fullScreen ? "68%" : "100%" }}>
             <CssBaseline />
             <div>
               <Typography component="h1" variant="h5" className="luqta-title">
@@ -371,7 +371,7 @@ const SignIn: React.FC = () => {
             </Grid>
           </Grid>
           {!fullScreen ?
-            <Grid item lg={7} md={7} xs={12}>
+            <Grid item lg={7} md={6} xs={12}>
             <Grid item lg={12} md={12} xs={12}>
                 {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "55px" }} />}
                 <img src={SigInImg}  style={{ width: "100%" }}/>
@@ -379,10 +379,11 @@ const SignIn: React.FC = () => {
             </Grid>
             : null}
         </Grid>
-        {!fullScreen &&
-        <Box mt={8}>
-          <Copyright />
-        </Box>}
+        <Grid container>
+              <Grid item lg={12} md={12} xs={12}>
+                  <Copyright />
+              </Grid>
+            </Grid>
       </Container>
     </MuiThemeProvider>
     );  

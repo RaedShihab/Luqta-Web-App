@@ -227,7 +227,7 @@ const SignUp: React.FC = () => {
           <CssBaseline />
           {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
           <Grid container spacing={2} direction="row">
-            <Grid item lg={12} md={5} xs={12} direction="row">
+            <Grid item lg={12} md={12} xs={12}>
               <Container component="main" maxWidth="xs" style={{ width: !fullScreen ? "68%" : "100%" }}>
                 <CssBaseline />
                 <div>

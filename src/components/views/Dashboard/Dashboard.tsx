@@ -38,9 +38,9 @@ import HelpOutlinedIcon from "@material-ui/icons/HelpOutlined";
 import StarIcon from "@material-ui/icons/Star";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Checkbox from "@material-ui/core/Checkbox";
-import Menu from "./CategoryMenu";
-import ListingProduct from "./ListingProduct/ListingProduct";
-import ListingAds from "./ListingAds/ListingAds";
+
+import ListingProduct from "../ListingProduct/ListingProduct";
+import ListingAds from "../ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -48,14 +48,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
+
 import Collapse from '@material-ui/core/Collapse';
-import { category } from './Categoty';
-import "../../App.css";
+import Menu from "../Category/CategoryMenu";
+import { category } from '../Category/Categoty';
+import "../../../App.css";
 import "./Dashboard.css";
 import Demo from './demo';
 

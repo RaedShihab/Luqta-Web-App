@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Popover from '@material-ui/core/Popover';
-import { MenuContent } from './styles/Elements';
+import { MenuContent } from '../styles/Elements';
 import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import {  Grid, createMuiTheme, Icon } from '@material-ui/core';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';

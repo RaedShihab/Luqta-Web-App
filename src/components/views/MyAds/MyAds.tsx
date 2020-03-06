@@ -1,0 +1,380 @@
+import React, { useState, useEffect } from "react";
+import classNames from "classnames";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  withStyles,
+  useTheme,
+} from "@material-ui/core/styles";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  Container,
+  Icon,
+  IconButton,
+  Grid,
+  InputBase,
+  Button,
+  OutlinedInput,
+  InputAdornment
+} from "@material-ui/core";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import KeyboardArrowDownOutlinedIcon from "@material-ui/icons/KeyboardArrowDownOutlined";
+import Wallet from '../../../assets/wallet.png';
+
+import ListingProduct from "../ListingProduct/ListingProduct";
+
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import FlashOnIcon from '@material-ui/icons/FlashOn';
+import CreateIcon from '@material-ui/icons/Create';
+import "./MyAds.css";
+
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    card: {
+      background: "#FFFFFF 0% 0% no-repeat padding-box",
+      borderRadius: "3px"
+    },
+    cardContent: {
+      "&:last-child": {
+        paddingBottom: "16px"
+      }
+    },
+    walletMoney: {
+      color: "#444444",
+      fontFamily: "Roboto",
+      fontWeight: 400,
+      fontSize: "16px"
+    },
+    tagLine: {
+      fontSize: "10px"
+    },
+    promoLine: {
+      color:"#01B8F8",
+      fontSize:"12px",
+      float: "right",
+      marginRight:"20px",
+      marginTop: "5px"
+    },
+    inputCSS: {
+      background: "#FFFFFF 0% 0% no-repeat padding-box",
+      border: "1px solid #D9D9D9",
+      borderRadius: "4px",
+      width: "90%",
+      float: "right",
+      marginRight: "20px",
+      padding: "2px 10px 2px 10px"
+    },
+    btnCSS: {
+      textTransform: "none",
+      width: "100%"
+    },
+    iconButton: {
+      padding: 4
+    },
+    commandBtn: {
+      backgroundColor: "rgb(139,157,195, 0.15)",
+      borderRadius: "4px",
+      width: "100%",
+      marginRight: "20px",
+      color: "#134B8E",
+      textTransform: "none",
+      fontSize: "12px",
+      fontWeight: 400,
+      "&:last-child": {
+        marginRight: 0,
+        color: "#FF0000"
+      }
+    }
+  })
+);
+
+
+const BootstrapInput = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      'label + &': {
+        marginTop: theme.spacing(2),
+      },
+    },
+    input: {
+      borderRadius: 4,
+      position: 'relative',
+      backgroundColor: theme.palette.background.paper,
+      border: '1px solid #ced4da',
+      fontSize: 16,
+      padding: '10px 26px 10px 12px',
+      transition: theme.transitions.create(['border-color', 'box-shadow']),
+      // Use the system font instead of the default Roboto font.
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:focus': {
+        borderRadius: 4,
+        borderColor: '#80bdff',
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+      },
+    },
+  }),
+)(InputBase);
+
+const MyAds: React.FC = () => {
+ 
+
+  const muitheme = useTheme();
+  const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
+
+  const [sortBy, setSortBy] = React.useState('10');
+  const handleSortByChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSortBy(event.target.value as string);
+  };
+
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const [selectAll, setSelectAll] = React.useState(true);
+  const handleSelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectAll(event.target.checked);
+  };
+
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+          main: "#134B8E",
+      },
+    },
+    overrides: {
+      MuiTab: {
+        root: {
+          textTransform: "none",
+          minWidth: "130px !important"
+        }
+      },
+      MuiButtonBase: {
+        root: {
+          fontSize: "12px"
+        }
+      },
+      MuiFormControlLabel: {
+        label: {
+          fontSize: "11px",
+          fontWeight: 400,
+          color: "#2A2A2A"
+        }
+      }
+    }
+  });
+
+  return (
+    <MuiThemeProvider theme={theme}>
+     
+        <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#FFF" }}>
+          <Grid item xs={12}>
+            <Container fixed className="" style={{ alignItems: "center", }}>
+              <Tabs
+                value={value}
+                indicatorColor="primary"
+                textColor="primary"
+                onChange={handleChange}
+              >
+                <Tab label="My Ads" />
+                <Tab label="My fomunity" />
+                <Tab label="Profile" />
+                <Tab label="Notifications" />
+                <Tab label="Chat" />
+              </Tabs>
+            </Container> 
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
+          <Grid item xs={12}>
+            <Container fixed className="" style={{ alignItems: "center", }}>
+              <Card className={classes.card}>
+                <CardContent className={classes.cardContent}>
+                  <Grid container className="align-flex-start">
+                    <Grid item lg={6} md={6} xs={12}>
+                        <div style={{ display: "inline-block"}}><img src={Wallet} width="50px" /></div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style={{ display: "inline-block" }} className={classes.walletMoney}>
+                          ₹ 498.02
+                          <div style={{ display: "block"}} className={classes.tagLine}>
+                          Your Wallet Balance
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid item lg={4} md={4} xs={12}>
+                          <InputBase
+                            className={classes.inputCSS}
+                            placeholder="Enter amount to be added in Wallet"
+                            inputProps={{ "aria-label": "search google maps" }}
+                          />
+                          <div className={classes.promoLine}>
+                          Have promo code?
+                        </div>
+                    </Grid>
+                    <Grid item lg={2} md={4} xs={12}>
+                      <Button className={classes.btnCSS} color="primary" variant="contained">
+                        Add Money to Wallet
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Container> 
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#D4D4D4" }}>
+          <Grid item xs={12}>
+            <Container fixed className="" style={{ alignItems: "center", }}>
+                  <Grid container className="align-center" style={{ padding: "16px" }}>
+                    <Grid item lg={6} md={6} xs={12}>
+                        <InputBase
+                            // style={{ width: "90%", marginRight: 0 }}
+                            className={classes.inputCSS}
+                            placeholder="Search inside my ads"
+                            inputProps={{ "aria-label": "search google maps" }}
+                        />
+                    </Grid>
+                    <Grid item lg={4} md={4} xs={12}>
+                        <InputBase
+                            // style={{ width: "80%" }}
+                            className={classes.inputCSS}
+                            placeholder="Categories"
+                            inputProps={{ "aria-label": "search google maps" }}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton aria-label=""  edge="end">
+                                  <KeyboardArrowDownOutlinedIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                        />
+                    </Grid>
+                    <Grid item lg={2} md={4} xs={12}>
+                      <Button className={classes.btnCSS} color="primary" variant="contained">
+                        Search
+                      </Button>
+                    </Grid>
+                  </Grid>
+            </Container> 
+          </Grid>
+        </Grid>
+      
+      
+        <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
+          <Grid item lg={12} md={12} xs={12}>
+            <Container fixed className="" style={{ alignItems: "center", display: "flex" }}>
+              <Grid item lg={10} md={10} xs={12}>
+                <Tabs
+                  value={value}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  onChange={handleChange}
+                >
+                  <Tab label="Active" />
+                  <Tab label="Premium" />
+                  <Tab label="Inactive" />
+                  <Tab label="Deleted" />
+                </Tabs>
+              </Grid>
+              <Grid item lg={2} md={2} xs={12}>
+                <FormControl style={{ width: "100%" }}>
+                  <InputLabel id="demo-customized-select-label">Sort By</InputLabel>
+                  <Select
+                    labelId="demo-customized-select-label"
+                    id="demo-customized-select"
+                    value={sortBy}
+                    placeholder=""
+                    onChange={handleSortByChange}
+                    input={<BootstrapInput />}
+                    IconComponent={KeyboardArrowDownOutlinedIcon}
+                  >
+                    {/* <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem> */}
+                    <MenuItem value={10}>Date</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Container> 
+          </Grid>
+          <Container fixed  style={{ alignItems: "center", marginBottom: "20px" }}>
+          <Grid item lg={12} md={12} xs={12} className={!fullScreen? "display-flex" : ""}>
+              <Grid item lg={6} md={2} xs={12}>
+                 <FormGroup row>
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
+                      }
+                      label="Select All Ads"
+                    />
+                 </FormGroup>
+              </Grid>
+              <Grid item lg={6} md={10} xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="contained" className={classes.commandBtn}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
+                <Button variant="contained" className={classes.commandBtn}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
+                <Button variant="contained" className={classes.commandBtn}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
+              </Grid>
+          </Grid>
+          </Container> 
+          
+          <Grid item xs={12}>
+            <Container fixed className="" style={{ alignItems: "center", marginBottom: "20px" }}>
+              <Grid container spacing={2} direction="row">
+                {["", ""].map((prod: any, index: any) => {
+                  return (
+                    <Grid key={index} item lg={12} md={12} xs={12}>
+                      <div className="display-flex">
+                      <FormGroup row>
+                        <FormControlLabel
+                            control={
+                              <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
+                            }
+                            label=""
+                          />
+                      </FormGroup>
+                      <ListingProduct myAds={true} />
+                      </div>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+              </Container> 
+          </Grid>
+        </Grid>
+      </MuiThemeProvider>
+  );
+};
+
+export default MyAds;

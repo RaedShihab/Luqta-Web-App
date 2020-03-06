@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { category } from './Categoty';
+import { category } from '../Category/Categoty';
 import './Dashboard.css';
 
 const parentCategory = category.categories.data;

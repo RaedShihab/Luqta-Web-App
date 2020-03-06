@@ -15,8 +15,8 @@ const MainRoutes: React.FC = () => {
           <Switch>
           <Route exact path='/signin' component={MySignIn} />
           <Route exact path='/signup' component={MySignUp} />
-          <Route exact path="/dashboard" component={Layout} />
-          <Redirect path='*' to={'/signin'} />
+          <Route path="/" component={Layout} />
+          {/* <Redirect path='*' to={'/signin'} /> */}
           {/* <Route path="*" component={NotFound} /> */}
           </Switch>
       </Suspense>

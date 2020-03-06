@@ -67,7 +67,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-const ListingProduct: React.FC = () => {
+
+interface IListingProduct {
+  myAds?: boolean;
+}
+const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -173,29 +177,31 @@ const ListingProduct: React.FC = () => {
                     <span className="locationName"> Car for sale </span>
                   </Grid>
                 </Grid>
-                <Grid container style={{ marginTop: "10px" }} direction="row">
-                  <Grid item lg={1} md={2} xs={3}>
-                    <IconButton className={classes.iconButton}>
-                      <FavoriteIcon />
-                    </IconButton>
+                {!myAds ? 
+                  <Grid container style={{ marginTop: "10px" }} direction="row">
+                    <Grid item lg={1} md={2} xs={3}>
+                      <IconButton className={classes.iconButton}>
+                        <FavoriteIcon />
+                      </IconButton>
+                    </Grid>
+                    {!fullScreen && <Box m={2} />}
+                    <Grid item lg={1} md={2} xs={3}>
+                      <IconButton className={classes.iconButton}>
+                        <ShareIcon />
+                      </IconButton>
+                    </Grid>
+                    {!fullScreen && <Box m={2} />}
+                    <Grid item lg={1} md={2} xs={3}>
+                      <IconButton className={classes.iconButton}>
+                        <CallIcon />
+                      </IconButton>
+                    </Grid>
+                    {!fullScreen && <Box m={2} />}
+                    <Grid item container alignContent="flex-end" justify="flex-end" direction="row" lg={7} md={2} xs={3}>
+                      <Avatar style={{ background: "#134B8E" }} alt="Remy Sharp">DC</Avatar>
+                    </Grid>
                   </Grid>
-                  {!fullScreen && <Box m={2} />}
-                  <Grid item lg={1} md={2} xs={3}>
-                    <IconButton className={classes.iconButton}>
-                      <ShareIcon />
-                    </IconButton>
-                  </Grid>
-                  {!fullScreen && <Box m={2} />}
-                  <Grid item lg={1} md={2} xs={3}>
-                    <IconButton className={classes.iconButton}>
-                      <CallIcon />
-                    </IconButton>
-                  </Grid>
-                  {!fullScreen && <Box m={2} />}
-                  <Grid item container alignContent="flex-end" justify="flex-end" direction="row" lg={7} md={2} xs={3}>
-                    <Avatar style={{ background: "#134B8E" }} alt="Remy Sharp">DC</Avatar>
-                  </Grid>
-                </Grid>
+                  : null}
               </Grid>
             </Grid>
           </Grid>

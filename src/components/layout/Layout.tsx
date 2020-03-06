@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
@@ -7,7 +8,6 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import FooterCategory from "./FooterCategory";
 import Footer from "./Footer";
-import Dashboard from "../views/Dashboard";
 import Box from "@material-ui/core/Box";
 import withRoot from "../../withRoot";
 import { styles } from "./styles";
@@ -15,6 +15,8 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 
+const Dashboard = React.lazy(() => import('../views/Dashboard/Dashboard'));
+const MyAds = React.lazy(() => import('../views/MyAds/MyAds'));
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -70,7 +72,18 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
         <Toolbar variant="dense"  className={classNames( fullScreen && classes.smToolbar)} />
         <Box flexGrow={1} style={{ height: "100%", overflow: "hidden" }}>
           <main className={classNames(classes.content)}>
-            <Dashboard />
+          <BrowserRouter>
+              <Switch>
+                <Route exact path='/' component={Dashboard} />
+                <Route exact path='/dashboard' component={Dashboard} />
+                <Route exact path='/myads' component={MyAds} />
+                {/* <Route path="/mylists" component={MyLists} /> */}
+                {/* <Route path="/list/:listId" component={List} /> */}
+                {/* <Route path="/layout" component={Layout} /> */}
+                {/* <Route exact path="/discover" component={Browse} /> */}
+                {/* <Route component={NotFoundPage} /> */}
+              </Switch>
+          </BrowserRouter>
           </main>
         </Box>
         <Box flexGrow={1} style={{ height: "100%" }}>

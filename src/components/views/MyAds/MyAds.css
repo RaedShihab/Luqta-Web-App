@@ -1,20 +1,6 @@
-.Announcement {
-    font-size: 16px;
-    font-weight: 600;
-}
-.AnnouncementLabel {
-    color: #AFAFAF;
-    font-size: 16px;
-    font-family: Segoe UI;
-}
-.AnnouncementNumber {
-    color: #134B8E;
-    font-size: 16px;
-    font-weight: 500;
-    font-family: Segoe UI;
-}
-.categoryCss {
+
+/* .categoryCss {
     font-family: Roboto;
     font-weight: 500 !important;
     color: #555E67 !important;
-}
+} */

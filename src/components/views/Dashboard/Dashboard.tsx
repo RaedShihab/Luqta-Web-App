@@ -54,7 +54,7 @@ import Menu from "../Category/CategoryMenu";
 import { category } from '../Category/Categoty';
 import "../../../App.css";
 import "./Dashboard.css";
-import Demo from './demo';
+import Search from './search';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -317,7 +317,7 @@ const Dashboard: React.FC = () => {
                   >
                     <SearchIcon />
                   </IconButton>
-                  <Demo />
+                  <Search />
                 </div>
           </ListItem>
           <div style={{ bottom: 0, position: "fixed", width: "100%" }}>
@@ -447,7 +447,7 @@ const Dashboard: React.FC = () => {
                         placeholder="Search for anything.."
                         inputProps={{ "aria-label": "search google maps" }}
                       /> */}
-                      <Demo />
+                      <Search />
                     </div>
 
                     <div className={classes.searchbox + " display-flex"}>

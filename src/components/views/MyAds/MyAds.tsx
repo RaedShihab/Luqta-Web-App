@@ -41,6 +41,8 @@ import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import CreateIcon from '@material-ui/icons/Create';
+import Menu from "../Category/CategoryMenu";
+import Search from './searchAds';
 import "./MyAds.css";
 
 
@@ -100,6 +102,11 @@ const useStyles = makeStyles((theme: Theme) =>
         marginRight: 0,
         color: "#FF0000"
       }
+    },
+    resCommandBtn: {
+      width: "50%",
+      marginBottom: "5px",
+      marginRight: "0px",
     }
   })
 );
@@ -146,24 +153,8 @@ const MyAds: React.FC = () => {
  
 
   const muitheme = useTheme();
-  const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
-
-  const [sortBy, setSortBy] = React.useState('10');
-  const handleSortByChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSortBy(event.target.value as string);
-  };
-
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
-
-  const [selectAll, setSelectAll] = React.useState(true);
-  const handleSelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectAll(event.target.checked);
-  };
-
+ 
+ 
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -174,7 +165,10 @@ const MyAds: React.FC = () => {
       MuiTab: {
         root: {
           textTransform: "none",
-          minWidth: "130px !important"
+          minWidth: "130px !important",
+          '&:hover': {
+            backgroundColor: "#DFE4E8"
+          }
         }
       },
       MuiButtonBase: {
@@ -191,6 +185,75 @@ const MyAds: React.FC = () => {
       }
     }
   });
+ 
+ 
+ 
+  const responsive = useMediaQuery(muitheme.breakpoints.down("sm"));
+
+  const [sortBy, setSortBy] = React.useState('10');
+  const handleSortByChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSortBy(event.target.value as string);
+  };
+
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const [adsTab, setAdsTab] = React.useState("Active");
+  const handleAdsTabChange = (event: React.ChangeEvent<{}>, newValue: any) => {
+    setAdsTab(newValue);
+  };
+
+  const [selectAll, setSelectAll] = React.useState(false);
+  const handleSelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectAll(event.target.checked);
+    if (event.target.checked) {
+      setState({ 0: true, 1: true, 2: true });
+    } else {
+      setState({ 0: false, 1: false, 2: false });
+    }
+  };
+
+  const [state, setState]: any = React.useState({
+    0: false,
+    1: false,
+  });
+
+  const handleAdsCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, [event.target.value]: event.target.checked });
+  };
+
+  useEffect(() => {
+    if(state) {
+      let isAllSelected = true;
+      Object.keys(state).map((st : any) => {
+        if(!state[st]) {
+          isAllSelected = false;
+        }
+      });
+      if (isAllSelected) {
+        setSelectAll(true);
+      } else {
+        setSelectAll(false);
+      }
+    }
+  }, [state])
+
+
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [selectedCategory, setSelectedCategory]: any = useState(null);
+  
+  const [selectedSubCategory, setSelectedSubCategory]: any = useState(null);
+
+  const openCategoryMenu = (e: any) => {
+    setOpenMenu(true);
+    let ele: any = document.getElementById("seachCategory"); 
+    setMenuAnchor(ele);
+  };
+  
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -202,6 +265,8 @@ const MyAds: React.FC = () => {
                 value={value}
                 indicatorColor="primary"
                 textColor="primary"
+                variant="scrollable"
+                scrollButtons="on"
                 onChange={handleChange}
               >
                 <Tab label="My Ads" />
@@ -220,7 +285,7 @@ const MyAds: React.FC = () => {
               <Card className={classes.card}>
                 <CardContent className={classes.cardContent}>
                   <Grid container className="align-flex-start">
-                    <Grid item lg={6} md={6} xs={12}>
+                    <Grid item lg={6} md={4} xs={12}>
                         <div style={{ display: "inline-block"}}><img src={Wallet} width="50px" /></div>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <div style={{ display: "inline-block" }} className={classes.walletMoney}>
@@ -256,19 +321,22 @@ const MyAds: React.FC = () => {
           <Grid item xs={12}>
             <Container fixed className="" style={{ alignItems: "center", }}>
                   <Grid container className="align-center" style={{ padding: "16px" }}>
-                    <Grid item lg={6} md={6} xs={12}>
-                        <InputBase
-                            // style={{ width: "90%", marginRight: 0 }}
+                    <Grid item lg={6} md={4} xs={12}>
+                        {/* <InputBase
+                            style={{ marginBottom: "5px" }}
                             className={classes.inputCSS}
                             placeholder="Search inside my ads"
                             inputProps={{ "aria-label": "search google maps" }}
-                        />
+                        /> */}
+                        <Search />
                     </Grid>
-                    <Grid item lg={4} md={4} xs={12}>
+                    <Grid item lg={4} md={4} xs={12} id="seachCategory">
                         <InputBase
-                            // style={{ width: "80%" }}
+                            style={{ marginBottom: "5px" }}
                             className={classes.inputCSS}
+                            onClick={openCategoryMenu}
                             placeholder="Categories"
+                            value={!selectedCategory ? "Categories" : selectedCategory.name.en}
                             inputProps={{ "aria-label": "search google maps" }}
                             endAdornment={
                               <InputAdornment position="end">
@@ -280,7 +348,7 @@ const MyAds: React.FC = () => {
                         />
                     </Grid>
                     <Grid item lg={2} md={4} xs={12}>
-                      <Button className={classes.btnCSS} color="primary" variant="contained">
+                      <Button className={classes.btnCSS} style={{ marginBottom: "5px" }} color="primary" variant="contained">
                         Search
                       </Button>
                     </Grid>
@@ -289,24 +357,37 @@ const MyAds: React.FC = () => {
           </Grid>
         </Grid>
       
+
+            {openMenu ? (
+                    <Menu
+                      menuAnchor={menuAnchor}
+                      setMenuAnchor={setMenuAnchor}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                      selectedSubCategory={selectedSubCategory}
+                      setSelectedSubCategory={setSelectedSubCategory}
+                    />
+                  ) : null}
       
         <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
           <Grid item lg={12} md={12} xs={12}>
-            <Container fixed className="" style={{ alignItems: "center", display: "flex" }}>
-              <Grid item lg={10} md={10} xs={12}>
+            <Container fixed className={!responsive? "display-flex" : ""} style={{ alignItems: "center" }}>
+              <Grid item lg={10} md={10} xs={12} style={{ marginBottom: "10px" }}>
                 <Tabs
-                  value={value}
+                  value={adsTab}
                   indicatorColor="primary"
                   textColor="primary"
-                  onChange={handleChange}
+                  variant="scrollable"
+                  scrollButtons="on"
+                  onChange={handleAdsTabChange}
                 >
-                  <Tab label="Active" />
-                  <Tab label="Premium" />
-                  <Tab label="Inactive" />
-                  <Tab label="Deleted" />
+                  <Tab label="Active"   value="Active"   />
+                  <Tab label="Premium"  value="Premium"  />
+                  <Tab label="Inactive" value="Inactive"  />
+                  <Tab label="Deleted"  value="Deleted"  />
                 </Tabs>
               </Grid>
-              <Grid item lg={2} md={2} xs={12}>
+              <Grid item lg={2} md={2} xs={12} style={{ marginBottom: "10px" }} >
                 <FormControl style={{ width: "100%" }}>
                   <InputLabel id="demo-customized-select-label">Sort By</InputLabel>
                   <Select
@@ -330,7 +411,7 @@ const MyAds: React.FC = () => {
             </Container> 
           </Grid>
           <Container fixed  style={{ alignItems: "center", marginBottom: "20px" }}>
-          <Grid item lg={12} md={12} xs={12} className={!fullScreen? "display-flex" : ""}>
+          <Grid item lg={12} md={12} xs={12} className={!responsive? "display-flex" : ""}>
               <Grid item lg={6} md={2} xs={12}>
                  <FormGroup row>
                     <FormControlLabel
@@ -341,10 +422,10 @@ const MyAds: React.FC = () => {
                     />
                  </FormGroup>
               </Grid>
-              <Grid item lg={6} md={10} xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button variant="contained" className={classes.commandBtn}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
-                <Button variant="contained" className={classes.commandBtn}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
-                <Button variant="contained" className={classes.commandBtn}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
+              <Grid item lg={6} md={10} xs={12} className={!responsive? "display-flex" : ""} style={{ justifyContent: "flex-end", textAlign: "center" }}>
+                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
+                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
+                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
               </Grid>
           </Grid>
           </Container> 
@@ -352,23 +433,26 @@ const MyAds: React.FC = () => {
           <Grid item xs={12}>
             <Container fixed className="" style={{ alignItems: "center", marginBottom: "20px" }}>
               <Grid container spacing={2} direction="row">
-                {["", ""].map((prod: any, index: any) => {
-                  return (
-                    <Grid key={index} item lg={12} md={12} xs={12}>
-                      <div className="display-flex">
-                      <FormGroup row>
-                        <FormControlLabel
-                            control={
-                              <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
-                            }
-                            label=""
-                          />
-                      </FormGroup>
-                      <ListingProduct myAds={true} />
-                      </div>
-                    </Grid>
-                  );
-                })}
+              {adsTab === "Active" ?                 
+                ["", ""].map((prod: any, index: number) => {
+                    return (
+                      <Grid key={index} item lg={12} md={12} xs={12}>
+                        <div className="display-flex">
+                        <FormGroup row>
+                          <FormControlLabel
+                              control={
+                                <Checkbox checked={state[index]} color="primary" onChange={handleAdsCheckBoxChange} value={index} />
+                              }
+                              label=""
+                            />
+                        </FormGroup>
+                        <ListingProduct myAds={true} />
+                        </div>
+                      </Grid>
+                    );
+                  })
+                : null}
+
               </Grid>
               </Container> 
           </Grid>

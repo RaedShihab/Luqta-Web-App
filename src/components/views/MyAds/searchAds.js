@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { category } from '../Category/Categoty';
+import { InputBase } from "@material-ui/core";
 import './MyAds.css';
 
 const parentCategory = category.categories.data;
@@ -19,20 +20,40 @@ function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputRef: node => {
+    <InputBase
+        fullWidth
+        inputRef={(node) => {
           ref(node);
           inputRef(node);
-        },
-        classes: {
-          input: classes.input + " " + classes.inputCSS + " categoryCss",
-          underline: classes.underline
-        },
-      }}
-      {...other}
+        }}
+        // InputProps={{
+        //   inputRef: node => {
+        //     ref(node);
+        //     inputRef(node);
+        //   },
+        //   // classes: {
+        //   //   // input: classes.input + " " + classes.inputCSS + " categoryCss",
+        //   //   // underline: classes.underline
+        //   // },
+        // }}
+        {...other}
+        style={{ marginBottom: "5px" }}
+        className={classes.input + " " + classes.inputCSS + " categoryCss"}
     />
+    // <TextField
+    //   fullWidth
+    //   InputProps={{
+    //     inputRef: node => {
+    //       ref(node);
+    //       inputRef(node);
+    //     },
+    //     classes: {
+    //       input: classes.input + " " + classes.inputCSS + " categoryCss",
+    //       underline: classes.underline
+    //     },
+    //   }}
+    //   {...other}
+    // />
   );
 }
 
@@ -88,7 +109,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   container: {
-    width: "98%",
+    width: "100%",
     flexGrow: 1,
     position: 'relative',
     borderRadius: "4px",
@@ -97,13 +118,20 @@ const styles = theme => ({
   },
   inputCSS: {
     flex: 1,
-    paddingLeft: "10px",
-    paddingRight: "10px",
+    // paddingLeft: "10px",
+    // paddingRight: "10px",
+    background: "#FFFFFF 0% 0% no-repeat padding-box",
+    border: "1px solid #D9D9D9",
+    borderRadius: "4px",
+    width: "90%",
+    float: "right",
+    marginRight: "20px",
+    padding: "2px 10px 2px 10px"
   },
   suggestionsContainerOpen: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
     left: 0,
     right: 0,
   },
@@ -171,7 +199,7 @@ class IntegrationAutosuggest extends React.Component {
           {...autosuggestProps}
           inputProps={{
             classes,
-            placeholder: 'Search',
+            placeholder:"Search inside my ads",
             value: this.state.single,
             onChange: this.handleChange('single'),
           }}

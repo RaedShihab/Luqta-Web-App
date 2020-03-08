@@ -175,7 +175,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 					<List component="nav" >
 						{
 							activeSubCategory && activeSubCategory.length ?
-								activeSubCategory.map((subCate: any, index: any) => {
+								activeSubCategory.slice(0,8).map((subCate: any, index: any) => {
 									let subCategory: any = category.subcategories.data.find(x => x.id === subCate.toString());
 									return (<ListItem className={classes.subCategoryList} key={index} onClick={() => { updateSubWithParentCategory(subCate); }}>
 									<span style={{ flexGrow: 1 }}>{subCategory.name.en}</span>

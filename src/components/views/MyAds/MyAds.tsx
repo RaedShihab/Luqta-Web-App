@@ -42,6 +42,7 @@ import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import CreateIcon from '@material-ui/icons/Create';
 import Menu from "../Category/CategoryMenu";
+import CategoryDrawarMenu from "../Category/ResCategoryMenu";
 import Search from './searchAds';
 import "./MyAds.css";
 
@@ -245,10 +246,10 @@ const MyAds: React.FC = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
   const [selectedCategory, setSelectedCategory]: any = useState(null);
-  
+  const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(false);
   const [selectedSubCategory, setSelectedSubCategory]: any = useState(null);
 
-  const openCategoryMenu = (e: any) => {
+  const openCategoryMenu = () => {
     setOpenMenu(true);
     let ele: any = document.getElementById("seachCategory"); 
     setMenuAnchor(ele);
@@ -334,7 +335,7 @@ const MyAds: React.FC = () => {
                         <InputBase
                             style={{ marginBottom: "5px" }}
                             className={classes.inputCSS}
-                            onClick={openCategoryMenu}
+                            onClick={() => { !responsive ? openCategoryMenu() : setOpenResCategorySubMenu(true) }}
                             placeholder="Categories"
                             value={!selectedCategory ? "Categories" : selectedCategory.name.en}
                             inputProps={{ "aria-label": "search google maps" }}
@@ -346,6 +347,7 @@ const MyAds: React.FC = () => {
                               </InputAdornment>
                             }
                         />
+                        <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
                     </Grid>
                     <Grid item lg={2} md={4} xs={12}>
                       <Button className={classes.btnCSS} style={{ marginBottom: "5px" }} color="primary" variant="contained">

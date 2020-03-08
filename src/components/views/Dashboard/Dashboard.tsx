@@ -38,23 +38,17 @@ import HelpOutlinedIcon from "@material-ui/icons/HelpOutlined";
 import StarIcon from "@material-ui/icons/Star";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Checkbox from "@material-ui/core/Checkbox";
-
 import ListingProduct from "../ListingProduct/ListingProduct";
 import ListingAds from "../ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
-
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import Collapse from '@material-ui/core/Collapse';
+import Search from './search';
 import Menu from "../Category/CategoryMenu";
+import CategoryDrawarMenu from "../Category/ResCategoryMenu";
+import SearchCategoryDrawarMenu from "../Category/ResSearchCategoryMenu";
 import { category } from '../Category/Categoty';
 import "../../../App.css";
 import "./Dashboard.css";
-import Search from './search';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -156,11 +150,7 @@ const theme = createMuiTheme({
       //   boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)"
       // }
     },
-    MuiDrawer:{
-      paperAnchorRight:{
-          width: "100%"
-      }
-  }
+    
   }
 });
 
@@ -219,121 +209,19 @@ const Dashboard: React.FC = () => {
     checkedC: true
   });
 
-  const [resCategoryMenu, setResCategoryMenu] = React.useState(false);
+  const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(false);
+  const [openResSearchCategorySubMenu, setOpenSearchResCategorySubMenu] = React.useState(false);
   const [isResFilter, setIsResFilter] = React.useState(false);
 
-  type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
-  const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
-    event: React.KeyboardEvent | React.MouseEvent,
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
-    if (type === "category") {
-      setIsResFilter(false);
-    } else {
-      setIsResFilter(true);
-    }
-    setResCategoryMenu(open);
-  };
+ 
 
-  const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(true);
+  
 
-  const handleClick = () => {
-    setOpenResCategorySubMenu(!openResCategorySubMenu);
-  };
+  // const handleClick = () => {
+  //   setOpenResCategorySubMenu(!openResCategorySubMenu);
+  // };
 
-  const sideList = (side: DrawerSide) => (
-    <div
-      role="presentation"
-      // onClick={toggleDrawer(side, false)}
-      // onKeyDown={toggleDrawer(side, false)}
-    >
-      {!isResFilter ?
-      <List>
-          <ListItem style={{ paddingTop: "2px", paddingBottom: "2px" }}>
-              <div style={{ width: "100%" }}>
-                  <div style={{ float: "left", width: "90%", textAlign: "center" }}>
-                      <div style={{ float: "left", cursor: "pointer" }} onClick={toggleDrawer(side, false)}>
-                          <Icon fontSize="small">keyboard_arrow_left</Icon>
-                      </div>
-                      <ListItemText primary="Categories" />
-                  </div>
-              </div>
-          </ListItem>
-          <Divider />
-					{
-						category.categories.data.map((cate: any, index: any) => {
-							return (
-              <>
-              <ListItem button onClick={toggleDrawer(side, false)}>
-                <ListItemIcon>
-                  <Icon>{cate.icon}</Icon>
-                </ListItemIcon>
-                <ListItemText primary={cate.name.en} />
-              </ListItem>
-              <Divider />
-              <Collapse in={openResCategorySubMenu} timeout="auto" unmountOnExit>
-                <List component="span" disablePadding>
-                {
-                      cate.subcategories.map((subCate: any, index: any) => {
-                        let subCategory: any = category.subcategories.data.find((x: any) => x.id === subCate.toString());
-                        return(
-                        <ListItem button onClick={toggleDrawer(side, false)}>
-                          <ListItemText primary={subCategory.name.en} />
-                        </ListItem>)
-                      })
-                }
-                </List>
-              </Collapse>
-							<Divider />
-              </>
-              );
-						})
-					}
-      </List>
-      : <List>
-          <ListItem style={{ paddingTop: "2px", paddingBottom: "2px" }}>
-              <div style={{ width: "100%" }}>
-                  <div style={{ float: "left", width: "90%", textAlign: "center" }}>
-                      <div style={{ float: "left", cursor: "pointer" }} onClick={toggleDrawer(side, false)}>
-                          <Icon fontSize="small">keyboard_arrow_left</Icon>
-                      </div>
-                      <ListItemText primary="Filter" />
-                  </div>
-              </div>
-          </ListItem>
-          <Divider />
-          <ListItem>
-              <div className={classes.searchbox + " display-flex"}>
-                  <IconButton
-                    type="submit"
-                    className={classes.iconButton + " categoryCss"}
-                    aria-label="search"
-                  >
-                    <SearchIcon />
-                  </IconButton>
-                  <Search />
-                </div>
-          </ListItem>
-          <div style={{ bottom: 0, position: "fixed", width: "100%" }}>
-          <Divider />
-          <ListItem style={{ justifyContent:"center" }}>
-            <Button type="button" variant="contained" color="primary" style={{ textTransform: "none" }} onClick={toggleDrawer(side, false)}>
-              Validate
-            </Button>
-          </ListItem>
-          </div>
-        </List>
-      }
-      <Divider />
-    </div>
-  );
-
+  
 
   const handleSwitchChange = (name: string) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -541,12 +429,11 @@ const Dashboard: React.FC = () => {
       <Container fixed className="" style={{ alignItems: "center" }}>
         <Grid container spacing={2} style={{ width: "100%", margin: "auto" }}>
           <Grid item xs={12}>
-          <Button onClick={toggleDrawer('right', true)} variant="contained" color="primary" style={{ textTransform: "none" }}>Categories</Button>
+          <Button onClick={() => { setOpenResCategorySubMenu(true)}} variant="contained" color="primary" style={{ textTransform: "none" }}>Categories</Button>
           &nbsp;&nbsp;&nbsp;
-          <Button onClick={toggleDrawer('right', true, "Filter")} variant="contained" color="primary" style={{ textTransform: "none" }}>Filter</Button>
-          <Drawer anchor="right" open={resCategoryMenu} onClose={toggleDrawer('right', false)}>
-            {sideList('right')}
-          </Drawer>
+          <Button onClick={() => setOpenSearchResCategorySubMenu(true)} variant="contained" color="primary" style={{ textTransform: "none" }}>Filter</Button>
+          <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
+          <SearchCategoryDrawarMenu classes={classes} openResSearchCategorySubMenu={openResSearchCategorySubMenu} setOpenResSearchCategorySubMenu={setOpenSearchResCategorySubMenu} />
           </Grid>
           </Grid>
       </Container>

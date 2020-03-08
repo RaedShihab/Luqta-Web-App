@@ -6,6 +6,7 @@ import {  Grid, createMuiTheme, Icon } from '@material-ui/core';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Divider from "@material-ui/core/Divider";
 // import ListItemText from '@material-ui/core/ListItemText';
 // import DriveEtaIcon from '@material-ui/icons/DriveEta';
 // import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';

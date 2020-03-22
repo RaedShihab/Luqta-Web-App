@@ -17,6 +17,7 @@ import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 
 const Dashboard = React.lazy(() => import('../views/Dashboard/Dashboard'));
 const MyAds = React.lazy(() => import('../views/MyAds/MyAds'));
+const AdDetail = React.lazy(() => import('../views/AdDetail/AdDetail'));
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -77,11 +78,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/myads' component={MyAds} />
-                {/* <Route path="/mylists" component={MyLists} /> */}
-                {/* <Route path="/list/:listId" component={List} /> */}
-                {/* <Route path="/layout" component={Layout} /> */}
-                {/* <Route exact path="/discover" component={Browse} /> */}
-                {/* <Route component={NotFoundPage} /> */}
+                <Route exact path='/ad-detail' component={AdDetail} />
               </Switch>
           </BrowserRouter>
           </main>

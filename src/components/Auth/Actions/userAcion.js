@@ -9,16 +9,20 @@ export const userActions = {
     getAll
 };
 function login(username, password) {
+    
     return dispatch => {
+        console.log('action')
         dispatch(request({ username }));
-
         userService.login(username, password)
             .then(
                 user => {
+                    console.log('sccess')
                     dispatch(success(user));
-                    history.push('/countries');
+                    history.push('/myads');
+                    window.location.reload(false);
                 },
                 error => {
+                    console.log('err')
                     dispatch(failure(error));
                     dispatch(alertActions.error(error));
                 }

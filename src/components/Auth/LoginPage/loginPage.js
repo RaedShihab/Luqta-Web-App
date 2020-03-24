@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import {Container, Box, Grid, Link, Avatar, Typography} from '@material-ui/core';
 import {Radio , FormControlLabel, FormControl, RadioGroup} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import { withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { userActions } from '../Actions/userAcion';
 import { withStyles } from '@material-ui/core/styles';
 import LockIcon from '@material-ui/icons/Lock';
@@ -69,7 +69,6 @@ class LoginPage extends React.Component {
       this.props.i18n.changeLanguage(newlang);
     };
     render() {
-      console.log(this.props)
       // if(this.props.loggingIn) {
       //   alert('loginn')
       // }
@@ -87,22 +86,21 @@ class LoginPage extends React.Component {
                     password: ''
                 }}
                 onSubmit={(values)=> {
-                  console.log(values)
                     const { dispatch, history } = this.props;
                     if (values) {
                       console.log(values)
                         dispatch(userActions.login(values.username, values.password));
-                        // history.push('/dashboard')
+                        // history.push('/')
                         }
                           }}
                           // render={
                             
                           // }
-                          validationSchema={Yup.object().shape({
-                            username: Yup.string('Enter your User Name')
-                              .required (('name_is_required')),
-                            password: Yup.string().required(('password_is_required'))
-                          })}
+                          // validationSchema={Yup.object().shape({
+                          //   username: Yup.string('Enter your User Name')
+                          //     .required (t('name_is_required')),
+                          //   password: Yup.string().required(t('password_is_required'))
+                          // })}
                 >
                   {
                     (props)=> {
@@ -111,7 +109,7 @@ class LoginPage extends React.Component {
                             <LockIcon />
                           </Avatar>
                           <Typography component="h1" variant="h5">
-                          {(
+                          {t(
                               "sign_in"
                             )} 
                           </Typography>
@@ -147,7 +145,7 @@ class LoginPage extends React.Component {
                                required
                                fullWidth
                                helperText={(props.errors.username && props.touched.username) && props.errors.username}
-                               label={("user_name")}
+                               label={t("user_name")}
                                name="username"
                                 onChange={props.handleChange}
                               />
@@ -157,7 +155,7 @@ class LoginPage extends React.Component {
                                required
                                fullWidth
                                helperText={(props.errors.password && props.touched.password) && props.errors.password}
-                               label={("passowrd")}
+                               label={t("passowrd")}
                                name="password"
                                onChange={props.handleChange}
                               />
@@ -169,19 +167,19 @@ class LoginPage extends React.Component {
                                 className={classes.submit}
                               >
 
-                                {this.props.loggingIn === undefined && ("sign_in")}
+                                {this.props.loggingIn === undefined && t("sign_in")}
                                 {this.props.loggingIn && <CircularProgress color="white"/>}
                                 
                               </Button>
                               <Grid container>
                           <Grid item xs>
                             <Link href="#" variant="body2">
-                              {("forgot_password")}
+                              {t("forgot_password")}
                             </Link>
                           </Grid>
                           <Grid item>
                             <Link href="#" variant="body2">
-                              {("dont_have_an_account_sign_up")}
+                              {t("dont_have_an_account_sign_up")}
                             </Link>
                           </Grid>
                        </Grid>
@@ -209,7 +207,7 @@ function mapStateToProps(state) {
 const connectedLoginPage = compose(
     withStyles(useStyles),
     connect(mapStateToProps),
-    // withTranslation("translation")
+    withTranslation("translation")
   )(LoginPage);
 
   export default connectedLoginPage;

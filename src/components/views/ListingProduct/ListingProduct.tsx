@@ -70,8 +70,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IListingProduct {
   myAds?: boolean;
+  ad?: any
 }
-const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
+const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -105,7 +106,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                         style={{ fontWeight: 500 }}
                         variant="subtitle1"
                       >
-                        New house open view not overlooked
+                        {ad.description}
                       </Typography>
                     </div>
                     <Typography
@@ -123,7 +124,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                 >
                   <span className="display-flex align-center">
                     <AccessTimeIcon style={{ height: "16px", width: "16px" }} />{" "}
-                    &nbsp;&nbsp; 12:00 AM
+                    &nbsp;&nbsp; {ad.created_at}
                   </span>
                 </div>
                 <br />
@@ -149,7 +150,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     >
                       <LocationOnIcon />
                     </Typography>
-                    <span className="locationName"> Amman </span>
+                    <span className="locationName"> {ad.city_id} </span> |
+                    <span className="locationName"> {ad.district_id} </span>
                   </Grid>
                 </Grid>
                 <Grid container>
@@ -174,7 +176,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     >
                       <DriveEtaIcon />
                     </Typography>
-                    <span className="locationName"> Car for sale </span>
+                    <span className="locationName"> Car for sale </span>|
+                    <span className="locationName"> {ad.model_id} </span>|
+                    <span className="locationName"> {ad.brand_id} </span>
                   </Grid>
                 </Grid>
                 {!myAds ? 

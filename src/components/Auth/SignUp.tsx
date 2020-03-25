@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import {Formik, ErrorMessage} from 'formik';
+import * as Yup from 'yup';
 import { MuiThemeProvider, createMuiTheme, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, useMediaQuery } from '@material-ui/core';
 import { Link as Rlink } from "react-router-dom";
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -101,6 +103,10 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: "#2CC0F9"
       }
+    },
+    errMessage: {
+      color: 'red',
+      marginBottom: 5
     }
   })
 );
@@ -210,9 +216,38 @@ const SignUp: React.FC = () => {
     }
   }, [direction])
 
+  // const handleInputChange = (e: { target: { value: any; }; }) => {
+  //   console.log(e.target.value)
+  // }
+  const [username, setUsername] = useState('');
+
+  interface MyFormValues {
+    name: string;
+    email: string;
+    password: string;
+  }
+
+  const validateYupSchema = Yup.object().shape<MyFormValues>({
+    name: Yup.string().required('name_is_required').min(10).max(300),
+    email: Yup.string().email().required ('email_is_required'),
+    password: Yup.string().required('password_is_required').min(6).max(20)
+  })
+
+  const initialValues: MyFormValues = { name: '', email: '', password: '' };
+
+
     return (
       <MuiThemeProvider theme={theme}>
-      <AppBar position="fixed"
+        <Formik 
+        initialValues={initialValues}
+        onSubmit={(values) => {
+          console.log(values)
+        }}
+        validationSchema={validateYupSchema}
+        render={
+          (props)=> {
+            return <React.Fragment>
+                  <AppBar position="fixed"
        className={classNames(
         classes.root,
         fullScreen && classes.smAppbar
@@ -255,7 +290,7 @@ const SignUp: React.FC = () => {
                   Welcome to Luqta!
                   </Typography>
 
-                  <form noValidate>
+                  <form onSubmit={props.handleSubmit}>
                   <Button
                       type="button"
                       fullWidth
@@ -313,10 +348,14 @@ const SignUp: React.FC = () => {
                       id="username"
                       label="Name"
                       name="name"
-                      autoComplete="email"
-                      // onChange={this.handleInputChange}
+                      // autoComplete="email"
+                      onChange={props.handleChange}
+                      // onChange={handleInputChange}
                       autoFocus
                     />
+                    <div className={classes.errMessage}>
+                        <ErrorMessage  name="name"/>
+                      </div>
                     <TextField
                       InputLabelProps={{
                         shrink: true,
@@ -327,11 +366,15 @@ const SignUp: React.FC = () => {
                       fullWidth
                       id="useremail"
                       label="Email or Phone"
-                      name="username"
+                      name="email"
                       autoComplete="email"
+                      onChange={props.handleChange}
                       // onChange={this.handleInputChange}
                       autoFocus
                     />
+                    <div className={classes.errMessage}>
+                        <ErrorMessage  name="email"/>
+                      </div>
                     <TextField
                       InputLabelProps={{
                         shrink: true,
@@ -343,11 +386,15 @@ const SignUp: React.FC = () => {
                       name="password"
                       label="Password"
                       type="password"
-                      id="password"
-                      autoComplete="current-password"
+                      // id="password"
+                      // autoComplete="current-password"
+                      onChange={props.handleChange}
                       // onChange={this.handleInputChange}
                       // onKeyDown={this.handleKeyDown}
                     />
+                      <div className={classes.errMessage}>
+                        <ErrorMessage  name="password"/>
+                      </div>
                     {/* <div className="display-flex align-center" style={{ marginBottom: "20px" }}>
                       <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -360,7 +407,7 @@ const SignUp: React.FC = () => {
                     </div> */}
                     <div style={{ marginBottom: "20px" }}></div>
                     <Button
-                      type="button"
+                      type="submit"
                       fullWidth
                       variant="contained"
                       color="primary"
@@ -398,6 +445,10 @@ const SignUp: React.FC = () => {
             </Grid>
         </Grid>
       </Container>
+            </React.Fragment>
+          }
+        }
+        />
     </MuiThemeProvider>
     );  
 }

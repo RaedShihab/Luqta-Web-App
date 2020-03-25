@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
 import { CssBaseline, Toolbar } from "@material-ui/core";
+import {PrivateRoute} from '../Auth/Components/privateRoutes';
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import FooterCategory from "./FooterCategory";
@@ -77,8 +78,8 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
               <Switch>
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/dashboard' component={Dashboard} />
-                <Route exact path='/myads' component={MyAds} />
-                <Route exact path='/ad-detail' component={AdDetail} />
+                <PrivateRoute exact path='/myads' component={MyAds} />
+                <PrivateRoute exact path='/ad-detail' component={AdDetail} />
               </Switch>
           </BrowserRouter>
           </main>

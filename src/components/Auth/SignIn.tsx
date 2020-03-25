@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {Formik, ErrorMessage} from 'formik';
-// import { withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -175,7 +175,7 @@ const SignIn: React.FC = (props) => {
 // class MySignInc extends React.Component<RouteComponentProps<any>, {}> {
   // state = { 'siteId': '', username: '', password: '', loading: false, goToDashboard: false }
   const { dispatch, history, loggingIn, alertType, i18n, t } : any = props;
-  // const {language} : any = i18n;
+  const {language} : any = i18n;
 
   // console.log('props', language)
   // console.log('alertType', alertType)
@@ -185,7 +185,7 @@ const SignIn: React.FC = (props) => {
 
 
 
-  const [direction, setDirection] = React.useState("ltr");
+  const [direction, setDirection] = React.useState(language ==="ar"?"rtl" : "ltr");
 
   const theme = React.useMemo(
     () =>
@@ -226,7 +226,7 @@ const SignIn: React.FC = (props) => {
   );
 
   const updateMirrorView = () => {
-    // i18n.changeLanguage(language === 'ar'? 'en': 'ar')
+    i18n.changeLanguage(language === 'ar'? 'en': 'ar')
     setDirection(direction === "rtl" ? "ltr": "rtl")
   }
   
@@ -433,7 +433,7 @@ const SignIn: React.FC = (props) => {
                   loggingIn ?
                   <CircularProgress style={{color: 'white'}}/> 
                   :
-                  ('sign_in')
+                  t('signin')
               }
             </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -511,7 +511,7 @@ function mapStateToProps(state: {
 
 const connectedSignIn : any = compose(
   withStyles(styles),
-  // withTranslation('translations'),
+  withTranslation("translations"),
   connect(mapStateToProps),
 )(SignIn);
 

@@ -317,7 +317,7 @@ const SignIn: React.FC = (props) => {
           <CssBaseline />
           <div>
             <Typography component="h1" variant="h5" className="luqta-title">
-            Welcome to Luqta!
+            {t("welcome_to_luqta")}
             </Typography>
 
             <form onSubmit={props.handleSubmit}>
@@ -334,7 +334,7 @@ const SignIn: React.FC = (props) => {
               >
                 <div style={{ width: "100%" }}>
                   <img src={GoogleIcon} style={{ float:"left" }} alt="google"/>
-                  <div> Login with Google</div>
+                   <div>{t("signin_google")}</div>
               </div>
             </Button>
             <Button
@@ -349,7 +349,7 @@ const SignIn: React.FC = (props) => {
               >
                 <div style={{ width: "100%" }}>
                   <FacebookIcon style={{ float:"left" }} />
-                  <div>Login with Facebook</div>
+                   <div>{t("signin_facebook")}</div>
                 </div>
             </Button>
             <Button
@@ -364,10 +364,10 @@ const SignIn: React.FC = (props) => {
               >
                 <div style={{ width: "100%" }}>
                   <TwitterIcon style={{ float:"left" }} />
-                  <div>Login with Twitter</div>
+                  <div>{t("signin_twitter")}</div>
                 </div>
             </Button>
-            <h2 className="textwithline"><span> or </span></h2>
+            <h2 className="textwithline"><span> {t("or")} </span></h2>
               <TextField
                 InputLabelProps={{
                   shrink: true,
@@ -377,8 +377,8 @@ const SignIn: React.FC = (props) => {
                 // required
                 fullWidth
                 // id="username"
-                label="Email or Phone"
-                placeholder="Email or Phone"
+                label={t("email_or_Phone")}
+                placeholder={t("email_or_Phone")}
                 name="email"
                 autoComplete="email"
                 onChange={props.handleChange}
@@ -395,10 +395,10 @@ const SignIn: React.FC = (props) => {
                 variant="outlined"
                 margin="normal"
                 // required
-                placeholder="password"
+                placeholder={t("password")}
                 fullWidth
                 name="password"
-                label="Password"
+                label={t("password")}
                 type="password"
                 // id="password"
                 autoComplete="current-password"
@@ -412,11 +412,11 @@ const SignIn: React.FC = (props) => {
               <div className="display-flex align-center" style={{ marginBottom: "20px" }}>
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
+                  label={t("remember_me")}
                   style={{ float: "left", color: "#134B8E", }}
                 />
                 <Link href="#" className="forgatePwd" variant="body2" style={{ flexGrow: 1, textAlign: "end" }}>
-                  Forgot password?
+                  {t("forget_password")}
                 </Link>
               </div>
               <Button
@@ -437,25 +437,25 @@ const SignIn: React.FC = (props) => {
               }
             </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success">
+                <Alert style={{margin: 100}} onClose={handleClose} severity="success">
                   This is a success message!
                 </Alert>
             </Snackbar>
               <div className="display-flex" style={{ justifyContent: "center", marginBottom: "20px" }}>
                   <FormControlLabel
                     control={<Checkbox value="remember"  color="primary" />}
-                    label="I accept terms and condition"
+                    label={t("i_accept")}
                     style={{ fontSize: "12px", color: "#555E67" }}
                   />                
                 <FormControlLabel
                     control={<Checkbox value="remember" color="primary" />}
-                    label="Notification"
+                    label={t("notification")}
                     style={{ fontSize: "12px", color: "#555E67" }}
                   />
               </div>
 
               <div style={{ textAlign: "center", fontFamily: "Roboto", fontSize: "13px", fontWeight: 400 }}>
-                <span style={{ color: "#8E8E8E" }}>Don't have an account?</span> <Rlink to="/signup" style={{ color: "#134B8E" }}>Sign up</Rlink>
+            <span style={{ color: "#8E8E8E" }}>{t("dont_have_account")}</span> <Rlink to="/signup" style={{ color: "#134B8E" }}>{t("signup")}</Rlink>
               </div>
               </form>
             {/* </form> */}
@@ -511,7 +511,7 @@ function mapStateToProps(state: {
 
 const connectedSignIn : any = compose(
   withStyles(styles),
-  withTranslation("translations"),
+  withTranslation("auth/auth"),
   connect(mapStateToProps),
 )(SignIn);
 

@@ -106,7 +106,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
                         style={{ fontWeight: 500 }}
                         variant="subtitle1"
                       >
-                        {ad.description}
+                        {ad.title}
                       </Typography>
                     </div>
                     <Typography

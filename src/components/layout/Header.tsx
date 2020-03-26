@@ -1,4 +1,5 @@
 import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import {
   createStyles,
   makeStyles,
@@ -118,23 +119,22 @@ const theme = createMuiTheme({
   }
 });
 
-interface ISidebarProps {
+interface ISidebarProps extends WithTranslation {
   leftDrawerOpen: any;
   setLeftDrawerOpen: any;
   direction: any;
   setDirection: any;
+  t: any;
 }
 
-const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, direction, setDirection }) => {
+const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, direction, setDirection, t, i18n }) => {
   const classes = useStyles();
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
-  
+  const {language} = i18n
   const updateMirrorView = () => {
-    if (direction === "ltr") 
-        setDirection("rtl");
-    else  
-        setDirection("ltr");
+    i18n.changeLanguage(language === 'ar'? 'en': 'ar')
+    setDirection(direction==="ltr"? "rtl": "ltr")
   }
 
   return (
@@ -171,7 +171,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
                 href="#contained-buttons"
                 style={{ marginRight: "40px"}}
               >
-                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post and ad
+                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; {t("post_and_ad")}
               </CustomButton>
             ) : null}
           </Toolbar>
@@ -213,4 +213,4 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
   );
 };
 
-export default Header;
+export default withTranslation("/dashboard/dashboard")(Header);

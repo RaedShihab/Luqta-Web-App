@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { withTranslation } from "react-i18next";
+import { compose } from 'redux';
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
@@ -32,14 +34,17 @@ function RTL(props: any) {
 
 interface ILayoutProps {
   classes: any;
+  i18n: any
 }
 
 
-const Layout: React.FC<ILayoutProps> = ({ classes }) => {
+const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
+
+  const {language} : any = i18n
   const [leftDrawerOpen, setLeftDrawerOpen] = React.useState(false);
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
-  const [direction, setDirection] = React.useState("ltr");
+  const [direction, setDirection] = React.useState(language==="ar"? "rtl" : "ltr");
 
   const theme = React.useMemo(
     () =>
@@ -100,4 +105,11 @@ const Layout: React.FC<ILayoutProps> = ({ classes }) => {
   );
 };
 
-export default withRoot(withStyles(styles)(Layout));
+
+// export default withRoot(withStyles(styles)(Layout));
+const connectedLayout : any = compose(
+  withStyles(styles),
+  withTranslation("dashboard/dashboard"),
+)(Layout);
+
+export default withRoot(connectedLayout);

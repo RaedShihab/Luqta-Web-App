@@ -1,4 +1,5 @@
 import React from 'react';
+import { withTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
@@ -154,7 +155,7 @@ class IntegrationAutosuggest extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
 
     const autosuggestProps = {
       renderInputComponent,
@@ -171,7 +172,7 @@ class IntegrationAutosuggest extends React.Component {
           {...autosuggestProps}
           inputProps={{
             classes,
-            placeholder: 'Search',
+            placeholder: t('search'),
             value: this.state.single,
             onChange: this.handleChange('single'),
           }}
@@ -228,4 +229,4 @@ IntegrationAutosuggest.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(IntegrationAutosuggest);
+export default withTranslation("/dashboard/dashboard")(withStyles(styles)(IntegrationAutosuggest));

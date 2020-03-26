@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -195,7 +196,11 @@ const AntSwitch = withStyles((theme: Theme) =>
   })
 )(Switch);
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC = (props) => {
+
+  const {i18n, t, history} : any = props
+  const {language} : any = i18n
+
   const [selectedCategory, setSelectedCategory]: any = useState(null);
   
   const [selectedSubCategory, setSelectedSubCategory]: any = useState(null);
@@ -250,18 +255,32 @@ const Dashboard: React.FC = () => {
   const [labelWidth, setLabelWidth] = React.useState(0);
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
+  // const[pageNumber, setPageNumber] = React.useState(1)
 
   useEffect(() => {
+    console.log(props)
+    const defaultPage: any = 1
+    const page = localStorage.getItem('page')
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads: 
-    Axios.get('/ads')
+    Axios.get(`/ads?page=${page}&per_page=${5}`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
       setAds(res.data.data)
       setGettingAds(false)
+      localStorage.setItem('page', defaultPage)
+    })
+    .catch(err => {
+      console.log(err.response)
+      setGettingAds(false)
     })
   }, []);
+
+  const handlePageNumber = (e: any, value: any) => {
+    localStorage.setItem('page', value)
+    window.location.reload(false);
+  }
 
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
@@ -301,14 +320,14 @@ const Dashboard: React.FC = () => {
                           control={
                             <CustomRadioButton className={classes.radiocss} />
                           }
-                          label="Offers"
+                          label={t("offers")}
                         />
                         <FormControlLabel
                           value="Requests"
                           style={{ marginLeft: "0px", color: "#134B8E" }}
                           control={<CustomRadioButton />}
                           
-                          label="Requests"
+                          label={t("requests")}
                         />
                       </RadioGroup>
                     </FormControl>
@@ -399,7 +418,7 @@ const Dashboard: React.FC = () => {
                                   value="checkedC"
                                 />
                               }
-                              label="See also the ads available for delivery"
+                              label={t("See also the ads available for delivery")}
                             />
   
                             <IconButton
@@ -420,7 +439,7 @@ const Dashboard: React.FC = () => {
                         >
                           <NotificationsIcon style={{ color: "#134B8E" }} />
                         </IconButton>
-                        <span style={{ color: "#7985A2", fontSize: "12px", fontWeight:500, marginRight: "10px" }}>Save Search</span>
+                        <span style={{ color: "#7985A2", fontSize: "12px", fontWeight:500, marginRight: "10px" }}>{t("save_search")}</span>
                       </div>
                     </div>
                   </div>
@@ -434,7 +453,7 @@ const Dashboard: React.FC = () => {
                         variant="contained"
                         color="primary"
                       >
-                        Search (1,143,764 results)
+                        {t("search_results")} (1,143,764)
                       </Button>
                     </div>
                   </div>
@@ -567,7 +586,7 @@ const Dashboard: React.FC = () => {
               </Grid>
               <Grid container spacing={2} direction="row">
                 <Grid item lg={12} md={12} xs={12}>
-                  <Pagination count={19} color="primary" shape="rounded" boundaryCount={10}  />
+                  <Pagination count={19} color="primary" shape="rounded" boundaryCount={10}  onChange={handlePageNumber}/>
                 </Grid>
               </Grid>
             </Grid>
@@ -578,4 +597,4 @@ const Dashboard: React.FC = () => {
   }
 };
 
-export default Dashboard;
+export default withTranslation('/dashboard/dashboard')(Dashboard);

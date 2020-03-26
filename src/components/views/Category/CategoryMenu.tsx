@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { withTranslation, WithTranslation } from "react-i18next";
 import Popover from '@material-ui/core/Popover';
 import { MenuContent } from '../styles/Elements';
 import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
@@ -81,16 +82,17 @@ const theme = createMuiTheme({
 });
 
 
-interface IMenuProps {
+interface IMenuProps extends WithTranslation{
 	menuAnchor: any;
 	setMenuAnchor: any;
 	selectedCategory: any;
 	setSelectedCategory: any;
 	selectedSubCategory: any; 
 	setSelectedSubCategory: any;
+	t: any;
   }
 
-const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory  }) => {
+const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, t, i18n  }) => {
 
 	const [activeCategory, setActiveCategory]: any = useState(null);
 	const [activeSubCategory, setActiveSubCategory]: any = useState(null);
@@ -148,7 +150,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 				<List component="nav">
 						<ListItem className={classes.boxHeader} onClick={() => onListItemClick("Catégories")}>
 							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-							<span style={{ flexGrow: 1 }}>ALL CATEGORIES</span>
+							<span style={{ flexGrow: 1 }}>{t("ALL_CATEGORIES")}</span>
 						</ListItem>
 				</List>
 				<hr />
@@ -190,7 +192,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 			  		<List component="nav">
 						<div className={classes.boxcss} >
 							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
-							<span style={{ flexGrow: 1 }}>Top Brands</span>
+							<span style={{ flexGrow: 1 }}>{t("top_brands")}</span>
 						</div>						
 					</List>
 					<hr/>
@@ -212,4 +214,4 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	)
 }
 
-export default Menu;
+export default withTranslation("/dashboard/dashboard")(Menu);

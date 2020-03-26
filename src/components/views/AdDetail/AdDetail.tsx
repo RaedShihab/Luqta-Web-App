@@ -213,7 +213,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
           <Card className={classes.cardHover} elevation={0}>
             <CardContent className={classNames(resScreen && "rescardContent")}>
               <Grid container spacing={2}>
-                <Grid item lg={1} md={3} xs={3} id="adSlick" >
+                <Grid item lg={1} md={1} xs={3} id="adSlick" >
                   <div style={{ position: "relative" }} ref={adSlick}>
                   <span className={ classes.topSlick }>
                     <Icon className={classes.circleIcon}>
@@ -258,7 +258,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     </span>
                   </ButtonBase>
                 </Grid>
-                <Grid item lg={5} md={5} xs={12}>
+                <Grid item lg={5} md={6} xs={12}>
                   <Grid item xs={12}>
                     <div className={classNames(
                         !resScreen && "adcardheader display-flex",

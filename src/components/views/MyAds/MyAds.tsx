@@ -18,7 +18,8 @@ import {
   InputBase,
   Button,
   OutlinedInput,
-  InputAdornment
+  InputAdornment,
+  CircularProgress
 } from "@material-ui/core";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -45,7 +46,7 @@ import Menu from "../Category/CategoryMenu";
 import CategoryDrawarMenu from "../Category/ResCategoryMenu";
 import Search from './searchAds';
 import "./MyAds.css";
-
+import {Axios} from '../../apiServecis/axiosConfig';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,6 +109,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "50%",
       marginBottom: "5px",
       marginRight: "0px",
+    },
+    loading: {
+      textAlign: 'center'
     }
   })
 );
@@ -226,7 +230,13 @@ const MyAds: React.FC = () => {
     setState({ ...state, [event.target.value]: event.target.checked });
   };
 
+  const[ads, setAds] = React.useState([])
+  const[gettingAds, setGettingAds] = React.useState(false)
+
   useEffect(() => {
+    const defaultPage: any = 1
+    const page = localStorage.getItem('page')
+
     if(state) {
       let isAllSelected = true;
       Object.keys(state).map((st : any) => {
@@ -240,6 +250,18 @@ const MyAds: React.FC = () => {
         setSelectAll(false);
       }
     }
+    setGettingAds(true)
+    Axios.get(`/ads?page=${page}&per_page=${5}`)
+    .then((res: { data: any; })=> {
+      console.log(res.data.data)
+      setAds(res.data.data)
+      setGettingAds(false)
+      localStorage.setItem('page', defaultPage)
+    })
+    .catch(err => {
+      console.log(err.response)
+      setGettingAds(false)
+    })
   }, [state])
 
 
@@ -255,212 +277,216 @@ const MyAds: React.FC = () => {
     setMenuAnchor(ele);
   };
   
-
-  return (
-    <MuiThemeProvider theme={theme}>
-     
-        <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#FFF" }}>
-          <Grid item xs={12}>
-            <Container fixed className="" style={{ alignItems: "center", }}>
-              <Tabs
-                value={value}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="on"
-                onChange={handleChange}
-              >
-                <Tab label="My Ads" />
-                <Tab label="My fomunity" />
-                <Tab label="Profile" />
-                <Tab label="Notifications" />
-                <Tab label="Chat" />
-              </Tabs>
-            </Container> 
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
-          <Grid item xs={12}>
-            <Container fixed className="" style={{ alignItems: "center", }}>
-              <Card className={classes.card}>
-                <CardContent className={classes.cardContent}>
-                  <Grid container className="align-flex-start">
-                    <Grid item lg={6} md={4} xs={12}>
-                        <div style={{ display: "inline-block"}}><img src={Wallet} width="50px" /></div>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <div style={{ display: "inline-block" }} className={classes.walletMoney}>
-                          ₹ 498.02
-                          <div style={{ display: "block"}} className={classes.tagLine}>
-                          Your Wallet Balance
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid item lg={4} md={4} xs={12}>
-                          <InputBase
-                            className={classes.inputCSS}
-                            placeholder="Enter amount to be added in Wallet"
-                            inputProps={{ "aria-label": "search google maps" }}
-                          />
-                          <div className={classes.promoLine}>
-                          Have promo code?
-                        </div>
-                    </Grid>
-                    <Grid item lg={2} md={4} xs={12}>
-                      <Button className={classes.btnCSS} color="primary" variant="contained">
-                        Add Money to Wallet
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Container> 
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#D4D4D4" }}>
-          <Grid item xs={12}>
-            <Container fixed className="" style={{ alignItems: "center", }}>
-                  <Grid container className="align-center" style={{ padding: "16px" }}>
-                    <Grid item lg={6} md={4} xs={12}>
-                        {/* <InputBase
-                            style={{ marginBottom: "5px" }}
-                            className={classes.inputCSS}
-                            placeholder="Search inside my ads"
-                            inputProps={{ "aria-label": "search google maps" }}
-                        /> */}
-                        <Search />
-                    </Grid>
-                    <Grid item lg={4} md={4} xs={12} id="seachCategory">
-                        <InputBase
-                            style={{ marginBottom: "5px" }}
-                            className={classes.inputCSS}
-                            onClick={() => { !responsive ? openCategoryMenu() : setOpenResCategorySubMenu(true) }}
-                            placeholder="Categories"
-                            value={!selectedCategory ? "Categories" : selectedCategory.name.en}
-                            inputProps={{ "aria-label": "search google maps" }}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton aria-label=""  edge="end">
-                                  <KeyboardArrowDownOutlinedIcon />
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                        />
-                        <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
-                    </Grid>
-                    <Grid item lg={2} md={4} xs={12}>
-                      <Button className={classes.btnCSS} style={{ marginBottom: "5px" }} color="primary" variant="contained">
-                        Search
-                      </Button>
-                    </Grid>
-                  </Grid>
-            </Container> 
-          </Grid>
-        </Grid>
-      
-
-            {openMenu ? (
-                    <Menu
-                      menuAnchor={menuAnchor}
-                      setMenuAnchor={setMenuAnchor}
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
-                      selectedSubCategory={selectedSubCategory}
-                      setSelectedSubCategory={setSelectedSubCategory}
-                    />
-                  ) : null}
-      
-        <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
-          <Grid item lg={12} md={12} xs={12}>
-            <Container fixed className={!responsive? "display-flex" : ""} style={{ alignItems: "center" }}>
-              <Grid item lg={10} md={10} xs={12} style={{ marginBottom: "10px" }}>
+  if(gettingAds) {
+    return <div className={classes.loading}><CircularProgress size={60}/></div>
+  }
+  else {
+    return (
+      <MuiThemeProvider theme={theme}>
+       
+          <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#FFF" }}>
+            <Grid item xs={12}>
+              <Container fixed className="" style={{ alignItems: "center", }}>
                 <Tabs
-                  value={adsTab}
+                  value={value}
                   indicatorColor="primary"
                   textColor="primary"
                   variant="scrollable"
                   scrollButtons="on"
-                  onChange={handleAdsTabChange}
+                  onChange={handleChange}
                 >
-                  <Tab label="Active"   value="Active"   />
-                  <Tab label="Premium"  value="Premium"  />
-                  <Tab label="Inactive" value="Inactive"  />
-                  <Tab label="Deleted"  value="Deleted"  />
+                  <Tab label="My Ads" />
+                  <Tab label="My fomunity" />
+                  <Tab label="Profile" />
+                  <Tab label="Notifications" />
+                  <Tab label="Chat" />
                 </Tabs>
-              </Grid>
-              <Grid item lg={2} md={2} xs={12} style={{ marginBottom: "10px" }} >
-                <FormControl style={{ width: "100%" }}>
-                  <InputLabel id="demo-customized-select-label">Sort By</InputLabel>
-                  <Select
-                    labelId="demo-customized-select-label"
-                    id="demo-customized-select"
-                    value={sortBy}
-                    placeholder=""
-                    onChange={handleSortByChange}
-                    input={<BootstrapInput />}
-                    IconComponent={KeyboardArrowDownOutlinedIcon}
-                  >
-                    {/* <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem> */}
-                    <MenuItem value={10}>Date</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Container> 
+              </Container> 
+            </Grid>
           </Grid>
-          <Container fixed  style={{ alignItems: "center", marginBottom: "20px" }}>
-          <Grid item lg={12} md={12} xs={12} className={!responsive? "display-flex" : ""}>
-              <Grid item lg={6} md={2} xs={12}>
-                 <FormGroup row>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
-                      }
-                      label="Select All Ads"
-                    />
-                 </FormGroup>
-              </Grid>
-              <Grid item lg={6} md={10} xs={12} className={!responsive? "display-flex" : ""} style={{ justifyContent: "flex-end", textAlign: "center" }}>
-                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
-                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
-                <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
-              </Grid>
-          </Grid>
-          </Container> 
-          
-          <Grid item xs={12}>
-            <Container fixed className="" style={{ alignItems: "center", marginBottom: "20px" }}>
-              <Grid container spacing={2} direction="row">
-              {adsTab === "Active" ?                 
-                ["", ""].map((prod: any, index: number) => {
-                    return (
-                      <Grid key={index} item lg={12} md={12} xs={12}>
-                        <div className="display-flex">
-                        <FormGroup row>
-                          <FormControlLabel
-                              control={
-                                <Checkbox checked={state[index]} color="primary" onChange={handleAdsCheckBoxChange} value={index} />
-                              }
-                              label=""
-                            />
-                        </FormGroup>
-                        <ListingProduct myAds={true} />
+  
+          <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
+            <Grid item xs={12}>
+              <Container fixed className="" style={{ alignItems: "center", }}>
+                <Card className={classes.card}>
+                  <CardContent className={classes.cardContent}>
+                    <Grid container className="align-flex-start">
+                      <Grid item lg={6} md={4} xs={12}>
+                          <div style={{ display: "inline-block"}}><img src={Wallet} width="50px" /></div>
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                          <div style={{ display: "inline-block" }} className={classes.walletMoney}>
+                            ₹ 498.02
+                            <div style={{ display: "block"}} className={classes.tagLine}>
+                            Your Wallet Balance
+                          </div>
                         </div>
                       </Grid>
-                    );
-                  })
-                : null}
-
-              </Grid>
+                      <Grid item lg={4} md={4} xs={12}>
+                            <InputBase
+                              className={classes.inputCSS}
+                              placeholder="Enter amount to be added in Wallet"
+                              inputProps={{ "aria-label": "search google maps" }}
+                            />
+                            <div className={classes.promoLine}>
+                            Have promo code?
+                          </div>
+                      </Grid>
+                      <Grid item lg={2} md={4} xs={12}>
+                        <Button className={classes.btnCSS} color="primary" variant="contained">
+                          Add Money to Wallet
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </Container> 
+            </Grid>
           </Grid>
-        </Grid>
-      </MuiThemeProvider>
-  );
+  
+          <Grid container spacing={3} style={{ width: "100%", margin: "auto",  background: "#D4D4D4" }}>
+            <Grid item xs={12}>
+              <Container fixed className="" style={{ alignItems: "center", }}>
+                    <Grid container className="align-center" style={{ padding: "16px" }}>
+                      <Grid item lg={6} md={4} xs={12}>
+                          {/* <InputBase
+                              style={{ marginBottom: "5px" }}
+                              className={classes.inputCSS}
+                              placeholder="Search inside my ads"
+                              inputProps={{ "aria-label": "search google maps" }}
+                          /> */}
+                          <Search />
+                      </Grid>
+                      <Grid item lg={4} md={4} xs={12} id="seachCategory">
+                          <InputBase
+                              style={{ marginBottom: "5px" }}
+                              className={classes.inputCSS}
+                              onClick={() => { !responsive ? openCategoryMenu() : setOpenResCategorySubMenu(true) }}
+                              placeholder="Categories"
+                              value={!selectedCategory ? "Categories" : selectedCategory.name.en}
+                              inputProps={{ "aria-label": "search google maps" }}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton aria-label=""  edge="end">
+                                    <KeyboardArrowDownOutlinedIcon />
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                          />
+                          <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
+                      </Grid>
+                      <Grid item lg={2} md={4} xs={12}>
+                        <Button className={classes.btnCSS} style={{ marginBottom: "5px" }} color="primary" variant="contained">
+                          Search
+                        </Button>
+                      </Grid>
+                    </Grid>
+              </Container> 
+            </Grid>
+          </Grid>
+        
+  
+              {openMenu ? (
+                      <Menu
+                        menuAnchor={menuAnchor}
+                        setMenuAnchor={setMenuAnchor}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        selectedSubCategory={selectedSubCategory}
+                        setSelectedSubCategory={setSelectedSubCategory}
+                      />
+                    ) : null}
+        
+          <Grid container spacing={2} style={{ width: "100%", margin: "auto",  background: "#F6F6F6" }}>
+            <Grid item lg={12} md={12} xs={12}>
+              <Container fixed className={!responsive? "display-flex" : ""} style={{ alignItems: "center" }}>
+                <Grid item lg={10} md={10} xs={12} style={{ marginBottom: "10px" }}>
+                  <Tabs
+                    value={adsTab}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="scrollable"
+                    scrollButtons="on"
+                    onChange={handleAdsTabChange}
+                  >
+                    <Tab label="Active"   value="Active"   />
+                    <Tab label="Premium"  value="Premium"  />
+                    <Tab label="Inactive" value="Inactive"  />
+                    <Tab label="Deleted"  value="Deleted"  />
+                  </Tabs>
+                </Grid>
+                <Grid item lg={2} md={2} xs={12} style={{ marginBottom: "10px" }} >
+                  <FormControl style={{ width: "100%" }}>
+                    <InputLabel id="demo-customized-select-label">Sort By</InputLabel>
+                    <Select
+                      labelId="demo-customized-select-label"
+                      id="demo-customized-select"
+                      value={sortBy}
+                      placeholder=""
+                      onChange={handleSortByChange}
+                      input={<BootstrapInput />}
+                      IconComponent={KeyboardArrowDownOutlinedIcon}
+                    >
+                      {/* <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem> */}
+                      <MenuItem value={10}>Date</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Container> 
+            </Grid>
+            <Container fixed  style={{ alignItems: "center", marginBottom: "20px" }}>
+            <Grid item lg={12} md={12} xs={12} className={!responsive? "display-flex" : ""}>
+                <Grid item lg={6} md={2} xs={12}>
+                   <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
+                        }
+                        label="Select All Ads"
+                      />
+                   </FormGroup>
+                </Grid>
+                <Grid item lg={6} md={10} xs={12} className={!responsive? "display-flex" : ""} style={{ justifyContent: "flex-end", textAlign: "center" }}>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
+                </Grid>
+            </Grid>
+            </Container> 
+            
+            <Grid item xs={12}>
+              <Container fixed className="" style={{ alignItems: "center", marginBottom: "20px" }}>
+                <Grid container spacing={2} direction="row">
+                {adsTab === "Active" ?                 
+                  ads.map((prod: any, index: number) => {
+                      return (
+                        <Grid key={index} item lg={12} md={12} xs={12}>
+                          <div className="display-flex">
+                          <FormGroup row>
+                            <FormControlLabel
+                                control={
+                                  <Checkbox checked={state[index]} color="primary" onChange={handleAdsCheckBoxChange} value={index} />
+                                }
+                                label=""
+                              />
+                          </FormGroup>
+                          <ListingProduct myAds={true} ad={prod}/>
+                          </div>
+                        </Grid>
+                      );
+                    })
+                  : null}
+  
+                </Grid>
+                </Container> 
+            </Grid>
+          </Grid>
+        </MuiThemeProvider>
+    );
+  }
 };
 
 export default MyAds;

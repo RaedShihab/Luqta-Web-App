@@ -83,6 +83,12 @@
     font-size: 24px;
     font-weight: 500;
 }
+.resAddetailBtn {
+    margin-top: 16px;
+    color: #676D80;
+    font-size: 24px;
+    font-weight: 500;
+}
 .repliesCss {
     font-family: Roboto;
     font-size: 12px;
@@ -99,12 +105,32 @@
     color: #F3000D;
     opacity: 1;
 }
+.resAdRates {
+    margin: 0;
+    font-family: Roboto;
+    text-align: left;
+    font-size: 30px;
+    letter-spacing: 0;
+    color: #F3000D;
+    opacity: 1;
+}
 .sellerAdBtn {
     width: 100%;
     text-transform: none;
     text-align: left;
     font-family: Roboto;
     font-size: 25px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: #555E67;
+    opacity: 1;
+}
+.resSellerAdBtn {
+    width: 100%;
+    text-transform: none;
+    text-align: left;
+    font-family: Roboto;
+    font-size: 20px;
     font-weight: 400;
     letter-spacing: 0.5px;
     color: #555E67;
@@ -117,6 +143,14 @@
     font-size: 20px;
     padding: 14px 36px 14px 36px;
     margin-right: 20px;
+    font-weight: 400;
+}
+.resAdContactbtn {
+    background: #134B8E 0% 0% no-repeat padding-box;
+    opacity: 1;
+    text-transform: none;
+    font-size: 20px;
+    margin-right: 5px;
     font-weight: 400;
 }
 .adContactbtn:hover {
@@ -133,7 +167,7 @@
 .adBoxWhiteTab {
     display: flex;
     align-items: center;
-    margin: 5px 40px 5px 40px;
+    /* margin: 5px 40px 5px 40px; */
     padding: 5px;
     height: 50px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -141,7 +175,7 @@
 .adBoxTab {
     display: flex;
     align-items: center;
-    margin: 5px 40px 5px 40px;
+    /* margin: 5px 40px 5px 40px; */
     padding: 5px;
     height: 50px;
     background: #F9F9F9 0% 0% no-repeat padding-box;

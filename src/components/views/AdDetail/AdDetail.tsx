@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     img: {
       width: "100%",
-      height: "370px",
       margin: "auto",
       display: "block",
       maxWidth: "100%",
@@ -162,13 +161,10 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
     }
   });
 
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const resScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [value, setValue] = React.useState<number | null>(3.5);
   const [adsTab, setAdsTab] = React.useState("Details");
-  
-  const adSlick = useRef(null);
-  
-  const settings = {
+  const [settings, setSettings] = React.useState({
     dots: false,
     infinite: true,
     speed: 500,
@@ -178,12 +174,21 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
     verticalSwiping: true,
     rtl: false,
     arrows: false
-  };
-
+  });
+  
+  const adSlick = useRef(null);
+  
   const handleAdsTabChange = (event: React.ChangeEvent<{}>, newValue: any) => {
     setAdsTab(newValue);
   };
 
+  useEffect(() => {
+    if (resScreen) {
+      setSettings({ ...settings, slidesToShow: 3 });
+    } else {
+      setSettings({ ...settings, slidesToShow: 4 });
+    }
+  }, [resScreen])
   const TabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
   
@@ -206,9 +211,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
       <div className={classes.root}>
         <Container fixed className="display-flex" style={{ alignItems: "center" }}>
           <Card className={classes.cardHover} elevation={0}>
-            <CardContent className={classNames(fullScreen && "rescardContent")}>
+            <CardContent className={classNames(resScreen && "rescardContent")}>
               <Grid container spacing={2}>
-                <Grid item lg={1} md={3} xs={1} id="adSlick" >
+                <Grid item lg={1} md={1} xs={3} id="adSlick" >
                   <div style={{ position: "relative" }} ref={adSlick}>
                   <span className={ classes.topSlick }>
                     <Icon className={classes.circleIcon}>
@@ -243,9 +248,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     </div>
                 </Grid>
               
-                <Grid item lg={5} md={5} xs={11}  style={{ width: "100%" }}>
+                <Grid item lg={5} md={5} xs={9}  style={{ width: "100%" }}>
                   <ButtonBase style={{ width: "100%", position: "relative" }}>
-                    <img className={classes.img} alt="listProduct" src={Car} />
+                    <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={Car} />
                     <span className={classes.topRightIcon}>
                       <Icon className={classes.circleIcon} style={{ color: "red" }}>
                         favorite
@@ -253,11 +258,11 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     </span>
                   </ButtonBase>
                 </Grid>
-                <Grid item lg={5} md={5} xs={11}>
+                <Grid item lg={5} md={6} xs={12}>
                   <Grid item xs={12}>
                     <div className={classNames(
-                        !fullScreen && "adcardheader display-flex",
-                        fullScreen && "resadcardheader"
+                        !resScreen && "adcardheader display-flex",
+                        resScreen && "resadcardheader"
                       )}
                     >
                         <Typography variant="subtitle1">
@@ -268,7 +273,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                   <Grid item xs={12}>
                     <div style={{ alignItems: "center" }}
                       className={classNames(
-                        !fullScreen && "adcardheader display-flex"
+                        !resScreen && "adcardheader", "display-flex"
                       )}
                     >
                         <Typography variant="subtitle1">
@@ -282,7 +287,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                             </Avatar>
                           </Badge>
                         </Typography>
+                        &nbsp;&nbsp;&nbsp;
                         <span className="adUserName">John Doe</span>
+                        &nbsp;
                         <span>
                         <Rating
                           size="small"
@@ -310,7 +317,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                   <Grid item xs={12}>
                         
                   <div style={{ alignItems: "center" }}
-                      className={classNames("addetailBtn display-flex")}
+                      className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}
                     >
                       <div style={{ textAlign: "center", marginRight: "20px" }}>
                           <Button
@@ -346,17 +353,17 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     </div>
                   </Grid>
                   <Grid item xs={12}>
-                    <div style={{ alignItems: "center" }} className={classNames("addetailBtn display-flex")}>
-                      <h3 className="adRates">$60,005.00</h3>
+                    <div style={{ alignItems: "center" }} className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}>
+                      <h3 className={ resScreen ? "resAdRates" : "adRates" }>$60,005.00</h3>
                     </div>
                   </Grid>
 
                   <Grid item xs={12}>
-                    <div style={{ alignItems: "center" }} className={classNames("addetailBtn display-flex")}>
+                    <div style={{ alignItems: "center" }} className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}>
                     <Button variant="outlined"
                             color="primary"
-                            size="large"
-                            className="sellerAdBtn"
+                            size={resScreen ? "small" : "large"}
+                            className={ resScreen ? "resSellerAdBtn" : "sellerAdBtn"}
                           >
                             See the seller's other ads
                           </Button>
@@ -364,12 +371,12 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <div style={{ alignItems: "center" }} className={classNames("addetailBtn display-flex")}>
+                    <div style={{ alignItems: "center" }} className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}>
                       <Button
                         variant="contained"
                         color="primary"
-                        size="large"
-                        className="adContactbtn"
+                        size={resScreen ? "small" : "large"}
+                        className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                         startIcon={<Icon>call</Icon>}
                       >
                         Call
@@ -377,8 +384,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                       <Button
                         variant="contained"
                         color="primary"
-                        size="large"
-                        className="adContactbtn"
+                        size={resScreen ? "small" : "large"}
+                        className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                         startIcon={<Icon>chat</Icon>}
                       >
                         Chat
@@ -386,8 +393,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                       <Button
                         variant="contained"
                         color="primary"
-                        size="large"
-                        className="adContactbtn"
+                        size={resScreen ? "small" : "large"}
+                        className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                         startIcon={<Icon>label_important</Icon>}
                       >
                         Premium
@@ -404,8 +411,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     value={adsTab}
                     indicatorColor="primary"
                     textColor="primary"
-                    variant="scrollable"
-                    scrollButtons="on"
+                    variant={ resScreen ? "fullWidth" : "standard"}
                     onChange={handleAdsTabChange}
                   >
                     <Tab label="Details"   value="Details"   {...a11yProps(0)}/>

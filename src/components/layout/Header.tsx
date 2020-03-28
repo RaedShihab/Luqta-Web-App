@@ -135,6 +135,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
   const updateMirrorView = () => {
     i18n.changeLanguage(language === 'ar'? 'en': 'ar')
     setDirection(direction==="ltr"? "rtl": "ltr")
+    console.log('kjk')
   }
 
   return (
@@ -160,7 +161,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               <MenuIcon />
             </IconButton> 
             : null }
-            <img src={"./brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
+            <img src={"../brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
                updateMirrorView();
               }} />
             {!fullScreen ? (

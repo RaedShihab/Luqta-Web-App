@@ -623,12 +623,12 @@ const Dashboard: React.FC = (props) => {
             </Grid>
           </Grid>
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          <Typography style={{margin: '0px 10px'}}>
-          {message}
-          </Typography>
-        </Alert>
-      </Snackbar>
+            <Alert onClose={handleClose} severity="error">
+              <Typography style={{margin: '0px 10px'}}>
+              {message}
+              </Typography>
+            </Alert>
+          </Snackbar>
         </Container>
       </MuiThemeProvider>
     );

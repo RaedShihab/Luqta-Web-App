@@ -84,7 +84,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/myads' component={MyAds} />
-                <Route exact path='/ad-detail' component={AdDetail} />
+                <Route exact path='/ad-detail/:id' component={AdDetail} />
               </Switch>
           </BrowserRouter>
           </main>

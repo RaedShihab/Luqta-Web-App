@@ -12,7 +12,7 @@ function login(username, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login:username, password:password })
     };
-    return fetch(`http://134.122.75.39/jo/login`, requestOptions)
+    return fetch(`http://134.122.75.39/jo-ar/login`, requestOptions)
     // .then(res=> res.json())
     // .then(data => console.log(data))
     // .catch(err => console.log(err.response))

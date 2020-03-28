@@ -25,6 +25,7 @@ import {
   Typography,
   Snackbar,
 } from "@material-ui/core";
+import Link from '@material-ui/core/Link';
 import MuiAlert from '@material-ui/lab/Alert';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -120,6 +121,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     loading: {
       textAlign: 'center'
+    },
+    link : {
+      textDecoration: "none"
     }
   })
 );
@@ -580,7 +584,13 @@ const Dashboard: React.FC = (props) => {
                 {ads.map((prod: any, index: any) => {
                   return (
                     <Grid key={index} item lg={12} md={12} xs={12}>
-                      <ListingProduct ad={prod} />
+                     <Link
+                     underline="none"
+                     component="a"
+                     href={`/ad-detail/${prod._id}`}
+                     >
+                     <ListingProduct ad={prod} />
+                     </Link>
                     </Grid>
                   );
                 })}

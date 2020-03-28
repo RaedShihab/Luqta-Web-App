@@ -19,6 +19,7 @@ import Image1 from "../../../assets/Image-1.png";
 import Image2 from "../../../assets/Image-2.png";
 import Image3 from "../../../assets/Image-3.png";
 import "./Ad.css"
+import { Axios } from "../../apiServecis/axiosConfig";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -138,7 +139,8 @@ function a11yProps(index: any) {
   };
 }
 
-const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
+const ListingProduct: React.FC<IListingProduct> = (props) => {
+  console.log(props)
   const classes = useStyles();
   const theme = createMuiTheme({
     overrides: {
@@ -188,6 +190,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
     } else {
       setSettings({ ...settings, slidesToShow: 4 });
     }
+
+    // Axios.get(`/ads/${}`)
   }, [resScreen])
   const TabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;

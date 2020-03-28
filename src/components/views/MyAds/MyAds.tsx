@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -19,8 +20,11 @@ import {
   Button,
   OutlinedInput,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
+  Typography,
+  Snackbar
 } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -154,8 +158,8 @@ const BootstrapInput = withStyles((theme: Theme) =>
   }),
 )(InputBase);
 
-const MyAds: React.FC = () => {
- 
+const MyAds: React.FC = (props) => {
+  const {t} :any = props
 
   const muitheme = useTheme();
  
@@ -232,6 +236,7 @@ const MyAds: React.FC = () => {
 
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
+  const [message, setMessage] = React.useState('')
 
   useEffect(() => {
     const defaultPage: any = 1
@@ -260,6 +265,8 @@ const MyAds: React.FC = () => {
     })
     .catch(err => {
       console.log(err.response)
+      setMessage(t('something_went_wrong_please_try_again'))
+      setOpen(true)
       setGettingAds(false)
     })
   }, [state])
@@ -275,6 +282,19 @@ const MyAds: React.FC = () => {
     setOpenMenu(true);
     let ele: any = document.getElementById("seachCategory"); 
     setMenuAnchor(ele);
+  };
+
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
   
   if(gettingAds) {
@@ -295,11 +315,11 @@ const MyAds: React.FC = () => {
                   scrollButtons="on"
                   onChange={handleChange}
                 >
-                  <Tab label="My Ads" />
-                  <Tab label="My fomunity" />
-                  <Tab label="Profile" />
-                  <Tab label="Notifications" />
-                  <Tab label="Chat" />
+                  <Tab label={t("my_ads")} />
+                  <Tab label={t("my_comunity")} />
+                  <Tab label={t("profile")} />
+                  <Tab label={t("notifications")} />
+                  <Tab label={t("chat")} />
                 </Tabs>
               </Container> 
             </Grid>
@@ -317,23 +337,23 @@ const MyAds: React.FC = () => {
                           <div style={{ display: "inline-block" }} className={classes.walletMoney}>
                             ₹ 498.02
                             <div style={{ display: "block"}} className={classes.tagLine}>
-                            Your Wallet Balance
+                            {t("your_wallet_balance")}
                           </div>
                         </div>
                       </Grid>
                       <Grid item lg={4} md={4} xs={12}>
                             <InputBase
                               className={classes.inputCSS}
-                              placeholder="Enter amount to be added in Wallet"
+                              placeholder={t("enter_wallet_ammount")}
                               inputProps={{ "aria-label": "search google maps" }}
                             />
                             <div className={classes.promoLine}>
-                            Have promo code?
+                            {t("have_promocode")}
                           </div>
                       </Grid>
                       <Grid item lg={2} md={4} xs={12}>
                         <Button className={classes.btnCSS} color="primary" variant="contained">
-                          Add Money to Wallet
+                         {t("search_in_myads")}
                         </Button>
                       </Grid>
                     </Grid>
@@ -376,7 +396,7 @@ const MyAds: React.FC = () => {
                       </Grid>
                       <Grid item lg={2} md={4} xs={12}>
                         <Button className={classes.btnCSS} style={{ marginBottom: "5px" }} color="primary" variant="contained">
-                          Search
+                          {t("search")}
                         </Button>
                       </Grid>
                     </Grid>
@@ -408,15 +428,15 @@ const MyAds: React.FC = () => {
                     scrollButtons="on"
                     onChange={handleAdsTabChange}
                   >
-                    <Tab label="Active"   value="Active"   />
-                    <Tab label="Premium"  value="Premium"  />
-                    <Tab label="Inactive" value="Inactive"  />
-                    <Tab label="Deleted"  value="Deleted"  />
+                    <Tab label={t("active")}value="Active"   />
+                    <Tab label={t("premium")}  value="Premium"  />
+                    <Tab label={t("inactive")} value="Inactive"  />
+                    <Tab label={t("deleted")}  value="Deleted"  />
                   </Tabs>
                 </Grid>
                 <Grid item lg={2} md={2} xs={12} style={{ marginBottom: "10px" }} >
                   <FormControl style={{ width: "100%" }}>
-                    <InputLabel id="demo-customized-select-label">Sort By</InputLabel>
+                    <InputLabel id="demo-customized-select-label">{t("sort_by")}</InputLabel>
                     <Select
                       labelId="demo-customized-select-label"
                       id="demo-customized-select"
@@ -445,14 +465,14 @@ const MyAds: React.FC = () => {
                         control={
                           <Checkbox checked={selectAll} color="primary" onChange={handleSelectAllChange} value="checkedA" />
                         }
-                        label="Select All Ads"
+                        label={t("selectAll")}
                       />
                    </FormGroup>
                 </Grid>
                 <Grid item lg={6} md={10} xs={12} className={!responsive? "display-flex" : ""} style={{ justifyContent: "flex-end", textAlign: "center" }}>
-                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><CreateIcon /> &nbsp;&nbsp; Edit</Button>
-                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><FlashOnIcon /> &nbsp;&nbsp; Premium</Button>
-                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><DeleteRoundedIcon /> &nbsp;&nbsp;Remove</Button>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><CreateIcon /> &nbsp;&nbsp; {t("edit")}</Button>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><FlashOnIcon /> &nbsp;&nbsp; {t("premium")}</Button>
+                  <Button variant="contained" className={classNames(classes.commandBtn, responsive ? classes.resCommandBtn : '')}><DeleteRoundedIcon /> &nbsp;&nbsp;{t("remove")}</Button>
                 </Grid>
             </Grid>
             </Container> 
@@ -460,7 +480,7 @@ const MyAds: React.FC = () => {
             <Grid item xs={12}>
               <Container fixed className="" style={{ alignItems: "center", marginBottom: "20px" }}>
                 <Grid container spacing={2} direction="row">
-                {adsTab === "Active" ?                 
+                {adsTab === "Active" ?             
                   ads.map((prod: any, index: number) => {
                       return (
                         <Grid key={index} item lg={12} md={12} xs={12}>
@@ -479,8 +499,15 @@ const MyAds: React.FC = () => {
                       );
                     })
                   : null}
-  
+                  {/* {ads===[] && <Card style={{textAlign: 'center', margin: 'auto'}}><Typography variant="h6">Sorry no resilts to show</Typography></Card>} */}
                 </Grid>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="error">
+                    <Typography style={{margin: '0px 10px'}}>
+                    {message}
+                    </Typography>
+                  </Alert>
+                </Snackbar>
                 </Container> 
             </Grid>
           </Grid>
@@ -489,4 +516,4 @@ const MyAds: React.FC = () => {
   }
 };
 
-export default MyAds;
+export default withTranslation('/myAds/myads')(MyAds);

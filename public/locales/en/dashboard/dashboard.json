@@ -7,5 +7,8 @@
     "requests" : "Requests",
     "See also the ads available for delivery" : "See also the ads available for delivery",
     "save_search" : "Save Search",
-    "search_results": "Search Results"
+    "search_results": "Search Results",
+    "city" : "City",
+    "category" : "Category",
+    "something_went_wrong_please_try_again" : "Somthing went wrong, Please try again"
 }

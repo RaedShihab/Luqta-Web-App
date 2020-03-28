@@ -1,0 +1,22 @@
+{
+    "my_ads" : "إعلاناتي",
+    "my_comunity" : "مجتمعي",
+    "profile" : "حسابي",
+    "notifications" : "إشعارات",
+    "chat" : "دردشة",
+    "your_wallet_balance" : "رصيد محفظتي",
+    "enter_wallet_ammount" : "أدخل رصيد للمحفظة",
+    "have_promocode" : "لديك بروموكود؟",
+    "search_in_myads" : "ابحث داخل إعلاناتي",
+    "categories" : "التصنيفات",
+    "search": "بحث",
+    "Active": "نشيط",
+    "premium": "مميز",
+    "inactive": "غير نشط",
+    "deleted" : "محذوف",
+    "sort_by" : "ترتيب",
+    "selectAll" : "اختيار جميع الأعلانات",
+    "edit": "تعديل",
+    "remove": "حذف",
+    "something_went_wrong_please_try_again" : "حدث خطأ ما, الرجاء حاول مجدداً"
+}

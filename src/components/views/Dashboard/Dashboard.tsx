@@ -21,8 +21,11 @@ import {
   InputLabel,
   MenuItem,
   Icon,
-  CircularProgress
+  CircularProgress,
+  Typography,
+  Snackbar,
 } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Radio from "@material-ui/core/Radio";
@@ -249,22 +252,38 @@ const Dashboard: React.FC = (props) => {
     setMenuAnchor(ele);
   };
 
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
   const [sortBy, setSortBy] = React.useState("Most Recent");
 
   const inputLabel = React.useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
+
+  const [message, setMessage] = React.useState('')
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
-  // const[pageNumber, setPageNumber] = React.useState(1)
-
-  useEffect(() => {
-    console.log(props)
     const defaultPage: any = 1
-    const page = localStorage.getItem('page')
+    const page : any = localStorage.getItem('page')
+    const parsIntPage : any = parseInt(page)
+    localStorage.setItem('nextpage', parsIntPage)
+    const nextpage :any = localStorage.getItem("nextpage")
+    const parsIntNextPage :any = parseInt(nextpage)
+  useEffect(() => {
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads: 
-    Axios.get(`/ads?page=${page}&per_page=${5}`)
+    Axios.get(`/ads?page=${parsIntPage}&per_page=${5}`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
       setAds(res.data.data)
@@ -273,7 +292,9 @@ const Dashboard: React.FC = (props) => {
     })
     .catch(err => {
       console.log(err.response)
+      setMessage(t('something_went_wrong_please_try_again'))
       setGettingAds(false)
+      setOpen(true)
     })
   }, []);
 
@@ -581,16 +602,23 @@ const Dashboard: React.FC = (props) => {
             <Grid item lg={8} md={8} xs={12}>
               <Grid container spacing={2} direction="row">
                 <Grid item lg={12} md={12} xs={12}>
-                  <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> Save Search</Button>
+                  <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> {t("save_search")}</Button>
                 </Grid>
               </Grid>
               <Grid container spacing={2} direction="row">
                 <Grid item lg={12} md={12} xs={12}>
-                  <Pagination count={19} color="primary" shape="rounded" boundaryCount={10}  onChange={handlePageNumber}/>
+                  <Pagination defaultPage={parsIntNextPage} count={19} color="primary" shape="rounded" boundaryCount={10}  onChange={handlePageNumber}/>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          <Typography style={{margin: '0px 10px'}}>
+          {message}
+          </Typography>
+        </Alert>
+      </Snackbar>
         </Container>
       </MuiThemeProvider>
     );

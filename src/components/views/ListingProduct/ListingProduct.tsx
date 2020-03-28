@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -68,11 +69,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IListingProduct {
+interface IListingProduct extends WithTranslation {
   myAds?: boolean;
-  ad?: any
+  ad?: any;
+  t: any;
 }
-const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
+const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -136,9 +138,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
                       <Typography
                         variant="caption"
                         color="textSecondary"
-                        className="locationInfo"
+                        // className="locationInfo"
                       >
-                        City:
+                        {t("city")}:
                       </Typography>
                     </div>
                   </Grid>
@@ -162,9 +164,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
                       <Typography
                         variant="caption"
                         color="textSecondary"
-                        className="locationInfo"
+                        // className="locationInfo"
                       >
-                        Category:
+                        {t("category")}:
                       </Typography>
                     </div>
                   </Grid>
@@ -215,4 +217,4 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad }) => {
   );
 };
 
-export default ListingProduct;
+export default withTranslation("/dashboard/dashboard")(ListingProduct);

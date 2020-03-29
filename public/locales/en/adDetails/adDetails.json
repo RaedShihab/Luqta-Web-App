@@ -1,0 +1,23 @@
+{
+    "reviews" : "Reviews",
+    "rete" : "Rate",
+    "response_rate" : "Response Rate",
+    "replies_in" : "Replies in",
+    "see_other_ads" : "See other seller's from this ads",
+    "premium": "Premuim",
+    "chat" : "Chat",
+    "call" : "Call",
+    "details": "Details",
+    "desc" : "Description",
+    "city": "City",
+    "district": "District",
+    "location" : "Location",
+    "created_at" : "Created at",
+    "ad_number" : "ad number",
+    "phone" : "Phone",
+    "brand" : "Brand",
+    "model" : "Model",
+    "year" : "Year",
+    "suggested_items": "Suggested Items",
+    "something_went_wrong_please_try_again" : "Somthing went wrong, Please try again"
+}

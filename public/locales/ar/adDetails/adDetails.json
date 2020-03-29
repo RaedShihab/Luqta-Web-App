@@ -1,0 +1,23 @@
+{
+    "reviews" : "التصنيفات",
+    "rete" : "التصنيف",
+    "response_rate" : "معدل الاستجابة",
+    "replies_in" : "سرعة الاستجابة",
+    "see_other_ads" : "انظر أيضا لإعلانات مشابهة",
+    "premium": "مميز",
+    "chat" : "دردشة",
+    "call" : "اتصال",
+    "details": "تفاصيل الأعلان",
+    "desc" : "الوصف",
+    "city": "المدينة",
+    "district": "المنطقة",
+    "location" : "الموقع",
+    "created_at" : "تاريخ النشر",
+    "ad_number" : "رقم الأعلان",
+    "phone" : "رقم الهاتف",
+    "brand" : "الماركة",
+    "model" : "الموديل",
+    "year" : "السنة",
+    "suggested_items": "مقترحات",
+    "something_went_wrong_please_try_again" : "حدث خطأ ما, الرجاء حاول مجدداً"
+}

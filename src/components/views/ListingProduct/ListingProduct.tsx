@@ -8,6 +8,7 @@ import {
   Theme,
   useTheme
 } from "@material-ui/core/styles";
+import Link from '@material-ui/core/Link';
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import Box from "@material-ui/core/Box";
@@ -24,6 +25,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import CallIcon from "@material-ui/icons/Call";
 import Avatar from '@material-ui/core/Avatar';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import "./Listing.css";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,6 +82,19 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [dispImage, setDispImage]: any = useState(false);
+  const [showPhone, setShowPhone] = React.useState(false);
+
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handlePhoneShow = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowPhone(false);
+  };
+
   return (
     <div className={classes.root}>
       <Card className={classes.cardHover} onMouseOver={() => { setDispImage(true);  }} onMouseLeave={() => { setDispImage(false);  }}>
@@ -96,7 +112,12 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
             </Grid>
             <Grid item lg={9} md={9} xs={8} sm container>
               <Grid item xs={12}>
-                <Grid item xs={12}>
+               <Link
+                  underline="none"
+                  component="a"
+                  href={`/ad-detail/${ad.id}`}
+               >
+               <Grid item xs={12}>
                   <div
                     className={classNames(
                       !fullScreen && "cardheader display-flex",
@@ -152,7 +173,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <LocationOnIcon />
                     </Typography>
-                    <span className="locationName"> {ad.city_id} </span> |
+                    <span className="locationName"> {ad.city.name.ar} </span> |
                     <span className="locationName"> {ad.district_id} </span>
                   </Grid>
                 </Grid>
@@ -178,11 +199,12 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <DriveEtaIcon />
                     </Typography>
-                    <span className="locationName"> Car for sale </span>|
-                    <span className="locationName"> {ad.model_id} </span>|
-                    <span className="locationName"> {ad.brand_id} </span>
+                    {/* <span className="locationName"> {ad.category.name.ar} </span>| */}
+                    {/* <span className="locationName"> {ad.model} </span>|
+                    <span className="locationName"> {ad.brand} </span> */}
                   </Grid>
                 </Grid>
+               </Link>
                 {!myAds ? 
                   <Grid container style={{ marginTop: "10px" }} direction="row">
                     <Grid item lg={1} md={2} xs={3}>
@@ -198,7 +220,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     </Grid>
                     {!fullScreen && <Box m={2} />}
                     <Grid item lg={1} md={2} xs={3}>
-                      <IconButton className={classes.iconButton}>
+                      <IconButton onClick={()=>{setShowPhone(!showPhone)}} className={classes.iconButton}>
                         <CallIcon />
                       </IconButton>
                     </Grid>
@@ -211,6 +233,13 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
               </Grid>
             </Grid>
           </Grid>
+              <Snackbar open={showPhone} onClose={handlePhoneShow}>
+                <Alert onClose={handlePhoneShow} severity="info">
+                  <Typography style={{margin: '0px 10px'}}>
+                  {t("phone")}: {ad.user.phone_number}
+                  </Typography>
+                </Alert>
+            </Snackbar>
         </CardContent>
       </Card>
     </div>

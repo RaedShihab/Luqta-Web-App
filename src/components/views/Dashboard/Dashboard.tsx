@@ -584,13 +584,13 @@ const Dashboard: React.FC = (props) => {
                 {ads.map((prod: any, index: any) => {
                   return (
                     <Grid key={index} item lg={12} md={12} xs={12}>
-                     <Link
+                     {/* <Link
                      underline="none"
                      component="a"
-                     href={`/ad-detail/${prod._id}`}
-                     >
+                     href={`/ad-detail/${prod.id}`}
+                     > */}
                      <ListingProduct ad={prod} />
-                     </Link>
+                     {/* </Link> */}
                     </Grid>
                   );
                 })}

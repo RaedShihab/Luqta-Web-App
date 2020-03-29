@@ -6,7 +6,10 @@ import {
   createStyles,
   Theme,
 } from "@material-ui/core/styles";
-import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent, CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container, Icon, ButtonBase, Typography, Badge, Button, Divider, Box,CardMedia, CircularProgress, Snackbar } from "@material-ui/core";
+import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent, 
+  CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container, Icon,
+   ButtonBase, Typography, Badge, Button, Divider, Box,CardMedia, 
+   CircularProgress, Snackbar, IconButton } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import Slider from "react-slick";
@@ -113,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) =>
       "&>span": {
         padding: "5px",
         color: "#000",
-        opacity: 1
+        opacity: 1,
       }
     },
     detailBtn: {
@@ -121,8 +124,14 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: "10px",
       }
     },
+    rtlBtn: {
+      margin: '0px 20px',
+    },
     loading: {
       textAlign: 'center'
+    },
+    margin: {
+      margin: '0px 5px'
     },
   })
 );
@@ -149,6 +158,9 @@ function a11yProps(index: any) {
 const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) => {
   const {params} : any = match;
   const {id} : any = params;
+  const lang = ()=> {
+    return localStorage.getItem('i18nextLng')
+  }
 
   const classes = useStyles();
   const theme = createMuiTheme({
@@ -196,8 +208,10 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   const [adDetails, setAdDetails] = React.useState({});
   const ad : any = adDetails
   const [open, setOpen] = React.useState(false);
+  const [showPhone, setShowPhone] = React.useState(false);
   const [message, setMessage] = React.useState('')
   const [gettingDetails, setGettingDetails] = React.useState(true)
+  
   function Alert(props : any) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -209,18 +223,25 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     setOpen(false);
   };
 
+  const handlePhoneShow = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowPhone(false);
+  };
+
   useEffect(() => {
     if (resScreen) {
       setSettings({ ...settings, slidesToShow: 3 });
     } else {
       setSettings({ ...settings, slidesToShow: 4 });
     }
-
+    
     Axios.get(`/ads/${id}`)
     .then(res =>{
-       console.log(res.data.data)
-        setGettingDetails(false)
+      console.log(res.data.data)
         setAdDetails(res.data.data)
+        setGettingDetails(false)
       })
     .catch(err => {
       console.log(err)
@@ -309,7 +330,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           resScreen && "resadcardheader"
                         )}
                       >
-                          <Typography variant="subtitle1">
+                          {/* <Typography variant="subtitle1"> */}
+                          <Typography variant="h6">
                             {ad.title}
                           </Typography>
                       </div>
@@ -346,7 +368,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           />
                           
                           </span>
-                          <span className="adReview">125 Reviews</span>
+                          <span className="adReview">125 {t("reviews")}</span>
                           <Button
                             variant="outlined"
                             color="primary"
@@ -354,7 +376,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                             className={classes.button}
                             startIcon={<Icon>star</Icon>}
                           >
-                            Rate
+                            {t("rate")}
                           </Button>
                       </div>
                     </Grid>
@@ -368,14 +390,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               variant="outlined"
                               color="primary"
                               size="small"
-                              className={classes.button + " " + classes.detailBtn}
+                              className={lang() === "en" ?( classes.button + " " + classes.detailBtn) :( classes.button + " " + classes.detailBtn + " " + classes.rtlBtn)}
                               startIcon={<Icon>watch_later</Icon>}
                             >
-                              1 Hours
+                              <div className={lang()==='ar'? classes.margin : ''}>Hours</div>
                             </Button>
                             <br />
                             <span className="repliesCss">
-                            Replies in
+                           {t("replies_in")}
                             </span>
                           </div>
                           <Divider orientation="vertical" flexItem />
@@ -384,14 +406,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               variant="outlined"
                               color="primary"
                               size="small"
-                              className={classes.button + " " + classes.detailBtn}
+                              className={lang() === "en" ?( classes.button + " " + classes.detailBtn) :( classes.button + " " + classes.detailBtn + " " + classes.rtlBtn)}
                               startIcon={<Icon>watch_later</Icon>}
                             >
-                              100%
+                              <div className={lang()==='ar'? classes.margin : ''}>100%</div>
                             </Button>
                             <br />
                             <span className="repliesCss">
-                            Response Rate
+                            {t("response_rate")}
                             </span>
                           </div>
                       </div>
@@ -412,7 +434,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               size={resScreen ? "small" : "large"}
                               className={ resScreen ? "resSellerAdBtn" : "sellerAdBtn"}
                             >
-                              See the seller's other ads
+                              {t("see_other_ads")}
                             </Button>
                       </div>
                     </Grid>
@@ -420,13 +442,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     <Grid item xs={12}>
                       <div style={{ alignItems: "center" }} className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}>
                         <Button
+                        onClick={()=>{setShowPhone(!showPhone)}}
                           variant="contained"
                           color="primary"
                           size={resScreen ? "small" : "large"}
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                           startIcon={<Icon>call</Icon>}
                         >
-                          Call
+                         <div style={{marginRight: 5}}>{t("call")}</div>
                         </Button>
                         <Button
                           variant="contained"
@@ -435,7 +458,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                           startIcon={<Icon>chat</Icon>}
                         >
-                          Chat
+                          <div style={{marginRight: 5}}>{t("chat")}</div>
                         </Button>
                         <Button
                           variant="contained"
@@ -444,7 +467,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
                           startIcon={<Icon>label_important</Icon>}
                         >
-                          Premium
+                          <div style={{marginRight: 5}}>{t("premium")}</div>
                         </Button>
                       </div>
                     </Grid>
@@ -461,9 +484,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                       variant={ resScreen ? "fullWidth" : "standard"}
                       onChange={handleAdsTabChange}
                     >
-                      <Tab label="Details"   value="Details"   {...a11yProps(0)}/>
-                      <Tab label="Description"  value="Description"  {...a11yProps(1)} />
-                      <Tab label="Location" value="Location"   {...a11yProps(2)}/>
+                      <Tab label={t("details")}value="Details"   {...a11yProps(0)}/>
+                      <Tab label={t("desc")}  value="Description"  {...a11yProps(1)} />
+                      <Tab label={t("location")} value="Location"   {...a11yProps(2)}/>
                     </Tabs>
                     <TabPanel value={adsTab} index={"Details"}>
                       {/* <Box className="adBoxTab" >
@@ -471,29 +494,29 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                         <div className="adBoxRightCol">$45,000</div>
                       </Box> */}
                       <Box className="adBoxWhiteTab" >
-                        <div className="adBoxLeftCol">Created at:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                        <div className="adBoxLeftCol">{t("created_at")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
                     <div className="adBoxRightCol">{ad.created_at}</div>
                       </Box>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">Ad Number:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad._id}</div>
+                        <div className="adBoxLeftCol">{t("ad_number")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                    <div className="adBoxRightCol">{ad.id}</div>
                       </Box>
                       <Box className="adBoxWhiteTab" >
-                        <div className="adBoxLeftCol">Brand:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.brand_id}</div>
+                        <div className="adBoxLeftCol">{t("brand")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                    <div className="adBoxRightCol">{ad.brand}</div>
                       </Box>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">Model:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                        <div className="adBoxRightCol">{ad.model_id}</div>
+                        <div className="adBoxLeftCol">{t("model")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                        <div className="adBoxRightCol">{ad.model}</div>
                       </Box>
-                      <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">Year:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                      {/* <Box className="adBoxTab" >
+                        <div className="adBoxLeftCol">{t("year")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
                         <div className="adBoxRightCol">1991</div>
-                      </Box>
+                      </Box> */}
                     </TabPanel>
                     <TabPanel value={adsTab} index={"Description"}>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">Descrition:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                        <div className="adBoxLeftCol">{t("desc")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
                     <div 
                     className="adBoxRightCol"
                     >
@@ -503,17 +526,17 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     </TabPanel>
                     <TabPanel value={adsTab} index={"Location"}>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">City:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.city_id}</div>
+                        <div className="adBoxLeftCol">{t("city")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                    <div className="adBoxRightCol">{ad.city.name.ar}</div>
                       </Box>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">District:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.district_id}</div>
+                        <div className="adBoxLeftCol">{t("district")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                    <div className="adBoxRightCol">{ad.district}</div>
                       </Box>
                     </TabPanel>
                   </Grid>
                   <Grid item lg={12} md={12} xs={12}>
-                    <h2 style={{ color: "#676D80", opacity: 1, margin: 0, marginLeft: "40px", fontWeight: 500 }}>Suggested Items</h2>
+                    <h2 style={{ color: "#676D80", opacity: 1, margin: 0, marginLeft: "40px", fontWeight: 500 }}>{t("suggested_items")}</h2>
                   </Grid>
                   { ["","","",""].map((temp: any, index: any) => {
                     return (
@@ -558,6 +581,13 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Typography>
               </Alert>
             </Snackbar>
+            <Snackbar open={showPhone} onClose={handlePhoneShow}>
+              <Alert onClose={handlePhoneShow} severity="info">
+                <Typography style={{margin: '0px 10px'}}>
+                {t("phone")}: {ad.user.phone_number}
+                </Typography>
+              </Alert>
+            </Snackbar>
           </Container>
         </div>
       </MuiThemeProvider>
@@ -565,4 +595,4 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   }
 };
 
-export default withTranslation("/dashboard/dashboard")(ListingProduct);
+export default withTranslation("/adDetails/adDetails")(ListingProduct);

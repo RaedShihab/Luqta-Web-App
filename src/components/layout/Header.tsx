@@ -135,7 +135,6 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
   const updateMirrorView = () => {
     i18n.changeLanguage(language === 'ar'? 'en': 'ar')
     setDirection(direction==="ltr"? "rtl": "ltr")
-    console.log('kjk')
   }
 
   return (
@@ -156,7 +155,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               color="primary"
               aria-label="Open drawer"
               onClick={() => setLeftDrawerOpen(!leftDrawerOpen)}
-              style={{ marginLeft: -12, marginRight: 20 }}
+              // style={{ marginLeft: -12, marginRight: 20 }}
             >
               <MenuIcon />
             </IconButton> 

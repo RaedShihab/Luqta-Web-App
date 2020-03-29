@@ -14,7 +14,7 @@ const token = ()=> {
   }
   
 export const Axios = axios.create({
-    baseURL: `http://134.122.75.39/jo-${lang()}`,
+    baseURL: `https://staging.luqta.com/jo-${lang()}`,
     headers: {
       'Accept': 'application/json',
       'Content-Type' : 'multipart/form-data',

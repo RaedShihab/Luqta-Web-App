@@ -25,6 +25,7 @@ import './auth.css'
 import GoogleIcon from '../../assets/google-favicon.png';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import {Axios} from '../apiServecis/axiosConfig'
 // import { promisify } from 'util';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -269,8 +270,14 @@ const SignUp: React.FC = (props) => {
         <Formik 
         initialValues={initialValues}
         onSubmit={(values) => {
+          const data : any = new FormData()
+          data.append('name', values.name)
+          data.append('login', values.login)
+          data.append('password', values.password)
+          data.append('password_confirmation', values.password_confirmation)
+          console.log(values)
           setWaiting(true)
-          axios.post('http://134.122.75.39/jo/account/register', values)
+          Axios.post('/account/register', data)
           .then(res => {
             console.log(res)
             setWaiting(false)
@@ -284,10 +291,10 @@ const SignUp: React.FC = (props) => {
             console.log(err.response)
             setWaiting(false)
             if(err.response.status === 422) {
-              // if(errors.login !== undefined) {
-              //   setMessage('Please enter a valid phone number or a valid email')
-              //   setOpenErr(true)
-              // }
+              if(errors.login !== undefined) {
+                setMessage('Please enter a valid phone number or a valid email')
+                setOpenErr(true)
+              }
               if(errors.password !== undefined) {
                 setMessage('The password confirmation does not match')
                 setOpenErr(true)

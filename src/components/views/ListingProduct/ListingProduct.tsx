@@ -102,14 +102,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
           <Grid container spacing={2}>
             <Grid item lg={3} md={3} xs={4}>
               <ButtonBase style={{ width: "auto", position: "relative" }} >
-                <Link 
+                <Link
                   underline="none"
                   component="a"
                   href={`/ad-detail/${ad.id}`}
                   >
-                 <img className={classes.img} alt="listProduct" src={ad.featured.image} />
+                <img className={classes.img} alt="listProduct" src={ad.featured === null?Product: ad.featured.image} />
                 </Link>
-                 <span className={dispImage ? "topLeft" : "display-none"}>
+                <span className={dispImage ? "topLeft" : "display-none"}>
                   <Icon className={"circle-icon "}>
                     near_me
                   </Icon>
@@ -180,7 +180,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                       <LocationOnIcon />
                     </Typography>
                     <span className="locationName"> {ad.city.name.ar} </span> |
-                    {/* <span className="locationName"> {ad.distric.name.ar} </span> */}
+                    <span className="locationName"> {ad.district_id} </span>
                   </Grid>
                 </Grid>
                 <Grid container>
@@ -203,11 +203,11 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                       color="textSecondary"
                       className="location"
                     >
-                      {/* <DriveEtaIcon /> */}
+                      <DriveEtaIcon />
                     </Typography>
-                    <span className="locationName"> {ad.category.name.ar} </span>
-                    <span className="locationName"> {ad.model !== null && '|' + ad.model.name.ar + '|'} </span>
-                    <span className="locationName"> {ad.brand !== null && ad.brand.name.ar} </span>
+                    {/* <span className="locationName"> {ad.category.name.ar} </span>| */}
+                    {/* <span className="locationName"> {ad.model} </span>|
+                    <span className="locationName"> {ad.brand} </span> */}
                   </Grid>
                 </Grid>
                </Link>

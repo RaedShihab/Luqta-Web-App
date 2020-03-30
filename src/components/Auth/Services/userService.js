@@ -9,7 +9,7 @@ export const userService = {
 function login(username, password) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',  'Accept': 'application/json'  },
         body: JSON.stringify({ login:username, password:password })
     };
     return fetch(`https://staging.luqta.com/jo-ar/login`, requestOptions)

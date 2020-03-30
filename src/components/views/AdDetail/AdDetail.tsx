@@ -205,13 +205,13 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     setAdsTab(newValue);
   };
 
+  const [specefications, setSpecefications] = React.useState([]);
   const [adDetails, setAdDetails] = React.useState({});
   const ad : any = adDetails
   const [open, setOpen] = React.useState(false);
   const [showPhone, setShowPhone] = React.useState(false);
   const [message, setMessage] = React.useState('')
   const [gettingDetails, setGettingDetails] = React.useState(true)
-  
   function Alert(props : any) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -230,21 +230,37 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     setShowPhone(false);
   };
 
+  //get ad spasefication
+  const getAdSpecefications = (id: any)=> {
+    console.log(ad)
+    Axios.get(`/categories/${id}/specifications`)
+    .then(res =>{
+      console.log(res.data.data)
+        setSpecefications(res.data.data)
+        setGettingDetails(false)
+      })
+    .catch(err => {
+      console.log(err)
+      setGettingDetails(false)
+      setMessage(t('something_went_wrong_please_try_again'))
+      setOpen(true)
+    })
+  }
+
   useEffect(() => {
     if (resScreen) {
       setSettings({ ...settings, slidesToShow: 3 });
     } else {
       setSettings({ ...settings, slidesToShow: 4 });
     }
-    
+    //show ad
     Axios.get(`/ads/${id}`)
     .then(res =>{
       console.log(res.data.data)
         setAdDetails(res.data.data)
-        setGettingDetails(false)
+        getAdSpecefications(res.data.data.category.id)
       })
     .catch(err => {
-      console.log(err)
       setGettingDetails(false)
       setMessage(t('something_went_wrong_please_try_again'))
       setOpen(true)
@@ -266,7 +282,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
       </Typography>
     );
   }
-
+  
   if(gettingDetails) {
     return <div className={classes.loading}><CircularProgress size={60}/></div>
   }
@@ -315,7 +331,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 
                   <Grid item lg={5} md={5} xs={9}  style={{ width: "100%" }}>
                     <ButtonBase style={{ width: "100%", position: "relative" }}>
-                      <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={Car} />
+                      <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={ad.featured.image} />
                       <span className={classes.topRightIcon}>
                         <Icon className={classes.circleIcon} style={{ color: "red" }}>
                           favorite
@@ -421,8 +437,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     <Grid item xs={12}>
                       <div style={{ alignItems: "center" }} className={classNames(!resScreen ? "addetailBtn" : "resAddetailBtn"," display-flex")}>
                         <h3 className={ resScreen ? "resAdRates" : "adRates" }>
-                          $60,005.00
-                          {/* {ad.price} */}
+                          {ad.price}
                           </h3>
                       </div>
                     </Grid>
@@ -499,20 +514,39 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                       </Box>
                       <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("ad_number")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.id}</div>
+                    <div className="adBoxRightCol">{ad.number}</div>
                       </Box>
+                      {
+                      ad.brand !== null &&
                       <Box className="adBoxWhiteTab" >
                         <div className="adBoxLeftCol">{t("brand")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.brand}</div>
+                    <div className="adBoxRightCol">{ad.brand.name.ar}</div>
                       </Box>
+                      }
+                      {
+                      ad.model !== null && 
                       <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("model")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                        <div className="adBoxRightCol">{ad.model}</div>
+                        <div className="adBoxRightCol">{ad.model.name.ar}</div>
                       </Box>
-                      {/* <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">{t("year")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                        <div className="adBoxRightCol">1991</div>
-                      </Box> */}
+                      }
+                      {
+                        specefications.map((spec: any)=> {
+                          const name : any = spec.name
+                          if(ad.cat_specs !== null) {
+                            if(ad.cat_specs[name] !== undefined)
+                               return <Box key={spec.id} className="adBoxTab" >
+                                    <div className="adBoxLeftCol">{spec.label.ar}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                                    {
+                                      spec.type === "list" ? 
+                                      <div className="adBoxRightCol">{ad.cat_specs[name] !== undefined && ad.cat_specs[name].ar}</div> 
+                                      :
+                                      <div className="adBoxRightCol">{ad.cat_specs[name] !== undefined && ad.cat_specs[name]}</div>
+                                    }
+                                 </Box>
+                          }
+                        })
+                      }
                     </TabPanel>
                     <TabPanel value={adsTab} index={"Description"}>
                       <Box className="adBoxTab" >
@@ -529,10 +563,10 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                         <div className="adBoxLeftCol">{t("city")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
                     <div className="adBoxRightCol">{ad.city.name.ar}</div>
                       </Box>
-                      <Box className="adBoxTab" >
+                      {ad.district !== null && <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("district")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.district}</div>
-                      </Box>
+                    <div className="adBoxRightCol">{ad.district.name.ar}</div>
+                      </Box>}
                     </TabPanel>
                   </Grid>
                   <Grid item lg={12} md={12} xs={12}>

@@ -174,10 +174,10 @@ const SignIn: React.FC = (props) => {
   
 // class MySignInc extends React.Component<RouteComponentProps<any>, {}> {
   // state = { 'siteId': '', username: '', password: '', loading: false, goToDashboard: false }
-  const { dispatch, history, loggingIn, alertType, i18n, t } : any = props;
+  const { dispatch, history, loggingIn,loggedIn, alertType, i18n, t } : any = props;
   const {language} : any = i18n;
 
-  // console.log('props', language)
+  console.log('alertType', alertType)
   // console.log('alertType', alertType)
   const classes = useStyles();
   const muitheme = useTheme();
@@ -239,7 +239,7 @@ const SignIn: React.FC = (props) => {
     }
   }, [direction])
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(alertType);
 
   const handleClose = (event: any, reason: any) => {
     if (reason === 'clickaway') {
@@ -266,6 +266,7 @@ const SignIn: React.FC = (props) => {
           if (values) {
             console.log(values)
               dispatch(userActions.login(values.email, values.password));
+              setOpen(alertType)
               // history.push('/')
               }
 
@@ -436,9 +437,9 @@ const SignIn: React.FC = (props) => {
                   t('signin')
               }
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert style={{margin: 100}} onClose={handleClose} severity="success">
-                  This is a success message!
+            <Snackbar open={alertType === "alert-danger"} autoHideDuration={6000}>
+                <Alert severity="error">
+                  <div style={{margin: '0px 5px'}}>{t("please_check_data")}</div> 
                 </Alert>
             </Snackbar>
               <div className="display-flex" style={{ justifyContent: "center", marginBottom: "20px" }}>
@@ -498,13 +499,14 @@ function Copyright() {
 }
 
 function mapStateToProps(state: {
-   authentication: { loggingIn: any; }
+   authentication: { loggingIn: any, loggedIn: any }
    alert: {type : any;}
   }
   ) {
   // const { loggingIn } = state.authentication;
   return {
       loggingIn: state.authentication.loggingIn,
+      loggedIn: state.authentication.loggedIn,
       alertType: state.alert.type
   };
 }

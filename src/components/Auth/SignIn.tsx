@@ -177,7 +177,6 @@ const SignIn: React.FC = (props) => {
   const { dispatch, history, loggingIn,loggedIn, alertType, i18n, t } : any = props;
   const {language} : any = i18n;
 
-  console.log('alertType', alertType)
   // console.log('alertType', alertType)
   const classes = useStyles();
   const muitheme = useTheme();

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import { compose } from 'redux';
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
@@ -81,10 +81,11 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
           <main className={classNames(classes.content)}>
           <BrowserRouter>
               <Switch>
-                <Route exact path='/' component={Dashboard} />
+                <Route exact path='/:page' component={Dashboard} />
                 <Route exact path='/dashboard' component={Dashboard} />
-                <Route exact path='/myads' component={MyAds} />
-                <Route exact path='/ad-detail/:id' component={AdDetail} />
+                <PrivateRoute exact path='/myads' component={MyAds} />
+                <PrivateRoute exact path='/ad-detail/:id' component={AdDetail} />
+                <Redirect path='/' to={'/1'} />
               </Switch>
           </BrowserRouter>
           </main>

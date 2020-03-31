@@ -205,8 +205,10 @@ const AntSwitch = withStyles((theme: Theme) =>
 
 const Dashboard: React.FC = (props) => {
 
-  const {i18n, t, history} : any = props
-  const {language} : any = i18n
+  const {i18n, t, history, match} : any = props
+  // const {language} : any = i18n
+  // const {location} : any = history
+  const {params} : any = match
 
   const [selectedCategory, setSelectedCategory]: any = useState(null);
   
@@ -261,6 +263,7 @@ const Dashboard: React.FC = (props) => {
   }
 
   const [open, setOpen] = React.useState(false);
+  const [pagee, setPage] = React.useState(1);
 
   const handleClose = (event: any, reason: string) => {
     if (reason === 'clickaway') {
@@ -277,22 +280,17 @@ const Dashboard: React.FC = (props) => {
   const [message, setMessage] = React.useState('')
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
-    const defaultPage: any = 1
-    const page : any = localStorage.getItem('page')
-    const parsIntPage : any = parseInt(page)
-    localStorage.setItem('nextpage', parsIntPage)
-    const nextpage :any = localStorage.getItem("nextpage")
-    const parsIntNextPage :any = parseInt(nextpage)
+    
   useEffect(() => {
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
-    //get ads: 
-    Axios.get(`/ads?page=${parsIntPage}&per_page=${5}`)
+    //get ads:
+    // Axios.get(`/ads?page=${location.state=== undefined ? 1 : location.state.page}&per_page=${5}`)
+    Axios.get(`/ads?page=${params.page===undefined? 1 : params.page}&per_page=${5}`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
       setAds(res.data.data)
       setGettingAds(false)
-      localStorage.setItem('page', defaultPage)
     })
     .catch(err => {
       console.log(err.response)
@@ -303,8 +301,10 @@ const Dashboard: React.FC = (props) => {
   }, []);
 
   const handlePageNumber = (e: any, value: any) => {
-    localStorage.setItem('page', value)
-    window.location.reload(false);
+    setPage(value)
+    // history.push(`/${value}`, {page: value});
+    // history.push(`/?page=${value}&per-page=5`, {page: value});
+    // window.location.reload(false);
   }
 
   const muitheme = useTheme();
@@ -617,7 +617,21 @@ const Dashboard: React.FC = (props) => {
               </Grid>
               <Grid container spacing={2} direction="row">
                 <Grid item lg={12} md={12} xs={12}>
-                  <Pagination defaultPage={parsIntNextPage} count={19} color="primary" shape="rounded" boundaryCount={10}  onChange={handlePageNumber}/>
+                  <Link
+                  underline='none'
+                  href={`/${pagee}`}
+                  // onClick={() =>
+                  //  history.push(`/?page=${pagee}&per-page=30`)
+                  // }
+                  >
+                    <Pagination 
+                    defaultPage={parseInt(params.page)} 
+                    count={19} 
+                    color="primary" shape="rounded" 
+                    boundaryCount={10}  
+                    onChange={handlePageNumber}
+                    />
+                  </Link>
                 </Grid>
               </Grid>
             </Grid>

@@ -17,9 +17,7 @@ import { styles } from "./styles";
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
-// import App from './any';
 
-const App = React.lazy(() => import('./any'));
 const Dashboard = React.lazy(() => import('../views/Dashboard/Dashboard'));
 const MyAds = React.lazy(() => import('../views/MyAds/MyAds'));
 const AdDetail = React.lazy(() => import('../views/AdDetail/AdDetail'));
@@ -84,7 +82,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
           <BrowserRouter>
               <Switch>
                 <Route exact path='/:page' component={Dashboard} />
-                <Route exact path='/:categ/:subCateg' component={App} />
+                <Route exact path='/:subCateg/:categ' component={Dashboard} />
                 
                 <Route exact path='/:subCateg/:categ/:page' component={Dashboard} />
                 

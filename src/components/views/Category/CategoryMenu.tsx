@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { withTranslation, WithTranslation } from "react-i18next";
 import Popover from '@material-ui/core/Popover';
 import { MenuContent } from '../styles/Elements';
@@ -13,6 +14,7 @@ import Divider from "@material-ui/core/Divider";
 // import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 // import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import { category } from './Categoty';
+import {Axios} from '../../apiServecis/axiosConfig'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -82,23 +84,32 @@ const theme = createMuiTheme({
 });
 
 
-interface IMenuProps extends WithTranslation{
+interface Props extends RouteComponentProps{ 
 	menuAnchor: any;
 	setMenuAnchor: any;
 	selectedCategory: any;
 	setSelectedCategory: any;
 	selectedSubCategory: any; 
 	setSelectedSubCategory: any;
-	t: any;
+	// t: any;
+	getAdsByCategId?: any;
+	history: any 
   }
 
-const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, t, i18n  }) => {
+const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, getAdsByCategId, history  }) => {
 
 	const [activeCategory, setActiveCategory]: any = useState(null);
-	const [activeSubCategory, setActiveSubCategory]: any = useState(null);
-	const classes = useStyles();	
+	const [activeSubCategory, setActiveSubCategory]: any = useState([]);
+	const classes = useStyles();
+
+	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
+		Axios.get(`/categories`)
+		.then(res=> {
+			setCategories(res.data.data)
+		})
+		.catch(err => console.log(err.response))
 	}, []);
 
 	const handleClose = () => {
@@ -106,16 +117,16 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	};
 
 	const onListItemClick = (value: any) => {
-		setActiveCategory(value.name.en);
-		setActiveSubCategory(value.subcategories);
-		// setMenuAnchor(null);
+		Axios.get(`/categories/${value}/children`)
+		.then(res => {
+			setActiveSubCategory(res.data.data);
+		})
+		.catch(err => console.log(err.response))
 	}
 
 	const updateSubWithParentCategory = (subCate: any) => {
-		const subCategory: any = category.subcategories.data.find((cat) => cat.id === subCate.toString());
-		const parentCat = category.categories.data.find((cat) => cat.id === subCategory.parent_id.toString());
-		setSelectedCategory(parentCat);
-		setSelectedSubCategory(subCategory);
+		setSelectedSubCategory(subCate);
+		// getAdsByCategId()
 		setMenuAnchor(null);
 	}
 
@@ -150,17 +161,22 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 				<List component="nav">
 						<ListItem className={classes.boxHeader} onClick={() => onListItemClick("Catégories")}>
 							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-							<span style={{ flexGrow: 1 }}>{t("ALL_CATEGORIES")}</span>
+							<span style={{ flexGrow: 1 }}>{("ALL_CATEGORIES")}</span>
 						</ListItem>
 				</List>
 				<hr />
 				<List component="nav" style={{ background: "#f4f6f7" }} >
 					{
-						category.categories.data.map((category: any, index: any) => {
-							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory && selectedCategory.id === category.id} onClick={() => { updateParentCategory(category); }} onMouseOver={() => {onListItemClick(category)}}>
+						categories.map((category: any, index: any) => {
+							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory && selectedCategory.id === category.id} 
+							onClick={() => { updateParentCategory(category); }} 
+							onMouseOver={() => {
+								onListItemClick(category.id)
+								setActiveCategory(category.name.ar)
+								}}>
 									<Icon>{category.icon}</Icon>
 									&nbsp; &nbsp;
-									<span style={{ flexGrow: 1 }}>{category.name.en}</span>
+									<span style={{ flexGrow: 1 }}>{category.name.ar}</span>
 								</ListItem>	
 							);
 						})
@@ -177,14 +193,23 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 					<hr />
 					<List component="nav" >
 						{
-							activeSubCategory && activeSubCategory.length ?
-								activeSubCategory.slice(0,8).map((subCate: any, index: any) => {
-									let subCategory: any = category.subcategories.data.find(x => x.id === subCate.toString());
-									return (<ListItem className={classes.subCategoryList} key={index} onClick={() => { updateSubWithParentCategory(subCate); }}>
-									<span style={{ flexGrow: 1 }}>{subCategory.name.en}</span>
-								</ListItem>)	
-								})
-							: null							
+						  activeSubCategory.map((subCateg: any, index: any)=> {
+							return <ListItem className={classes.subCategoryList} key={index} 
+							   onClick={
+								()=>{
+									updateSubWithParentCategory(subCateg)
+									history.push({pathname:`/${activeCategory}/${subCateg.name.ar}`, state: {id: subCateg.id}})
+									window.location.reload(false);
+								}
+								}>
+								{/* <Link to={{
+									pathname: `/${activeCategory}/${subCateg.name.ar}`,
+									state: {id: subCateg.id}
+								}}> */}
+								<span style={{ flexGrow: 1 }}>{subCateg.name.ar}</span>
+								{/* </Link> */}
+								</ListItem>
+							})
 						}
 					</List>
               </Grid>
@@ -192,7 +217,7 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 			  		<List component="nav">
 						<div className={classes.boxcss} >
 							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
-							<span style={{ flexGrow: 1 }}>{t("top_brands")}</span>
+							<span style={{ flexGrow: 1 }}>{("top_brands")}</span>
 						</div>						
 					</List>
 					<hr/>
@@ -214,4 +239,4 @@ const Menu:  React.FC<IMenuProps> = ({ menuAnchor, setMenuAnchor, selectedCatego
 	)
 }
 
-export default withTranslation("/dashboard/dashboard")(Menu);
+export default withRouter(Menu);

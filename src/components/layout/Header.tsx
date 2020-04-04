@@ -160,7 +160,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               <MenuIcon />
             </IconButton> 
             : null }
-            <img src={"../brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
+            <img src={"../../../brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
                updateMirrorView();
               }} />
             {!fullScreen ? (

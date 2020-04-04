@@ -1,6 +1,7 @@
 export const category = {
     "categories": {
-        "isFetching":false,"data":[
+        "isFetching":false,
+        "data":[
             {"id":"1", "icon": "directions_car", "name": { "en": "VEHICALS", "ar": "سيارات و مركبات"}, "parent_id": null, "subcategories":[55,56,57,58,59,60,61,62,63,64], "brands":[],},
             {"id":"2", "icon": "wb_sunny", "name": { "en": "VACATION", "ar": "سيارات و مركبات"}, "parent_id": null, "subcategories":[9,10,11,12,13,14,15], "brands":[],},
             {"id":"3", "icon": "card_travel", "name": { "en": "FASION", "ar": "سيارات و مركبات"}, "parent_id": null, "subcategories":[15,16,17,18,19,20,21,22], "brands":[],},
@@ -12,7 +13,8 @@ export const category = {
         ]
     },
     "subcategories": {
-        "isFetching":false,"data":[
+        "isFetching":false,
+        "data":[
             {"id":"9", "icon": "", "name": { "en": "Rentals & Gîtes", "ar": ""}, "parent_id": 2, "subcategories":[], "brands":[],},
             {"id":"10", "icon": "", "name": { "en": "Bed and Breakfast", "ar": ""}, "parent_id": 2, "subcategories":[], "brands":[],},
             {"id":"11", "icon": "", "name": { "en": "campsites", "ar": ""}, "parent_id": 2, "subcategories":[], "brands":[],},

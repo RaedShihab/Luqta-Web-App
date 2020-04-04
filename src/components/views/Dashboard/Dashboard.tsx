@@ -56,6 +56,7 @@ import { category } from '../Category/Categoty';
 import "../../../App.css";
 import "./Dashboard.css";
 import {Axios} from '../../apiServecis/axiosConfig';
+import Layout from '../../layout/Layout'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -206,8 +207,8 @@ const AntSwitch = withStyles((theme: Theme) =>
 const Dashboard: React.FC = (props) => {
 
   const {i18n, t, history, match} : any = props
-  // const {language} : any = i18n
-  // const {location} : any = history
+
+  const historyState = history.location.state
   const {params} : any = match
 
   const [selectedCategory, setSelectedCategory]: any = useState(null);
@@ -258,6 +259,24 @@ const Dashboard: React.FC = (props) => {
     setMenuAnchor(ele);
   };
 
+  const getAdsByCategId = (id: any) => {
+    console.log('getAdsByCategId')
+    setGettingAds(true)
+    Axios.get(`/ads?page=${params.page===undefined? 1 : params.page}&per_page=${5}`)
+    // Axios.get(`/ads`)
+    .then(res => {
+      // console.log(res)
+      setAds(res.data.data)
+      setGettingAds(false)
+    })
+    .catch(err => {
+      console.log(err.response)
+      setMessage(t('something_went_wrong_please_try_again'))
+      setGettingAds(false)
+      setOpen(true)
+    })
+  };
+
   function Alert(props : any) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -282,13 +301,19 @@ const Dashboard: React.FC = (props) => {
   const[gettingAds, setGettingAds] = React.useState(false)
     
   useEffect(() => {
+    console.log(historyState)
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads:
-    // Axios.get(`/ads?page=${location.state=== undefined ? 1 : location.state.page}&per_page=${5}`)
+    historyState !== undefined?
+    getAdsByCategId(historyState.id)
+      :
+    //get Ads by Categ id:
+    console.log('getAll')
     Axios.get(`/ads?page=${params.page===undefined? 1 : params.page}&per_page=${5}`)
+    // Axios.get(`/ads`)
     .then((res: { data: any; })=> {
-      console.log(res.data.data)
+      // console.log(res.data.data)
       setAds(res.data.data)
       setGettingAds(false)
     })
@@ -301,10 +326,15 @@ const Dashboard: React.FC = (props) => {
   }, []);
 
   const handlePageNumber = (e: any, value: any) => {
-    setPage(value)
-    // history.push(`/${value}`, {page: value});
-    // history.push(`/?page=${value}&per-page=5`, {page: value});
-    // window.location.reload(false);
+    // setPage(value)
+    if(historyState !== undefined) {
+      history.push({pathname:`/${params.subCateg}/${params.categ}/${value}`, state:{id: historyState.id}})
+      window.location.reload(false)
+    }
+    if(historyState === undefined) {
+      history.push(`/${value}`)
+      window.location.reload(false)
+    }
   }
 
   const muitheme = useTheme();
@@ -365,18 +395,17 @@ const Dashboard: React.FC = (props) => {
                         {!selectedSubCategory ? <>
                           {!selectedCategory ? (
                             <AppsIcon style={{ marginRight: "5px" }} />
-                          ) : <Icon>{selectedCategory.icon}</Icon>} 
+                          ) : <Icon>{selectedCategory.icon}</Icon>}
                             &nbsp;&nbsp;
                           <span style={{ flexGrow: 1 }}>
-                            {!selectedCategory ? "Categories" : selectedCategory.name.en}
+                            {!selectedCategory ? "Categories" : selectedCategory.name.ar}
                           </span>
                           </>
                           : 
                             <span style={{ flexGrow: 1 }}>
-                              {!selectedSubCategory ? "Categories" : selectedSubCategory.name.en}
+                              {!selectedSubCategory ? "Categories" : selectedSubCategory.name.ar}
                             </span>
                          }
-  
                         <KeyboardArrowDownOutlinedIcon />
                       </div>
   
@@ -426,6 +455,7 @@ const Dashboard: React.FC = (props) => {
                         setSelectedCategory={setSelectedCategory}
                         selectedSubCategory={selectedSubCategory}
                         setSelectedSubCategory={setSelectedSubCategory}
+                        getAdsByCategId={getAdsByCategId}
                       />
                     ) : null}
   
@@ -617,13 +647,13 @@ const Dashboard: React.FC = (props) => {
               </Grid>
               <Grid container spacing={2} direction="row">
                 <Grid item lg={12} md={12} xs={12}>
-                  <Link
+                  {/* <Link
                   underline='none'
-                  href={`/${pagee}`}
-                  // onClick={() =>
-                  //  history.push(`/?page=${pagee}&per-page=30`)
-                  // }
-                  >
+                  // href={historyState !== undefined? `/${params.subCateg}/${params.categ}/${pagee}` :`/${pagee}`}
+                  onClick={() =>
+                   history.push(historyState !== undefined? `/${params.subCateg}/${params.categ}/${pagee}` :`/${pagee}`)
+                  }
+                  > */}
                     <Pagination 
                     defaultPage={parseInt(params.page)} 
                     count={19} 
@@ -631,7 +661,7 @@ const Dashboard: React.FC = (props) => {
                     boundaryCount={10}  
                     onChange={handlePageNumber}
                     />
-                  </Link>
+                  {/* </Link> */}
                 </Grid>
               </Grid>
             </Grid>

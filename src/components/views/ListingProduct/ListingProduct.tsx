@@ -105,7 +105,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                 <Link
                   underline="none"
                   component="a"
-                  href={`/ad-detail/${ad.id}`}
+                  href={`/search/ad-detail/city/${ad.id}`}
                   >
                 <img className={classes.img} alt="listProduct" src={ad.featured === null?Product: ad.featured.image} />
                 </Link>
@@ -121,7 +121,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                <Link
                   underline="none"
                   component="a"
-                  href={`/ad-detail/${ad.id}`}
+                  href={`/search/ad-detail/city/${ad.id}`}
                >
                <Grid item xs={12}>
                   <div

@@ -199,7 +199,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 								()=>{
 									updateSubWithParentCategory(subCateg)
 									history.push({pathname:`/${activeCategory}/${subCateg.name.ar}`, state: {id: subCateg.id}})
-									window.location.reload(false);
+									// window.location.reload(false);
 								}
 								}>
 								{/* <Link to={{

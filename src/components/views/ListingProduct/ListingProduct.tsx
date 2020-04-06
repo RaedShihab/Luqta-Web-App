@@ -20,7 +20,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import Product from "../../../assets/product.png";
+import noImg from "../../../assets/noImg.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import CallIcon from "@material-ui/icons/Call";
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "auto",
       display: "block",
       maxWidth: "100%",
-      maxHeight: "100%"
+      maxHeight: "100%",
     },
     iconButton: {
       color: "#fff",
@@ -107,7 +107,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                   component="a"
                   href={`/search/ad-detail/city/${ad.id}`}
                   >
-                <img className={classes.img} alt="listProduct" src={ad.featured === null?Product: ad.featured.image} />
+                <img className={classes.img} alt="listProduct" src={ad.images === null||ad.images === undefined ? noImg: ad.images.image} />
                 </Link>
                 <span className={dispImage ? "topLeft" : "display-none"}>
                   <Icon className={"circle-icon "}>
@@ -242,7 +242,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
               <Snackbar open={showPhone} onClose={handlePhoneShow}>
                 <Alert onClose={handlePhoneShow} severity="info">
                   <Typography style={{margin: '0px 10px'}}>
-                  {t("phone")}: {ad.user.phone_number}
+                  {t("phone")}: {ad.owner.phone_number}
                   </Typography>
                 </Alert>
             </Snackbar>

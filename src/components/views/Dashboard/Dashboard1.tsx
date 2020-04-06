@@ -211,7 +211,6 @@ const Dashboard: React.FC = (props) => {
 
   const historyState = history.location.state
   const {params} : any = match
-  const [redirect, setRedirect] = useState('');
 
   const [selectedCategory, setSelectedCategory]: any = useState(null);
   
@@ -303,7 +302,6 @@ const Dashboard: React.FC = (props) => {
   const[gettingAds, setGettingAds] = React.useState(false)
     
   useEffect(() => {
-    console.log(history.action)
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads:
@@ -347,8 +345,6 @@ const Dashboard: React.FC = (props) => {
     return <div className={classes.loading}><CircularProgress size={60}/></div>
   }
   else{
-    console.log(history)
-    
     return (
       <MuiThemeProvider theme={theme}>
         {!fullScreen ? (

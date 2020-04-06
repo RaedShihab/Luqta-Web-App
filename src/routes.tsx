@@ -14,11 +14,11 @@ const MainRoutes: React.FC = () => {
     <div>
       <Suspense fallback={loading()}>
       <BrowserRouter>
-      {/* <Switch> */}
+      <Switch>
           <Route exact path='/signin' component={MySignIn} />
           <Route exact path='/signup' component={MySignUp} />
           <Route path="/" component={Layout} />
-          {/* </Switch> */}
+          </Switch>
       </BrowserRouter>
       </Suspense>
     </div>

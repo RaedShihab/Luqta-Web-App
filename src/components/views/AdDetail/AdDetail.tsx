@@ -15,7 +15,7 @@ import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent,
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import Slider from "react-slick";
-import NoImgAr from "./no-image-ar.png";
+import NoImg from "../../../assets/noImg.png";
 import Image0 from "../../../assets/Image-0.png";
 import Image1 from "../../../assets/Image-1.png";
 import Image2 from "../../../assets/Image-2.png";
@@ -263,9 +263,31 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     //show ad
     Axios.get(`/ads/${id}`)
     .then(res =>{
-      // console.log(res.data.data)
+      console.log(res.data.data)
+      const imgs = res.data.data.images.map((img:any)=>{
+        return img.image
+       })
         setAdDetails(res.data.data)
+        setImages(imgs)
         getAdSpecefications(res.data.data.category.id)
+        if(imgs.length-1 < 4 ) {
+          setSettings({
+            ...settings, 
+            slidesToShow: imgs.length-1 
+          })
+        }
+        if(imgs.length === 1 ) {
+          setSettings({
+            ...settings, 
+            slidesToShow: imgs.length
+          })
+        }
+        if(imgs.length === 0 ) {
+          setSettings({
+            ...settings, 
+            slidesToShow: 1
+          })
+        }
       })
     .catch(err => {
       setGettingDetails(false)
@@ -274,35 +296,35 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     })
     
     //get ad images
-    Axios.get(`/ads/${id}/images`)
-    .then(res =>{
-      const images : any = res.data.data.map((img : any)=> img.image)
-      setImages(images)
-      if(images.length-1 < 4 ) {
-        setSettings({
-          ...settings, 
-          slidesToShow: images.length-1 
-        })
-      }
-      if(images.length === 1 ) {
-        setSettings({
-          ...settings, 
-          slidesToShow: images.length
-        })
-      }
-      if(images.length === 0 ) {
-        setSettings({
-          ...settings, 
-          slidesToShow: 1
-        })
-      }
-      })
-    .catch(err => {
-      console.log(err.response)
-      // setGettingDetails(false)
-      // setMessage(t('something_went_wrong_please_try_again'))
-      // setOpen(true)
-    })
+    // Axios.get(`/ads/${id}/images`)
+    // .then(res =>{
+    //   const images : any = res.data.data.map((img : any)=> img.image)
+    //   setImages(images)
+    //   if(images.length-1 < 4 ) {
+    //     setSettings({
+    //       ...settings, 
+    //       slidesToShow: images.length-1 
+    //     })
+    //   }
+    //   if(images.length === 1 ) {
+    //     setSettings({
+    //       ...settings, 
+    //       slidesToShow: images.length
+    //     })
+    //   }
+    //   if(images.length === 0 ) {
+    //     setSettings({
+    //       ...settings, 
+    //       slidesToShow: 1
+    //     })
+    //   }
+    //   })
+    // .catch(err => {
+    //   console.log(err.response)
+    //   // setGettingDetails(false)
+    //   // setMessage(t('something_went_wrong_please_try_again'))
+    //   // setOpen(true)
+    // })
   }, [resScreen])
   
   const TabPanel = (props: TabPanelProps) => {
@@ -343,18 +365,17 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
 
                       <Slider {...settings}>
                         {
-                          images.length >0 ?
+                          images.length > 0 ?
                           images.map((img: any) => {
                             return <ButtonBase onClick={handleClick}>
-                                     <img src={img} style={{ width:"100px", backgroundColor:"#F9F9F9" }}></img>
+                                     <img src={img} style={{ width:"100px", height:"70px", backgroundColor:"#F9F9F9" }}></img>
                                    </ButtonBase>
                           })
                           :
                           <ButtonBase onClick={handleClick}>
-                            <img src={NoImgAr} style={{ width:"100px", backgroundColor:"#F9F9F9" }}></img>
+                            <img src={NoImg} style={{ width:"70px", backgroundColor:"#F9F9F9" }}></img>
                           </ButtonBase>
                           }
-
                       </Slider>
                       {/* <span className={ classes.downSlick }>
                         <Icon className={classes.circleIcon}>
@@ -365,12 +386,12 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                   </Grid>
                   <Grid item lg={5} md={5} xs={9}  style={{ width: "100%" }}>
                     <ButtonBase onClick={handleClick} style={{ width: "100%", position: "relative" }}>
-                      <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={ad.featured!== null? ad.featured.image:NoImgAr} />
-                      {/* <span className={classes.topRightIcon}>
+                      <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={ad.images === null || ad.images === undefined || ad.images.length < 1 ? NoImg: ad.images[0].image} />
+                      <span className={classes.topRightIcon}>
                         <Icon className={classes.circleIcon} style={{ color: "red" }}>
                           favorite
                         </Icon>
-                      </span> */}
+                      </span>
                     </ButtonBase>
                   </Grid>
                   <AutoRotatingCarouselModal
@@ -657,7 +678,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
             <Snackbar open={showPhone} onClose={handlePhoneShow}>
               <Alert onClose={handlePhoneShow} severity="info">
                 <Typography style={{margin: '0px 10px'}}>
-                {t("phone")}: {ad.user.phone_number}
+                {t("phone")}: {ad.owner.phone_number}
                 </Typography>
               </Alert>
             </Snackbar>

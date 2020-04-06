@@ -1,6 +1,6 @@
 import React from "react";
 import { AutoRotatingCarousel, Slide } from "material-auto-rotating-carousel";
-import NoImgAr from "./no-image-ar.png";
+import NoImgAr from "../../../assets/noImg.png";
 
 const AutoRotatingCarouselModal = ({ handleOpen, setHandleOpen, isMobile }) => {
   const {matches} = isMobile
@@ -9,7 +9,7 @@ const AutoRotatingCarouselModal = ({ handleOpen, setHandleOpen, isMobile }) => {
     <div>
       {/* <Button onClick={() => setHandleOpen({ open: true })}>Open carousel</Button> */}
       <AutoRotatingCarousel
-        label="Get started now"
+        // label="Get started now"
         open={handleOpen.open}
         onClose={() => setHandleOpen({ open: false })}
         onStart={() => setHandleOpen({ open: false })}
@@ -25,7 +25,7 @@ const AutoRotatingCarouselModal = ({ handleOpen, setHandleOpen, isMobile }) => {
             }
             // mediaBackgroundStyle={{ backgroundColor: red[400] }}
             // style={{ backgroundColor: red[600] }}
-            title="This is a very cool feature"
+            title="Luqta Spooq"
             subtitle="Just using this will blow your mind."
           />
           })
@@ -36,8 +36,8 @@ const AutoRotatingCarouselModal = ({ handleOpen, setHandleOpen, isMobile }) => {
             }
             // mediaBackgroundStyle={{ backgroundColor: red[400] }}
             // style={{ backgroundColor: red[600] }}
-            title="This is a very cool feature"
-            subtitle="Just using this will blow your mind."
+            // title="This is a very cool feature"
+            // subtitle="Just using this will blow your mind."
           />
         }
       </AutoRotatingCarousel>

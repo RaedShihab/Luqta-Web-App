@@ -87,7 +87,7 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
               <Switch>
                 <Route exact path='/:page' component={Dashboard} />
 
-                <Route exact path='/:subCateg/:categ' component={Dashboard} />
+                <Route exact path='/:subCateg/:categ' component={Dashboard1} />
                 
                 <Route exact path='/:subCateg/:categ/:page' component={Dashboard} />
                 

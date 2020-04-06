@@ -346,9 +346,7 @@ const Dashboard: React.FC = (props) => {
   if(gettingAds) {
     return <div className={classes.loading}><CircularProgress size={60}/></div>
   }
-  else{
-    console.log(history)
-    
+  else{    
     return (
       <MuiThemeProvider theme={theme}>
         {!fullScreen ? (

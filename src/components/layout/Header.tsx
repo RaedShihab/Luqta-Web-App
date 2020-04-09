@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom'
 import { withTranslation, WithTranslation } from "react-i18next";
 import {
   createStyles,
@@ -133,6 +134,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
   const {language} = i18n
   const updateMirrorView = () => {
+    window.location.reload(false)
     i18n.changeLanguage(language === 'ar'? 'en': 'ar')
     setDirection(direction==="ltr"? "rtl": "ltr")
   }
@@ -192,7 +194,11 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               </div>
               <div className={classes.otherIcons}>
                 <CustomLinkButton>
+                  <Link
+                  to='/myads'
+                  >
                   <FavoriteBorderIcon className={classes.IconCss} />
+                  </Link>
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>

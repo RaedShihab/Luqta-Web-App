@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import { compose } from 'redux';
-import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
+import { Route, Switch, BrowserRouter, Redirect, Router } from "react-router-dom";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
@@ -19,10 +19,10 @@ import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import Dashboard from '../views/Dashboard/Dashboard'
 import Dashboard1 from '../views/Dashboard/Dashboard1'
-import Dashboard2 from '../views/Dashboard/Dashboard2'
-// const Dashboard = React.lazy(() => import('../views/Dashboard/Dashboard'));
-// const Dashboard1 = React.lazy(() => import('../views/Dashboard/Dashboard'));
-// const Dashboard2 = React.lazy(() => import('../views/Dashboard/Dashboard'));
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
+
 const MyAds = React.lazy(() => import('../views/MyAds/MyAds'));
 const AdDetail = React.lazy(() => import('../views/AdDetail/AdDetail'));
 // Configure JSS
@@ -83,20 +83,18 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
         <Toolbar variant="dense"  className={classNames( fullScreen && classes.smToolbar)} />
         <Box flexGrow={1} style={{ height: "100%", overflow: "hidden" }}>
           <main className={classNames(classes.content)}>
-          <BrowserRouter>
+          <Router history={history}>
               <Switch>
-                <Route exact path='/:page' component={Dashboard} />
-
-                <Route exact path='/:subCateg/:categ' component={Dashboard1} />
+                <Route exact path='/myads' component={MyAds} />
+                <Route exact path='/' component={Dashboard} />
+                <Route exact path='/:subCateg/:categ' component={Dashboard1} />                
                 
-                <Route exact path='/:subCateg/:categ/:page' component={Dashboard} />
-                
-                <PrivateRoute exact path='/myads' component={MyAds} />
-                <Route exact path='/search/ad-detail/city/:id' component={AdDetail} />
 
-                <Redirect path='/' to='/1' />
+                <Route exact path='/:id/search/:name' component={AdDetail} />
+                
+                {/* <Redirect path="/" to="/1"/> */}
               </Switch>
-          </BrowserRouter>
+          </Router>  
           </main>
         </Box>
         <Box flexGrow={1} style={{ height: "100%" }}>

@@ -7,37 +7,43 @@ const AutoRotatingCarouselModal = ({ handleOpen, setHandleOpen, isMobile }) => {
   const {images} = isMobile
   return (
     <div>
-      {/* <Button onClick={() => setHandleOpen({ open: true })}>Open carousel</Button> */}
       <AutoRotatingCarousel
         // label="Get started now"
         open={handleOpen.open}
         onClose={() => setHandleOpen({ open: false })}
-        onStart={() => setHandleOpen({ open: false })}
+        onStart={(i) =>{ 
+          // setHandleOpen({ open: false })`
+          console.log('i',i)}
+        }
         autoplay={false}
         mobile={matches}
+        onChange={(i)=>  {
+          console.log(i)
+        }}
+        // landscape={true}
       >
         {
           images.length > 0 ?
           images.map(img=> {
             return <Slide
             media={
-              <img src={img} />
+                <img style={{width: "100%"}} src={img} />
             }
-            // mediaBackgroundStyle={{ backgroundColor: red[400] }}
-            // style={{ backgroundColor: red[600] }}
-            title="Luqta Spooq"
-            subtitle="Just using this will blow your mind."
+            mediaBackgroundStyle={{ height: '92%',  backgroundColor: 'white'}}
+            style={{ backgroundColor: 'white' }}
+            // title="Luqta Sooq"
+            // subtitle="Just using this will blow your mind."
+            
           />
           })
           :
-          <Slide
+          <Slide  
             media={
-              <img src={NoImgAr} />
+              <img style={{width: "100%", height: `${!matches?"100%" : ""}`}} src={NoImgAr} />
             }
             // mediaBackgroundStyle={{ backgroundColor: red[400] }}
             // style={{ backgroundColor: red[600] }}
-            // title="This is a very cool feature"
-            // subtitle="Just using this will blow your mind."
+            mediaBackgroundStyle={{ height: '100%'}}
           />
         }
       </AutoRotatingCarousel>

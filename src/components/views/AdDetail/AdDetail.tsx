@@ -596,10 +596,10 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           if(ad.cat_specs !== null) {
                             if(ad.cat_specs[name] !== undefined)
                                return <Box key={spec.id} className="adBoxTab" >
-                                    <div className="adBoxLeftCol">{spec.label.ar}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
+                                    <div className="adBoxLeftCol">{spec.label}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
                                     {
                                       spec.type === "list" ? 
-                                      <div className="adBoxRightCol">{ad.cat_specs[name] !== undefined && ad.cat_specs[name].ar}</div> 
+                                      <div className="adBoxRightCol">{ad.cat_specs[name] !== undefined && ad.cat_specs[name]}</div> 
                                       :
                                       <div className="adBoxRightCol">{ad.cat_specs[name] !== undefined && ad.cat_specs[name]}</div>
                                     }
@@ -621,11 +621,11 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     <TabPanel value={adsTab} index={"Location"}>
                       <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("city")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.city.name.ar}</div>
+                    <div className="adBoxRightCol">{ad.city.name}</div>
                       </Box>
                       {ad.district !== null && <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("district")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.district.name.ar}</div>
+                    <div className="adBoxRightCol">{ad.district.name}</div>
                       </Box>}
                     </TabPanel>
                   </Grid>
@@ -675,7 +675,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Typography>
               </Alert>
             </Snackbar>
-            <Snackbar open={showPhone} onClose={handlePhoneShow}>
+            <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
               <Alert onClose={handlePhoneShow} severity="info">
                 <Typography style={{margin: '0px 10px'}}>
                 {t("phone")}: {ad.owner.phone_number}

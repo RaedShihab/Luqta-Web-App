@@ -93,10 +93,11 @@ interface Props extends RouteComponentProps{
 	setSelectedSubCategory: any;
 	// t: any;
 	getAdsByCategId?: any;
-	history: any 
+	history: any;
+	setRedirect?: any;
   }
 
-const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, getAdsByCategId, history  }) => {
+const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, getAdsByCategId, history, setRedirect  }) => {
 
 	const [activeCategory, setActiveCategory]: any = useState(null);
 	const [activeSubCategory, setActiveSubCategory]: any = useState([]);
@@ -172,11 +173,11 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 							onClick={() => { updateParentCategory(category); }} 
 							onMouseOver={() => {
 								onListItemClick(category.id)
-								setActiveCategory(category.name.ar)
+								setActiveCategory(category.name)
 								}}>
 									<Icon>{category.icon}</Icon>
 									&nbsp; &nbsp;
-									<span style={{ flexGrow: 1 }}>{category.name.ar}</span>
+									<span style={{ flexGrow: 1 }}>{category.name}</span>
 								</ListItem>	
 							);
 						})
@@ -198,7 +199,8 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 							   onClick={
 								()=>{
 									updateSubWithParentCategory(subCateg)
-									history.push({pathname:`/${activeCategory}/${subCateg.name.ar}`, state: {id: subCateg.id}})
+									localStorage.setItem('categId', subCateg.id)
+									history.push({pathname:`/${activeCategory}/${subCateg.name}`})
 									window.location.reload(false);
 								}
 								}>
@@ -206,7 +208,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 									pathname: `/${activeCategory}/${subCateg.name.ar}`,
 									state: {id: subCateg.id}
 								}}> */}
-								<span style={{ flexGrow: 1 }}>{subCateg.name.ar}</span>
+								<span style={{ flexGrow: 1 }}>{subCateg.name}</span>
 								{/* </Link> */}
 								</ListItem>
 							})

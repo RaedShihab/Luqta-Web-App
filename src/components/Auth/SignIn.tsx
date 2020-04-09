@@ -231,6 +231,7 @@ const SignIn: React.FC = (props) => {
   
 
   useEffect(() => {
+    console.log(props)
     dispatch(userActions.logout());
     if (direction) {
       let body: any = document.getElementsByTagName("body");

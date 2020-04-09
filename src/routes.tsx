@@ -4,7 +4,7 @@ import { Route, Switch, Redirect,BrowserRouter, Router } from "react-router-dom"
 const Layout = React.lazy(() => import('./components/layout/Layout'));
 const MySignIn = React.lazy(() => import('./components/Auth/SignIn'));
 const MySignUp = React.lazy(() => import('./components/Auth/SignUp'));
-const Dashboard = React.lazy(() => import('./components/views/Dashboard/Dashboard'));
+const MyAds = React.lazy(() => import('./components/views/MyAds/MyAds'));
 
 const MainRoutes: React.FC = () => {
 
@@ -17,7 +17,9 @@ const MainRoutes: React.FC = () => {
       <Switch>
           <Route exact path='/signin' component={MySignIn} />
           <Route exact path='/signup' component={MySignUp} />
+          {/* <Route exact path='/myads' component={MyAds} /> */}
           <Route path="/" component={Layout} />
+          {/* <Redirect path="/my" to="/myads"/> */}
           </Switch>
       </BrowserRouter>
       </Suspense>

@@ -105,7 +105,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                 <Link
                   underline="none"
                   component="a"
-                  href={`/search/ad-detail/city/${ad.id}`}
+                  href={`/${ad.id}/search/${ad.title}`}
                   >
                 <img className={classes.img} alt="listProduct" src={ad.images === null||ad.images === undefined ? noImg: ad.images.image} />
                 </Link>
@@ -121,7 +121,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                <Link
                   underline="none"
                   component="a"
-                  href={`/search/ad-detail/city/${ad.id}`}
+                  href={`/${ad.id}/search/${ad.title}`}
                >
                <Grid item xs={12}>
                   <div
@@ -179,8 +179,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <LocationOnIcon />
                     </Typography>
-                    <span className="locationName"> {ad.city.name.ar} </span> |
-                    <span className="locationName"> {ad.district_id} </span>
+                    <span className="locationName"> {ad.city.name + ' |'} </span>
+                    {ad.district!== null && <span className="locationName"> {ad.district.name} </span>}
                   </Grid>
                 </Grid>
                 <Grid container>
@@ -205,9 +205,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <DriveEtaIcon />
                     </Typography>
-                    {/* <span className="locationName"> {ad.category.name.ar} </span>| */}
-                    {/* <span className="locationName"> {ad.model} </span>|
-                    <span className="locationName"> {ad.brand} </span> */}
+                    <span className="locationName"> {ad.category.name+ ' |'} </span>
+                    {ad.model !== null && <span className="locationName"> {ad.model + ' |'} </span>}
+                    {ad.brand !== null && <span className="locationName"> {ad.brand + ' |'} </span>}
                   </Grid>
                 </Grid>
                </Link>
@@ -239,7 +239,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
               </Grid>
             </Grid>
           </Grid>
-              <Snackbar open={showPhone} onClose={handlePhoneShow}>
+              <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
                 <Alert onClose={handlePhoneShow} severity="info">
                   <Typography style={{margin: '0px 10px'}}>
                   {t("phone")}: {ad.owner.phone_number}

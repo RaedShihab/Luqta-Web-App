@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
 import { withTranslation, WithTranslation } from "react-i18next";
-import AutoRotatingCarouselModal from './carouselModel'
 import classNames from "classnames";
 import {
   makeStyles,
@@ -15,7 +16,7 @@ import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent,
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import Slider from "react-slick";
-import NoImg from "../../../assets/noImg.png";
+import NoImg from "../../../assets/no_img_big2.png";
 import Image0 from "../../../assets/Image-0.png";
 import Image1 from "../../../assets/Image-1.png";
 import Image2 from "../../../assets/Image-2.png";
@@ -158,12 +159,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   const lang = ()=> {
     return localStorage.getItem('i18nextLng')
   }
-
-  const [handleOpen, setHandleOpen] = React.useState({ open: false });
-  const handleClick = () => {
-    console.log('handleClick')
-    setHandleOpen({ open: true });
-  };
+  
   const matches = useMediaQuery("(max-width:600px)");
 
   const classes = useStyles();
@@ -191,20 +187,15 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   const resScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [value, setValue] = React.useState<number | null>(3.5);
   const [adsTab, setAdsTab] = React.useState("Details");
-  const [images, setImages] : any = React.useState([]);
-  const [settings, setSettings] = React.useState({
-    dots: true,
-    infinite: false,
-    // speed: 500,
-    slidesToShow: 0,
-    slidesToScroll: 1,
-    vertical: true,
-    verticalSwiping: true,
-    rtl: false,
-    arrows: false
-  });
-  const adSlick = useRef(null);
-  
+  const [images, segtImages] = React.useState([])
+
+  const noImage:any = [
+    {
+      original: NoImg,
+      thumbnail: NoImg,
+    },
+  ]
+    
   const handleAdsTabChange = (event: React.ChangeEvent<{}>, newValue: any) => {
     setAdsTab(newValue);
   };
@@ -220,12 +211,6 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
-  const handleClose = (event: any, reason: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
 
   const handlePhoneShow = (event: any, reason: string) => {
     if (reason === 'clickaway') {
@@ -238,7 +223,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   const getAdSpecefications = (id: any)=> {
     Axios.get(`/categories/${id}/specifications`)
     .then(res =>{
-      // console.log(res.data.data)
+      console.log(res.data.data)
         setSpecefications(res.data.data)
         setGettingDetails(false)
       })
@@ -251,80 +236,22 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   }
 
   useEffect(() => {
-    if (resScreen) {
-      setSettings({ ...settings, 
-        // slidesToShow: 3 
-      });
-    } else {
-      setSettings({ ...settings, 
-        // slidesToShow: 4 
-      });
-    }
     //show ad
     Axios.get(`/ads/${id}`)
     .then(res =>{
       console.log(res.data.data)
-      const imgs = res.data.data.images.map((img:any)=>{
-        return img.image
-       })
+      const imgsArr = res.data.data.images.map((imgObj: any)=> {
+        return {images: imgObj.images, thumbnail: imgObj.thumbnail}
+      })
+      segtImages(imgsArr)
         setAdDetails(res.data.data)
-        setImages(imgs)
         getAdSpecefications(res.data.data.category.id)
-        if(imgs.length-1 < 4 ) {
-          setSettings({
-            ...settings, 
-            slidesToShow: imgs.length-1 
-          })
-        }
-        if(imgs.length === 1 ) {
-          setSettings({
-            ...settings, 
-            slidesToShow: imgs.length
-          })
-        }
-        if(imgs.length === 0 ) {
-          setSettings({
-            ...settings, 
-            slidesToShow: 1
-          })
-        }
       })
     .catch(err => {
+      setOpen(true)
       setGettingDetails(false)
       setMessage(t('something_went_wrong_please_try_again'))
-      setOpen(true)
     })
-    
-    //get ad images
-    // Axios.get(`/ads/${id}/images`)
-    // .then(res =>{
-    //   const images : any = res.data.data.map((img : any)=> img.image)
-    //   setImages(images)
-    //   if(images.length-1 < 4 ) {
-    //     setSettings({
-    //       ...settings, 
-    //       slidesToShow: images.length-1 
-    //     })
-    //   }
-    //   if(images.length === 1 ) {
-    //     setSettings({
-    //       ...settings, 
-    //       slidesToShow: images.length
-    //     })
-    //   }
-    //   if(images.length === 0 ) {
-    //     setSettings({
-    //       ...settings, 
-    //       slidesToShow: 1
-    //     })
-    //   }
-    //   })
-    // .catch(err => {
-    //   console.log(err.response)
-    //   // setGettingDetails(false)
-    //   // setMessage(t('something_went_wrong_please_try_again'))
-    //   // setOpen(true)
-    // })
   }, [resScreen])
   
   const TabPanel = (props: TabPanelProps) => {
@@ -347,58 +274,39 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
   if(gettingDetails) {
     return <div className={classes.loading}><CircularProgress size={60}/></div>
   }
+
   else {
     return (
       <MuiThemeProvider theme={theme}>
-        <div className={classes.root}>
+       { open ? <Snackbar open={true} >
+              <Alert severity="error">
+                <Typography style={{margin: '0px 10px'}}>
+                {message}
+                </Typography>
+                <Button 
+                onClick={()=>window.location.reload(false)}
+                >relaod</Button>
+              </Alert>
+            </Snackbar>  
+       :
+       <div className={classes.root}>
           <Container fixed className="display-flex" style={{ alignItems: "center" }}>
             <Card className={classes.cardHover} elevation={0}>
               <CardContent className={classNames(resScreen && "rescardContent")}>
                 <Grid container spacing={2}>
-                  <Grid item lg={1} md={1} xs={3} id="adSlick" >
+                
+                  {/* <Grid item lg={1} md={1} xs={3} id="adSlick" >
                     <div style={{ position: "relative" }} ref={adSlick}>
-                    {/* <span className={ classes.topSlick }>
-                      <Icon className={classes.circleIcon}>
-                        keyboard_arrow_up
-                      </Icon>
-                    </span> */}
-
-                      <Slider {...settings}>
-                        {
-                          images.length > 0 ?
-                          images.map((img: any) => {
-                            return <ButtonBase onClick={handleClick}>
-                                     <img src={img} style={{ width:"100px", height:"70px", backgroundColor:"#F9F9F9" }}></img>
-                                   </ButtonBase>
-                          })
-                          :
-                          <ButtonBase onClick={handleClick}>
-                            <img src={NoImg} style={{ width:"70px", backgroundColor:"#F9F9F9" }}></img>
-                          </ButtonBase>
-                          }
-                      </Slider>
-                      {/* <span className={ classes.downSlick }>
-                        <Icon className={classes.circleIcon}>
-                          keyboard_arrow_down
-                        </Icon>
-                      </span> */}
+                    
                       </div>
+                  </Grid> */}
+                  <Grid item lg={7} md={6} xs={12}  style={{ width: "100%" }}>
+                  <ImageGallery 
+                    items={images.length<1?noImage: images}
+                    showNav={false}
+                    showPlayButton={false}
+                />
                   </Grid>
-                  <Grid item lg={5} md={5} xs={9}  style={{ width: "100%" }}>
-                    <ButtonBase onClick={handleClick} style={{ width: "100%", position: "relative" }}>
-                      <img className={classes.img} style={{ height: resScreen? "260px" : "370px"  }} alt="listProduct" src={ad.images === null || ad.images === undefined || ad.images.length < 1 ? NoImg: ad.images[0].image} />
-                      <span className={classes.topRightIcon}>
-                        <Icon className={classes.circleIcon} style={{ color: "red" }}>
-                          favorite
-                        </Icon>
-                      </span>
-                    </ButtonBase>
-                  </Grid>
-                  <AutoRotatingCarouselModal
-                      isMobile={{matches: matches, images: images}}
-                      handleOpen={handleOpen}
-                      setHandleOpen={setHandleOpen}
-                    />
                   <Grid item lg={5} md={6} xs={12}>
                     <Grid item xs={12}>
                       <div className={classNames(
@@ -450,7 +358,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                             color="primary"
                             size="small"
                             className={classes.button}
-                            startIcon={<Icon>star</Icon>}
+                            // startIcon={<Icon>star</Icon>}
                           >
                             {t("rate")}
                           </Button>
@@ -467,7 +375,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               color="primary"
                               size="small"
                               className={lang() === "en" ?( classes.button + " " + classes.detailBtn) :( classes.button + " " + classes.detailBtn + " " + classes.rtlBtn)}
-                              startIcon={<Icon>watch_later</Icon>}
+                              // startIcon={<Icon>watch_later</Icon>}
                             >
                               <div className={lang()==='ar'? classes.margin : ''}>Hours</div>
                             </Button>
@@ -483,9 +391,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               color="primary"
                               size="small"
                               className={lang() === "en" ?( classes.button + " " + classes.detailBtn) :( classes.button + " " + classes.detailBtn + " " + classes.rtlBtn)}
-                              startIcon={<Icon>watch_later</Icon>}
+                              // startIcon={<Icon>watch_later</Icon>}
                             >
-                              <div className={lang()==='ar'? classes.margin : ''}>100%</div>
+                              <div className={lang()==='ar'? classes.margin : ''}>100%</div>  
                             </Button>
                             <br />
                             <span className="repliesCss">
@@ -522,7 +430,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           color="primary"
                           size={resScreen ? "small" : "large"}
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
-                          startIcon={<Icon>call</Icon>}
+                          // startIcon={<Icon>call</Icon>}
                         >
                          <div style={{marginRight: 5}}>{t("call")}</div>
                         </Button>
@@ -531,7 +439,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           color="primary"
                           size={resScreen ? "small" : "large"}
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
-                          startIcon={<Icon>chat</Icon>}
+                          // startIcon={<Icon>chat</Icon>}
                         >
                           <div style={{marginRight: 5}}>{t("chat")}</div>
                         </Button>
@@ -540,7 +448,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           color="primary"
                           size={resScreen ? "small" : "large"}
                           className={resScreen ? "resAdContactbtn" : "adContactbtn"}
-                          startIcon={<Icon>label_important</Icon>}
+                          // startIcon={<Icon>label_important</Icon>}
                         >
                           <div style={{marginRight: 5}}>{t("premium")}</div>
                         </Button>
@@ -656,7 +564,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                               </Typography>
                             </div>
                             <div>
-                              <Icon style={{ color: "#BBBBBB" }}>more_vert</Icon>
+                              {/* <Icon style={{ color: "#BBBBBB" }}>more_vert</Icon> */}
                             </div>
                           </div>
                         </CardContent>
@@ -668,13 +576,13 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Grid>
               </CardContent>
             </Card>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="error">
                 <Typography style={{margin: '0px 10px'}}>
                 {message}
                 </Typography>
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
             <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
               <Alert onClose={handlePhoneShow} severity="info">
                 <Typography style={{margin: '0px 10px'}}>
@@ -683,7 +591,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
               </Alert>
             </Snackbar>
           </Container>
-        </div>
+        </div>}
       </MuiThemeProvider>
     );
   }

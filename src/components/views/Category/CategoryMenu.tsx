@@ -9,10 +9,9 @@ import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from "@material-ui/core/Divider";
-// import ListItemText from '@material-ui/core/ListItemText';
-// import DriveEtaIcon from '@material-ui/icons/DriveEta';
-// import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
-// import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import {Link} from '@material-ui/core';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import { category } from './Categoty';
 import {Axios} from '../../apiServecis/axiosConfig'
 
@@ -108,6 +107,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 	useEffect(() => {
 		Axios.get(`/categories`)
 		.then(res=> {
+			console.log(res.data.data)
 			setCategories(res.data.data)
 		})
 		.catch(err => console.log(err.response))
@@ -198,18 +198,20 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 							return <ListItem className={classes.subCategoryList} key={index} 
 							   onClick={
 								()=>{
-									updateSubWithParentCategory(subCateg)
+									// updateSubWithParentCategory(subCateg)
 									localStorage.setItem('categId', subCateg.id)
-									history.push({pathname:`/${activeCategory}/${subCateg.name}`})
-									window.location.reload(false);
+									// history.push({pathname:`/${activeCategory}/${subCateg.name}`})
+									// window.location.reload(false);
 								}
 								}>
-								{/* <Link to={{
-									pathname: `/${activeCategory}/${subCateg.name.ar}`,
-									state: {id: subCateg.id}
-								}}> */}
-								<span style={{ flexGrow: 1 }}>{subCateg.name}</span>
-								{/* </Link> */}
+								<Link 
+								component='a'
+								underline='none'
+								href= {`/${activeCategory}/${subCateg.name}`}
+								>
+								<ListItemText primary={subCateg.name} />
+								{/* <span style={{ flexGrow: 1 }}>{subCateg.name}</span> */}
+								</Link>
 								</ListItem>
 							})
 						}

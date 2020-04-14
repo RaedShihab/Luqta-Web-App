@@ -6,7 +6,7 @@ import withRoot from './withRoot';
 // import Layout from './components/layout/Layout';
 import './components/common.css';
 import MainRoutes from './routes';
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();

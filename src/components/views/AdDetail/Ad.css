@@ -1,3 +1,35 @@
+
+  .slick-slider {
+    margin-top: 40px;
+  }
+  
+  .slick-prev, .slick-next {
+    left: 50%;
+    transform: translate(-50%, 0) rotate(90deg);
+    background-color: blue;
+  }
+  .slick-next {
+    top: unset;
+    bottom: -40px;
+  }
+  .slick-prev {
+    top: -40px;
+  }
+  .slick-arrow {
+      border-radius: 50%;
+    /* position: absolute; */
+    /* bottom: -35px; */
+    /* left: 50%; */
+    /* top: -3px; */
+    width: 34px;
+    height: 34px;
+    /* height: 34px; */
+    padding-top: 1.5px;
+    /* text-indent: -9999px; */
+    /* background-repeat: no-repeat; */
+  }
+  
+
 .rescardContent {
     padding: 8px !important;
 }

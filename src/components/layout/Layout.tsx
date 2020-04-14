@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import { compose } from 'redux';
-import { Route, Switch, BrowserRouter, Redirect, Router } from "react-router-dom";
+import { Route, Switch, Redirect, Router } from "react-router";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
@@ -84,16 +84,16 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
         <Box flexGrow={1} style={{ height: "100%", overflow: "hidden" }}>
           <main className={classNames(classes.content)}>
           <Router history={history}>
-              <Switch>
+              {/* <Switch> */}
                 <Route exact path='/myads' component={MyAds} />
                 <Route exact path='/' component={Dashboard} />
-                <Route exact path='/:subCateg/:categ' component={Dashboard1} />                
+                <Route exact path='/:subCateg/:categ' component={Dashboard} />                
                 
 
                 <Route exact path='/:id/search/:name' component={AdDetail} />
                 
                 {/* <Redirect path="/" to="/1"/> */}
-              </Switch>
+              {/* </Switch> */}
           </Router>  
           </main>
         </Box>

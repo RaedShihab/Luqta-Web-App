@@ -54,11 +54,9 @@ import Search from './search';
 import Menu from "../Category/CategoryMenu";
 import CategoryDrawarMenu from "../Category/ResCategoryMenu";
 import SearchCategoryDrawarMenu from "../Category/ResSearchCategoryMenu";
-import { category } from '../Category/Categoty';
 import "../../../App.css";
 import "./Dashboard.css";
 import {Axios} from '../../apiServecis/axiosConfig';
-import Layout from '../../layout/Layout'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -290,7 +288,7 @@ const Dashboard: React.FC = (props) => {
   };
   //get all: 
   const getAds = () => {
-    Axios.get(`/ads?page=${page===undefined? 1 : page}&per_page=${5}`)
+    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${5}`)
     // Axios.get(`/ads`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
@@ -330,6 +328,7 @@ const Dashboard: React.FC = (props) => {
   const[lang, setLang] = React.useState(localStorage.getItem("i18nextLng"))
     
   useEffect(() => {
+    console.log(history.action)
     const id :any = localStorage.getItem("categId")
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);

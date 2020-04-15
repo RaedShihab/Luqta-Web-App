@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { withTranslation } from "react-i18next";
 import { compose } from 'redux';
-import { Route, Switch, Redirect, Router } from "react-router";
+import { Route, Router } from "react-router";
 import classNames from "classnames";
 import { MuiThemeProvider, createMuiTheme, useMediaQuery, Container } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
 import { CssBaseline, Toolbar } from "@material-ui/core";
-import {PrivateRoute} from '../Auth/Components/privateRoutes';
+// import {PrivateRoute} from '../Auth/Components/privateRoutes';
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import FooterCategory from "./FooterCategory";
@@ -18,7 +18,6 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import Dashboard from '../views/Dashboard/Dashboard'
-import Dashboard1 from '../views/Dashboard/Dashboard1'
 import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();

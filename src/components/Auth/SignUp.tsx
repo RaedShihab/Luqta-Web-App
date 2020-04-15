@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {Formik, ErrorMessage} from 'formik';
 import { withTranslation } from "react-i18next";
 import { compose } from 'redux';

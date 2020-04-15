@@ -1,10 +1,9 @@
 import React, { Suspense } from 'react';
-import { Route, Switch, Redirect,BrowserRouter, Router } from "react-router-dom";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 
 const Layout = React.lazy(() => import('./components/layout/Layout'));
 const MySignIn = React.lazy(() => import('./components/Auth/SignIn'));
 const MySignUp = React.lazy(() => import('./components/Auth/SignUp'));
-const MyAds = React.lazy(() => import('./components/views/MyAds/MyAds'));
 
 const MainRoutes: React.FC = () => {
 

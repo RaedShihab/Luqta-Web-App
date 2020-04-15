@@ -1,4 +1,4 @@
-
+/* 
   .slick-slider {
     margin-top: 40px;
   }
@@ -17,29 +17,31 @@
   }
   .slick-arrow {
       border-radius: 50%;
-    /* position: absolute; */
-    /* bottom: -35px; */
-    /* left: 50%; */
-    /* top: -3px; */
     width: 34px;
     height: 34px;
-    /* height: 34px; */
     padding-top: 1.5px;
-    /* text-indent: -9999px; */
-    /* background-repeat: no-repeat; */
-  }
+  } */
   
 
 .rescardContent {
     padding: 8px !important;
 }
-.adcardheader {
+.adcardheaderLtr {
     border-left: 4px solid #FF002A;
     opacity: 1;
 }
+.adcardheaderRtl {
+    border-right: 4px solid #FF002A;
+    opacity: 1;
+}
+.adcardheaderLtr > h6 {
+    margin-left: 30px;
+}
+.adcardheaderRtl > h6 {
+    margin-right: 30px;
+}
 .adcardheader > h6 {
     color: #676D80;
-    margin-left: 30px;
     font-size: 24px;
     font-weight: 500;
     letter-spacing: 0.8px;

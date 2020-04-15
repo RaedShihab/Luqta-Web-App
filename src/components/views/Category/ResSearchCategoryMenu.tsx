@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Popover from '@material-ui/core/Popover';
-import { MenuContent } from '../styles/Elements';
-import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
+import React from 'react';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import {  Button, createMuiTheme, Icon, Divider } from '@material-ui/core';
-import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Drawer from '@material-ui/core/Drawer';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {Redirect} from 'react-router-dom';
 import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -21,11 +20,10 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  Icon,
+  // Icon,
   CircularProgress,
   Typography,
   Snackbar,
-  Paper
 } from "@material-ui/core";
 import Link from '@material-ui/core/Link';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -35,7 +33,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import AppsIcon from "@material-ui/icons/Apps";
 import KeyboardArrowDownOutlinedIcon from "@material-ui/icons/KeyboardArrowDownOutlined";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
@@ -49,7 +46,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListingProduct from "../ListingProduct/ListingProduct";
 import ListingAds from "../ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
-import Drawer from '@material-ui/core/Drawer';
 import Search from './search';
 import Menu from "../Category/CategoryMenu";
 import CategoryDrawarMenu from "../Category/ResCategoryMenu";
@@ -125,7 +121,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     link : {
       textDecoration: "none"
-    }
+    },
+    sorryMessage: {textAlign: 'center', fontWeight: 'bold'}
   })
 );
 
@@ -206,9 +203,9 @@ const AntSwitch = withStyles((theme: Theme) =>
 
 const Dashboard: React.FC = (props) => {
 
-  const {i18n, t, history, match, location} : any = props
+  const { t, match, location} : any = props
 
-  const historyState = history.location.state
+  // const historyState = history.location.state
   const {params} : any = match
 
   // current page
@@ -219,12 +216,12 @@ const Dashboard: React.FC = (props) => {
      :
      location.search[location.search.length-2]+location.search[location.search.length-1]
   }
-
+  const [clickedPage, setClickedPage] = React.useState(1)
   // const [redirect, setRedirect] = useState(false);
 
   const [selectedCategory, setSelectedCategory]: any = useState(params === {} ? null : params.categ);
   
-  const [selectedSubCategory, setSelectedSubCategory]: any = useState(params === {} ? null : params.subCateg);
+  const [selectedSubCategory, setSelectedSubCategory]: any = useState(params === {} ? null : params.categ);
 
   const [value, setValue] = useState("Offers");
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -242,7 +239,7 @@ const Dashboard: React.FC = (props) => {
 
   const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(false);
   const [openResSearchCategorySubMenu, setOpenSearchResCategorySubMenu] = React.useState(false);
-  const [isResFilter, setIsResFilter] = React.useState(false);
+  // const [isResFilter, setIsResFilter] = React.useState(false);
 
  
 
@@ -271,11 +268,10 @@ const Dashboard: React.FC = (props) => {
   };
   //get categ by id:
   const getAdsByCategId = (id: any, page: any) => {
-    console.log(id,  page)
-    Axios.get(`/ads?page=${page===undefined? 1 : page}&per_page=${5}`)
-    // Axios.get(`/ads`)
+    console.log(isNaN(page), parseInt(page))
+    Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
     .then(res => {
-      // console.log(res)
+      console.log(res.data.data)
       setAds(res.data.data)
       setGettingAds(false)
     })
@@ -288,8 +284,7 @@ const Dashboard: React.FC = (props) => {
   };
   //get all: 
   const getAds = () => {
-    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${5}`)
-    // Axios.get(`/ads`)
+    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${10}`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
       setAds(res.data.data)
@@ -325,16 +320,16 @@ const Dashboard: React.FC = (props) => {
   const [message, setMessage] = React.useState('')
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
-  const[lang, setLang] = React.useState(localStorage.getItem("i18nextLng"))
     
   useEffect(() => {
-    console.log(history.action)
+    // console.log(parseInt(page()))
+    setClickedPage(parseInt(page()))
     const id :any = localStorage.getItem("categId")
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads:
     params.categ !== undefined?
-    getAdsByCategId(id, page())
+    getAdsByCategId(id, parseInt(page()))
       :
     getAds()
   }, []);
@@ -411,7 +406,7 @@ const Dashboard: React.FC = (props) => {
                           className={classes.categoryLink + " categoryCss"}
                           onClick={openCategoryMenu}
                         >
-                          {!selectedSubCategory ? <>
+                          {/* {!selectedSubCategory ? <>
                             {!selectedCategory ? (
                               <AppsIcon style={{ marginRight: "5px" }} />
                             ) : <Icon>{selectedCategory.icon}</Icon>}
@@ -420,11 +415,11 @@ const Dashboard: React.FC = (props) => {
                               {!selectedCategory ? "Categories" : selectedCategory}
                             </span>
                             </>
-                            : 
+                            :  */}
                               <span style={{ flexGrow: 1 }}>
-                                {!selectedSubCategory ? "Categories" : selectedSubCategory}
+                                {!selectedSubCategory ? t("categories" ): selectedSubCategory}
                               </span>
-                           }
+                           {/* } */}
                           <KeyboardArrowDownOutlinedIcon />
                         </div>
     
@@ -641,9 +636,9 @@ const Dashboard: React.FC = (props) => {
                   })}
                 </Grid>
                 :
-                <Card style={{textAlign: 'center'}}>
-                  <Typography variant='h6'>No Ads to show</Typography>
-                </Card>
+                <div className={classes.sorryMessage}>
+                  <Typography color='primary' variant='h6'>{t("Sorry_we_could_not_find_anything")}</Typography>
+                 </div>
                 }
               </Grid>
               <Grid item lg={4} md={4} xs={12}>
@@ -665,9 +660,9 @@ const Dashboard: React.FC = (props) => {
                     <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> {t("save_search")}</Button>
                   </Grid>
                 </Grid>
-                {
+                {/* {
                   ads.length > 0
-                  &&
+                  && */}
                   <Grid container spacing={2} direction="row">
                   <Grid item lg={12} md={12} xs={12}>
                     <Link
@@ -676,16 +671,16 @@ const Dashboard: React.FC = (props) => {
                     href={params.categ !== undefined? `/${params.subCateg}/${params.categ}?page=${pagee}` : `/?page=${pagee}`}
                     >
                     <Pagination 
-                      defaultPage={parseInt(page())} 
+                      // defaultPage={isNaN(page)? 1 : parseInt(page())}
+                      defaultPage={isNaN(clickedPage)? 1 : clickedPage}
                       count={19} 
-                      color="primary" shape="rounded" 
+                      color="primary" shape="rounded"
                       boundaryCount={10}  
                       onChange={handlePageNumber}
                       />
                     </Link>
                   </Grid>
                 </Grid>
-                }
               </Grid>
             </Grid>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

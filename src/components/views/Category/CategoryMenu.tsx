@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { withTranslation, WithTranslation } from "react-i18next";
+// import { withTranslation, WithTranslation } from "react-i18next";
 import Popover from '@material-ui/core/Popover';
 import { MenuContent } from '../styles/Elements';
 import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
@@ -8,7 +8,6 @@ import {  Grid, createMuiTheme, Icon } from '@material-ui/core';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from "@material-ui/core/Divider";
 import {Link} from '@material-ui/core';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -96,7 +95,7 @@ interface Props extends RouteComponentProps{
 	setRedirect?: any;
   }
 
-const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, setSelectedCategory, selectedSubCategory, setSelectedSubCategory, getAdsByCategId, history, setRedirect  }) => {
+const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, history, setRedirect  }) => {
 
 	const [activeCategory, setActiveCategory]: any = useState(null);
 	const [activeSubCategory, setActiveSubCategory]: any = useState([]);
@@ -125,16 +124,16 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 		.catch(err => console.log(err.response))
 	}
 
-	const updateSubWithParentCategory = (subCate: any) => {
-		setSelectedSubCategory(subCate);
-		// getAdsByCategId()
-		setMenuAnchor(null);
-	}
+	// const updateSubWithParentCategory = (subCate: any) => {
+	// 	setSelectedSubCategory(subCate);
+	// 	// getAdsByCategId()
+	// 	setMenuAnchor(null);
+	// }
 
-	const updateParentCategory = (cate: any) => {
-		setSelectedCategory(cate);
-		setSelectedSubCategory(null);
-	}
+	// const updateParentCategory = (cate: any) => {
+	// 	setSelectedCategory(cate);
+	// 	setSelectedSubCategory(null);
+	// }
 
 	const open = Boolean(menuAnchor);
 	const id = open ? 'simple-popover' : undefined;
@@ -162,16 +161,17 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 				<List component="nav">
 						<ListItem className={classes.boxHeader} onClick={() => onListItemClick("Catégories")}>
 							<ListOutlinedIcon style={{ marginRight: "5px" }}/> 
-							<span style={{ flexGrow: 1 }}>{("ALL_CATEGORIES")}</span>
+							<span style={{ flexGrow: 1 }}>{("All Categories")}</span>
 						</ListItem>
 				</List>
 				<hr />
 				<List component="nav" style={{ background: "#f4f6f7" }} >
 					{
 						categories.map((category: any, index: any) => {
-							return (<ListItem className={classes.categoryList} key={index} selected={selectedCategory && selectedCategory.id === category.id} 
-							onClick={() => { updateParentCategory(category); }} 
-							onMouseOver={() => {
+							return (<ListItem className={classes.categoryList} key={index} 
+								// selected={selectedCategory && selectedCategory.id === category.id} 
+							// onClick={() => { updateParentCategory(category); }}
+							onClick={() => {
 								onListItemClick(category.id)
 								setActiveCategory(category.name)
 								}}>
@@ -195,7 +195,10 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, selectedCategory, s
 					<List component="nav" >
 						{
 						  activeSubCategory.map((subCateg: any, index: any)=> {
-							return <ListItem className={classes.subCategoryList} key={index} 
+							return <ListItem
+							       className={classes.categoryList}
+								//    className={classes.subCategoryList}
+								   key={index}
 							   onClick={
 								()=>{
 									// updateSubWithParentCategory(subCateg)

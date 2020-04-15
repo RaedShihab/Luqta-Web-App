@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Popover from '@material-ui/core/Popover';
-import { MenuContent } from '../styles/Elements';
-import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import {  Grid, createMuiTheme, Icon, Divider } from '@material-ui/core';
-import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, Icon, Divider } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Drawer from '@material-ui/core/Drawer';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -17,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { category } from './Categoty';
 import {Axios} from '../../apiServecis/axiosConfig'
 import { Link } from '@material-ui/core';
 
@@ -75,25 +70,24 @@ interface IMenuProps {
 //   const [isResFilter, setIsResFilter] = React.useState(false);
 //   const [resCategoryMenu, setResCategoryMenu] = React.useState(false);
 
-  const side = 'right';
   type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
-  const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
-    event: React.KeyboardEvent | React.MouseEvent,
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-	}
+//   const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
+//     event: React.KeyboardEvent | React.MouseEvent,
+//   ) => {
+//     if (
+//       event.type === 'keydown' &&
+//       ((event as React.KeyboardEvent).key === 'Tab' ||
+//         (event as React.KeyboardEvent).key === 'Shift')
+//     ) {
+//       return;
+// 	}
     // if (type === "category") {
     //   setIsResFilter(false);
     // } else {
     //   setIsResFilter(true);
     // }
     // setResCategoryMenu(open);
-  };
+//   };
 //   const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(true);
 
 const CategoryDrawarMenu:  React.FC<IMenuProps> = ({ openResCategorySubMenu, setOpenResCategorySubMenu }) => {

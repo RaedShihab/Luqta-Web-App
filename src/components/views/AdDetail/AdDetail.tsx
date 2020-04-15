@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -9,13 +9,12 @@ import {
   Theme,
 } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent, 
-  CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container, Icon,
-   ButtonBase, Typography, Badge, Button, Divider, Box,CardMedia, 
-   CircularProgress, Snackbar, IconButton }
+  CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container
+  , Typography, Badge, Button, Divider, Box,CardMedia, 
+   CircularProgress, Snackbar }
     from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
-import Slider from "react-slick";
 import NoImg from "../../../assets/no_img_big2.png";
 import Image0 from "../../../assets/Image-0.png";
 import Image1 from "../../../assets/Image-1.png";
@@ -160,7 +159,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
     return localStorage.getItem('i18nextLng')
   }
   
-  const matches = useMediaQuery("(max-width:600px)");
+  // const matches = useMediaQuery("(max-width:600px)");
 
   const classes = useStyles();
   const theme = createMuiTheme({
@@ -234,14 +233,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
       setOpen(true)
     })
   }
-
+  console.log(images)
   useEffect(() => {
     //show ad
     Axios.get(`/ads/${id}`)
     .then(res =>{
       console.log(res.data.data)
       const imgsArr = res.data.data.images.map((imgObj: any)=> {
-        return {images: imgObj.images, thumbnail: imgObj.thumbnail}
+        return {original: imgObj.image, thumbnail: imgObj.thumbnail}
       })
       segtImages(imgsArr)
         setAdDetails(res.data.data)
@@ -285,7 +284,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Typography>
                 <Button 
                 onClick={()=>window.location.reload(false)}
-                >relaod</Button>
+                >try again</Button>
               </Alert>
             </Snackbar>  
        :
@@ -311,7 +310,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     <Grid item xs={12}>
                       <div className={classNames(
                           !resScreen && "adcardheader display-flex",
-                          resScreen && "resadcardheader"
+                          resScreen && "resadcardheader",
+                          lang() === "ar" ? "adcardheaderRtl" : "adcardheaderLtr"
                         )}
                       >
                           {/* <Typography variant="subtitle1"> */}
@@ -323,7 +323,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     <Grid item xs={12}>
                       <div style={{ alignItems: "center" }}
                         className={classNames(
-                          !resScreen && "adcardheader", "display-flex"
+                          !resScreen && "adcardheader", "display-flex",
+                          lang() === "ar" ? "adcardheaderRtl" : "adcardheaderLtr"
                         )}
                       >
                           <Typography variant="subtitle1">
@@ -550,7 +551,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                           component="img"
                           alt="Contemplative Reptile"
                           height="140"
-                          image={index == 0 ? Image0 :  index == 1 ? Image1 : index == 2 ? Image2 : index === 3 ? Image3 : Image0}
+                          image={index === 0 ? Image0 :  index === 1 ? Image1 : index === 2 ? Image2 : index === 3 ? Image3 : Image0}
                           title="Contemplative Reptile"
                         />
                         <CardContent style={{ paddingTop: "8px" }}>
@@ -576,13 +577,6 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Grid>
               </CardContent>
             </Card>
-            {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="error">
-                <Typography style={{margin: '0px 10px'}}>
-                {message}
-                </Typography>
-              </Alert>
-            </Snackbar> */}
             <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
               <Alert onClose={handlePhoneShow} severity="info">
                 <Typography style={{margin: '0px 10px'}}>

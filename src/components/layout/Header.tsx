@@ -160,11 +160,19 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               // style={{ marginLeft: -12, marginRight: 20 }}
             >
               <MenuIcon />
-            </IconButton> 
+            </IconButton>
             : null }
-            <img src={"../../../brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
-               updateMirrorView();
-              }} />
+            <img src={"../../../brand.svg"} className={classes.logo} alt="luqta"/>
+              <IconButton
+              style={{margin: '0 10px'}}
+                onClick={() => {
+                  updateMirrorView();
+                 }}
+              >
+                <p style={{fontSize: 15, color: 'blue', padding: '0 6px'}}>
+                  {language === "ar"? "English" : "عربيّة"}
+                  </p>
+              </IconButton>
             {!fullScreen ? (
               <CustomButton
                 variant="contained"

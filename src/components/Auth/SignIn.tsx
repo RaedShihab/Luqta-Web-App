@@ -174,7 +174,7 @@ const SignIn: React.FC = (props) => {
   
 // class MySignInc extends React.Component<RouteComponentProps<any>, {}> {
   // state = { 'siteId': '', username: '', password: '', loading: false, goToDashboard: false }
-  const { dispatch, history, loggingIn,loggedIn, alertType, i18n, t } : any = props;
+  const { dispatch, loggingIn, alertType, i18n, t } : any = props;
   const {language} : any = i18n;
 
   // console.log('alertType', alertType)
@@ -241,13 +241,13 @@ const SignIn: React.FC = (props) => {
 
   const [open, setOpen] = React.useState(alertType);
 
-  const handleClose = (event: any, reason: any) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleClose = (event: any, reason: any) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpen(false);
-  };
+  //   // setOpen(false);
+  // };
 
   const initialValues: MyFormValues = { email: '', password: '' };
 

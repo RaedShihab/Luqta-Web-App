@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core/styles";
 import Link from '@material-ui/core/Link';
 import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -179,8 +178,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <LocationOnIcon />
                     </Typography>
-                    <span className="locationName"> {ad.city.name + ' |'} </span>
-                    {ad.district!== null && <span className="locationName"> {ad.district.name} </span>}
+                    <span className="locationName"> {ad.city.name} </span>
+                    {ad.district!== null && <span className="locationName"> {'| '+ad.district.name} </span>}
                   </Grid>
                 </Grid>
                 <Grid container>
@@ -205,9 +204,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
                     >
                       <DriveEtaIcon />
                     </Typography>
-                    <span className="locationName"> {ad.category.name+ ' |'} </span>
-                    {ad.model !== null && <span className="locationName"> {ad.model.name + ' |'} </span>}
-                    {ad.brand !== null && <span className="locationName"> {ad.brand.name} </span>}
+                    <span className="locationName"> {ad.category.name} </span>
+                    {ad.model !== null && <span className="locationName"> {'| '+ad.model.name} </span>}
+                    {ad.brand !== null && <span className="locationName"> {'| '+ad.brand.name} </span>}
                   </Grid>
                 </Grid>
                </Link>
@@ -242,7 +241,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
               <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
                 <Alert onClose={handlePhoneShow} severity="info">
                   <Typography style={{margin: '0px 10px'}}>
-                  {t("phone")}: {ad.owner.phone_number}
+                  {ad.owner.phone_number===undefined? t("user_didnt_add_phone") : ad.owner.phone_number}
                   </Typography>
                 </Alert>
             </Snackbar>

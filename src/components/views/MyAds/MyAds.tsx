@@ -13,12 +13,10 @@ import {
   MuiThemeProvider,
   createMuiTheme,
   Container,
-  Icon,
   IconButton,
   Grid,
   InputBase,
   Button,
-  OutlinedInput,
   InputAdornment,
   CircularProgress,
   Typography,
@@ -30,7 +28,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Card from "@material-ui/core/Card";
@@ -42,7 +39,7 @@ import ListingProduct from "../ListingProduct/ListingProduct";
 
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import CreateIcon from '@material-ui/icons/Create';

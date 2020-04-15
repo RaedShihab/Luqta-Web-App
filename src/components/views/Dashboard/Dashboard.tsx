@@ -268,7 +268,6 @@ const Dashboard: React.FC = (props) => {
   };
   //get categ by id:
   const getAdsByCategId = (id: any, page: any) => {
-    console.log(isNaN(page), parseInt(page))
     Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
     .then(res => {
       console.log(res.data.data)

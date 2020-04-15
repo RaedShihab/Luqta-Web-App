@@ -233,7 +233,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
       setOpen(true)
     })
   }
-  console.log(images)
+
   useEffect(() => {
     //show ad
     Axios.get(`/ads/${id}`)
@@ -483,20 +483,20 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                       </Box>
                       <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("ad_number")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.number}</div>
+                        <div className="adBoxRightCol">{ad.number}</div>
                       </Box>
                       {
                       ad.brand !== null &&
                       <Box className="adBoxWhiteTab" >
                         <div className="adBoxLeftCol">{t("brand")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div className="adBoxRightCol">{ad.brand.name.ar}</div>
+                    <div className="adBoxRightCol">{ad.brand.name}</div>
                       </Box>
                       }
                       {
                       ad.model !== null && 
                       <Box className="adBoxTab" >
                         <div className="adBoxLeftCol">{t("model")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                        <div className="adBoxRightCol">{ad.model.name.ar}</div>
+                        <div className="adBoxRightCol">{ad.model.name}</div>
                       </Box>
                       }
                       {
@@ -519,9 +519,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     </TabPanel>
                     <TabPanel value={adsTab} index={"Description"}>
                       <Box className="adBoxTab" >
-                        <div className="adBoxLeftCol">{t("desc")}:</div> &nbsp;&nbsp; - &nbsp;&nbsp;
-                    <div 
-                    className="adBoxRightCol"
+                    <div
+                    style={{padding: '5px 10px'}}
+                    // className="adBoxRightCol"
                     >
                       {ad.description}
                       </div>

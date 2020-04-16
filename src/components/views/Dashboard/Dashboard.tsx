@@ -217,6 +217,7 @@ const Dashboard: React.FC = (props) => {
      location.search[location.search.length-2]+location.search[location.search.length-1]
   }
   const [clickedPage, setClickedPage] = React.useState(1)
+  const [lastPage, setLastPage] = React.useState(1)
   // const [redirect, setRedirect] = useState(false);
 
   const [selectedCategory, setSelectedCategory]: any = useState(params === {} ? null : params.categ);
@@ -270,7 +271,8 @@ const Dashboard: React.FC = (props) => {
   const getAdsByCategId = (id: any, page: any) => {
     Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
     .then(res => {
-      console.log(res.data.data)
+      console.log(res.data.meta.last_page)
+      setLastPage(res.data.meta.last_page)
       setAds(res.data.data)
       setGettingAds(false)
     })
@@ -672,8 +674,10 @@ const Dashboard: React.FC = (props) => {
                     <Pagination 
                       // defaultPage={isNaN(page)? 1 : parseInt(page())}
                       defaultPage={isNaN(clickedPage)? 1 : clickedPage}
-                      count={19} 
-                      color="primary" shape="rounded"
+                      count={lastPage}
+                      shape="rounded"
+                      color="primary"
+                      hidePrevButton hideNextButton
                       boundaryCount={10}  
                       onChange={handlePageNumber}
                       />

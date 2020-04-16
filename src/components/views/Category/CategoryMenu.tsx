@@ -175,7 +175,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
 								onListItemClick(category.id)
 								setActiveCategory(category.name)
 								}}>
-									<Icon>{category.icon}</Icon>
+									{/* <Icon>{category.icon}</Icon> */}
 									&nbsp; &nbsp;
 									<span style={{ flexGrow: 1 }}>{category.name}</span>
 								</ListItem>	

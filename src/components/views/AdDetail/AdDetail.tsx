@@ -11,9 +11,10 @@ import {
 import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent, 
   CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container
   , Typography, Badge, Button, Divider, Box,CardMedia, 
-   CircularProgress, Snackbar, IconButton, ButtonBase }
+   CircularProgress, Snackbar, IconButton }
     from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
+import CloseIcon from '@material-ui/icons/Close';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import NoImg from "../../../assets/no_img_big2.png";
@@ -312,14 +313,24 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                     renderFullscreenButton= {(onClick: any, isFullscreen: any) => {
                       return (
                         <div>
-                          <IconButton
-                        style={{top: "40%", left: '43%', position: 'absolute', color: 'white'}}
+                          {!isFullscreen?<IconButton
+                        style={{top: "35%", left: '37%', position: 'absolute', color: 'white'}}
                           // className={
                           //   `image-gallery-fullscreen-button${isFullscreen ? ' active' : ''}`}
                           onClick={onClick}
                         >
                           <SearchIcon style={{fontSize:'100px'}}/>
                           </IconButton>
+                        :
+                        <IconButton
+                        style={{top: "2%", position: 'absolute', color: 'white'}}
+                          // className={
+                          //   `image-gallery-fullscreen-button${isFullscreen ? ' active' : ''}`}
+                          onClick={onClick}
+                        >
+                          <CloseIcon style={{fontSize:'50px'}}/>
+                          </IconButton>  
+                        }
                         </div>
                       );
                     }}

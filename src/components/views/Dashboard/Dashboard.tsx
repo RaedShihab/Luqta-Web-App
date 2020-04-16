@@ -285,7 +285,7 @@ const Dashboard: React.FC = (props) => {
   };
   //get all: 
   const getAds = () => {
-    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${10}`)
+    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${4}`)
     .then((res: { data: any; })=> {
       console.log(res.data.data)
       setAds(res.data.data)

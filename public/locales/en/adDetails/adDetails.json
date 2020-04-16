@@ -19,5 +19,6 @@
     "model" : "Model",
     "year" : "Year",
     "suggested_items": "Suggested Items",
-    "something_went_wrong_please_try_again" : "Somthing went wrong, Please try again"
+    "something_went_wrong_please_try_again" : "Somthing went wrong, Please try again",
+    "user_didnt_add_phone" : "The user did not add a phone number"
 }

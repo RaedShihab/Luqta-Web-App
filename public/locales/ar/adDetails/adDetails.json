@@ -19,5 +19,6 @@
     "model" : "الموديل",
     "year" : "السنة",
     "suggested_items": "مقترحات",
-    "something_went_wrong_please_try_again" : "حدث خطأ ما, الرجاء حاول مجدداً"
+    "something_went_wrong_please_try_again" : "حدث خطأ ما, الرجاء حاول مجدداً",
+    "user_didnt_add_phone" : "المستخدم لم يقم بوضع رقم هاتفه"
 }

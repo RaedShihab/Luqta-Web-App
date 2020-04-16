@@ -11,8 +11,9 @@ import {
 import { MuiThemeProvider, createMuiTheme, Grid, Card, CardContent, 
   CardActionArea, Tabs, Tab, Avatar, useMediaQuery, Container
   , Typography, Badge, Button, Divider, Box,CardMedia, 
-   CircularProgress, Snackbar }
+   CircularProgress, Snackbar, IconButton, ButtonBase }
     from "@material-ui/core";
+import SearchIcon from '@material-ui/icons/Search';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import NoImg from "../../../assets/no_img_big2.png";
@@ -300,10 +301,28 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                       </div>
                   </Grid> */}
                   <Grid item lg={7} md={6} xs={12}  style={{ width: "100%" }}>
-                  <ImageGallery 
+                  <ImageGallery
                     items={images.length<1?noImage: images}
                     showNav={false}
                     showPlayButton={false}
+                    showBullets={true}
+                    showIndex={true}
+                    isRTL={lang()==='ar'? true: false}
+                    slideOnThumbnailOver={true}
+                    renderFullscreenButton= {(onClick: any, isFullscreen: any) => {
+                      return (
+                        <div>
+                          <IconButton
+                        style={{top: "40%", left: '43%', position: 'absolute', color: 'white'}}
+                          // className={
+                          //   `image-gallery-fullscreen-button${isFullscreen ? ' active' : ''}`}
+                          onClick={onClick}
+                        >
+                          <SearchIcon style={{fontSize:'100px'}}/>
+                          </IconButton>
+                        </div>
+                      );
+                    }}
                 />
                   </Grid>
                   <Grid item lg={5} md={6} xs={12}>
@@ -577,10 +596,10 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false,  match, t}) 
                 </Grid>
               </CardContent>
             </Card>
-            <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
+            <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={6000}>
               <Alert onClose={handlePhoneShow} severity="info">
                 <Typography style={{margin: '0px 10px'}}>
-                {t("phone")}: {ad.owner.phone_number}
+                {ad.owner.phone_number === undefined? t("user_didnt_add_phone" ): ad.owner.phone_number}
                 </Typography>
               </Alert>
             </Snackbar>

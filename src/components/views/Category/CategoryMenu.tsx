@@ -82,7 +82,7 @@ const theme = createMuiTheme({
 });
 
 
-interface Props extends RouteComponentProps{ 
+interface Props extends RouteComponentProps{
 	menuAnchor: any;
 	setMenuAnchor: any;
 	selectedCategory: any;

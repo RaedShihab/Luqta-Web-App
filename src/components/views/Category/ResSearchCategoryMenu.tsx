@@ -37,7 +37,7 @@ const SearchCategoryDrawarMenu:  React.FC<IMenuProps> = ({ classes, openResSearc
 				<div style={{ width: "100%" }}>
 					<div style={{ float: "left", width: "90%", textAlign: "center" }}>
 						<div style={{ float: "left", cursor: "pointer" }} onClick={() => setOpenResSearchCategorySubMenu(false)}>
-							<Icon fontSize="small">keyboard_arrow_left</Icon>
+							{/* <Icon fontSize="small">keyboard_arrow_left</Icon> */}
 						</div>
 						<ListItemText primary="Filter" />
 					</div>

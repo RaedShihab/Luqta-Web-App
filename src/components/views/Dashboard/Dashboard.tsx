@@ -269,32 +269,47 @@ const Dashboard: React.FC = (props) => {
   };
   //get categ by id:
   const getAdsByCategId = (id: any, page: any) => {
-    Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
+    console.log(id)
+    setSearchLoading(true)
+    setShowPagination(true)
+    Axios.get(searchKeyWords === ''?`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`: `/ads?query=${searchKeyWords}&category_id=${id}&page=1&par_page=200`)
     .then(res => {
       console.log(res.data.meta.last_page)
       setLastPage(res.data.meta.last_page)
       setAds(res.data.data)
+      setSearchLoading(false)
       setGettingAds(false)
     })
     .catch(err => {
       console.log(err.response)
       setMessage(t('something_went_wrong_please_try_again'))
       setGettingAds(false)
+      setSearchLoading(false)
       setOpen(true)
     })
   };
-  //get all: 
+
+  const [searchKeyWords, setSearchKeyWords] = React.useState('')
+  const [searchResults, setSearchResults] = React.useState('')
+  const [searchLoading, setSearchLoading] = React.useState(false)
+  const [showPagination, setShowPagination] = React.useState(false)
+  //get all:
   const getAds = () => {
-    Axios.get(`/ads?page=${page()===undefined? 1 : page()}&per_page=${4}`)
+    setSearchLoading(true)
+    console.log(params)
+    Axios.get(searchKeyWords !== ''? `/ads?query=${searchKeyWords}&page=1&par_page=200` : `/ads?page=${page()===undefined? 1 : page()}&per_page=${4}`)
     .then((res: { data: any; })=> {
-      console.log(res.data.data)
+      searchKeyWords !== ''  && setSearchResults(res.data.meta.total)
       setAds(res.data.data)
+      setLastPage(res.data.meta.last_page)
+      setSearchLoading(false)
       setGettingAds(false)
     })
     .catch(err => {
       console.log(err.response)
       setMessage(t('something_went_wrong_please_try_again'))
       setGettingAds(false)
+      setSearchLoading(false)
       setOpen(true)
     })
   }
@@ -321,11 +336,11 @@ const Dashboard: React.FC = (props) => {
   const [message, setMessage] = React.useState('')
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
-    
+
+  const id :any = localStorage.getItem("categId")
   useEffect(() => {
     // console.log(parseInt(page()))
     setClickedPage(parseInt(page()))
-    const id :any = localStorage.getItem("categId")
     setGettingAds(true)
     setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads:
@@ -430,19 +445,27 @@ const Dashboard: React.FC = (props) => {
                         />
     
                         <div className={classes.searchbox + " display-flex"}>
-                          <IconButton
+                          {searchKeyWords&& <IconButton
                             type="submit"
                             className={classes.iconButton + " categoryCss"}
                             aria-label="search"
+                            onClick={()=>
+                              params.categ !== undefined?
+                              getAdsByCategId(id, parseInt(page()))
+                                :
+                              getAds()}
                           >
-                            <SearchIcon />
-                          </IconButton>
+                           {searchLoading?
+                           <CircularProgress/>
+                           :
+                           <SearchIcon />}
+                          </IconButton>}
                           {/* <InputBase
                             className={classes.inputCSS}
                             placeholder="Search for anything.."
                             inputProps={{ "aria-label": "search google maps" }}
                           /> */}
-                          <Search />
+                          <Search  setSearchKeyWords={setSearchKeyWords}/>
                         </div>
     
                         <div className={classes.searchbox + " display-flex"}>
@@ -515,7 +538,7 @@ const Dashboard: React.FC = (props) => {
                     </div>
     
                     <div className={classNames("cardbuttoncss")}>
-                      <div className={classNames("cardbutton")}>
+                     {searchResults !== '' && <div className={classNames("cardbutton")}>
                         <Button
                           type="button"
                           fullWidth
@@ -523,9 +546,9 @@ const Dashboard: React.FC = (props) => {
                           variant="contained"
                           color="primary"
                         >
-                          {t("search_results")} (1,143,764)
+                          {t("search_results")} {searchResults}
                         </Button>
-                      </div>
+                      </div>}
                     </div>
                   </CardContent>
                 </Card>
@@ -549,7 +572,7 @@ const Dashboard: React.FC = (props) => {
           <Container fixed className="" style={{ alignItems: "center" }}>
             <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
               <Grid item xs={12}>
-                <span className="Announcement">Announcements: All of France</span>
+                <span className="Announcement">Announcements: Best of Jordan</span>
               </Grid>
               <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
                 <span className="AnnouncementLabel">Ads:</span> &nbsp;
@@ -671,7 +694,7 @@ const Dashboard: React.FC = (props) => {
                     underline='none'
                     href={params.categ !== undefined? `/${params.subCateg}/${params.categ}?page=${pagee}` : `/?page=${pagee}`}
                     >
-                    <Pagination 
+                    {showPagination && <Pagination 
                       // defaultPage={isNaN(page)? 1 : parseInt(page())}
                       defaultPage={isNaN(clickedPage)? 1 : clickedPage}
                       count={lastPage}
@@ -680,7 +703,7 @@ const Dashboard: React.FC = (props) => {
                       hidePrevButton hideNextButton
                       boundaryCount={10}  
                       onChange={handlePageNumber}
-                      />
+                      />}
                     </Link>
                   </Grid>
                 </Grid>

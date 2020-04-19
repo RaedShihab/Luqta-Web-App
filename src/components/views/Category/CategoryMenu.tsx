@@ -8,7 +8,7 @@ import {  Grid, createMuiTheme, Icon } from '@material-ui/core';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {Link} from '@material-ui/core';
+import {NavLink} from 'react-router-dom';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { category } from './Categoty';
@@ -25,26 +25,32 @@ const useStyles = makeStyles((theme: Theme) =>
 			display: "flex",
 			alignItems: "center",
 			padding: "2px",
-			fontWeight: 600
+			fontWeight: 600,
+			color : "#134B8E",
 		},
 		boxHeader: {
 			display: "flex",
 			alignItems: "center",
 			color: "#134B8E", 
-			fontWeight: 500,
+			fontWeight: 600,
 			padding: "0 0 0 10px",
 		},
 		categoryList: {
-			fontSize: "14px",
+			fontSize: "18px",
 		},
 		subCategoryList: {
-			fontSize: "14px",
+			fontSize: "17px",
 			color: "#141414",
 			opacity: 0.55,
 			fontWeight: 500,
 		},
 		cateIcon: {
 			marginRight: "5px",
+		},
+		link: {
+			textDecoration: "none",
+			color : "#134B8E",
+			fontWeight: "bold"
 		}
     }),
 );
@@ -85,17 +91,14 @@ const theme = createMuiTheme({
 interface Props extends RouteComponentProps{
 	menuAnchor: any;
 	setMenuAnchor: any;
-	selectedCategory: any;
-	setSelectedCategory: any;
-	selectedSubCategory: any; 
-	setSelectedSubCategory: any;
+	selectedCategory?: any;
+	setSelectedCategory?: any;
+	selectedSubCategory?: any; 
+	setSelectedSubCategory?: any;
 	// t: any;
-	getAdsByCategId?: any;
-	history: any;
-	setRedirect?: any;
   }
 
-const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, history, setRedirect  }) => {
+const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, setSelectedSubCategory }) => {
 
 	const [activeCategory, setActiveCategory]: any = useState(null);
 	const [activeSubCategory, setActiveSubCategory]: any = useState([]);
@@ -124,11 +127,12 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
 		.catch(err => console.log(err.response))
 	}
 
-	// const updateSubWithParentCategory = (subCate: any) => {
-	// 	setSelectedSubCategory(subCate);
-	// 	// getAdsByCategId()
-	// 	setMenuAnchor(null);
-	// }
+	const updateSubWithParentCategory = (subCate: any) => {
+		// console.log(subCate.name)
+		setSelectedSubCategory(subCate.name);
+		// getAdsByCategId()
+		setMenuAnchor(null);
+	}
 
 	// const updateParentCategory = (cate: any) => {
 	// 	setSelectedCategory(cate);
@@ -177,7 +181,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
 								}}>
 									{/* <Icon>{category.icon}</Icon> */}
 									&nbsp; &nbsp;
-									<span style={{ flexGrow: 1 }}>{category.name}</span>
+									<span style={{ flexGrow: 1, fontWeight: 'bold' }}>{category.name}</span>
 								</ListItem>	
 							);
 						})
@@ -188,7 +192,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
               <Grid item xs={4}>
 					<List component="nav">
 						<ListItem className={classes.boxcss}>
-							<span style={{ flexGrow: 1 }}>{activeCategory}</span>
+							<span style={{ flexGrow: 1 }}>{activeCategory? activeCategory: 'Selected category'}</span>
 						</ListItem>
 					</List>
 					<hr />
@@ -201,20 +205,23 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
 								   key={index}
 							   onClick={
 								()=>{
-									// updateSubWithParentCategory(subCateg)
-									localStorage.setItem('categId', subCateg.id)
+									updateSubWithParentCategory(subCateg)
+									// localStorage.setItem('categId', subCateg.id)
 									// history.push({pathname:`/${activeCategory}/${subCateg.name}`})
 									// window.location.reload(false);
 								}
-								}>
-								<Link 
-								component='a'
-								underline='none'
-								href= {`/${activeCategory}/${subCateg.name}`}
+								}
+							>
+								<NavLink
+								className={classes.link}
+								to={{
+									pathname: `/${activeCategory}/${subCateg.name}`,
+									state: subCateg.id 
+								  }}
 								>
 								<ListItemText primary={subCateg.name} />
 								{/* <span style={{ flexGrow: 1 }}>{subCateg.name}</span> */}
-								</Link>
+								</NavLink>
 								</ListItem>
 							})
 						}
@@ -224,7 +231,7 @@ const Menu:  React.FC<Props> = ({ menuAnchor, setMenuAnchor, getAdsByCategId, hi
 			  		<List component="nav">
 						<div className={classes.boxcss} >
 							{/* <ListOutlinedIcon style={{ marginRight: "5px" }}/>  */}
-							<span style={{ flexGrow: 1 }}>{("top_brands")}</span>
+							<span style={{ flexGrow: 1 }}>{("Top")}</span>
 						</div>						
 					</List>
 					<hr/>

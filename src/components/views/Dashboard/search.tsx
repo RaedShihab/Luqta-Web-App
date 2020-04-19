@@ -61,10 +61,11 @@ const styles = (theme:any) => ({
 });
 
 interface Props extends WithTranslation{ 
-	setSearchKeyWords?: any
+  setSearchKeyWords?: any
+  searchKeyWords?: any;
   }
 
-const IntegrationAutosuggest: React.FC<Props> = ({setSearchKeyWords})=> {
+const IntegrationAutosuggest: React.FC<Props> = ({setSearchKeyWords,searchKeyWords})=> {
 
   const [suggestions,  setSugg] = React.useState([])
 
@@ -72,7 +73,7 @@ const IntegrationAutosuggest: React.FC<Props> = ({setSearchKeyWords})=> {
     let suggestions
     Axios.get('/categories')
     .then(res => {
-          console.log(res.data.data)
+          // console.log(res.data.data)
           suggestions = res.data.data.map((sugg:any) => {
             return {title: sugg.name}
           })
@@ -89,7 +90,9 @@ const IntegrationAutosuggest: React.FC<Props> = ({setSearchKeyWords})=> {
       style={{ width: '100%' }}
       renderInput={(params) => 
       <TextField
-      onSelect={(e:any)=> setSearchKeyWords(e.target.value)}
+      // value={searchKeyWords}
+      onChange={(e:any)=>{
+         setSearchKeyWords(e.target.value)}}
       {...params} label="Search" variant="outlined" />}
         // theme={{
         //   container: classes.container,

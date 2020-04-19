@@ -86,10 +86,13 @@ const Layout: React.FC<ILayoutProps> = ({ classes, i18n }) => {
               {/* <Switch> */}
                 <Route exact path='/myads' component={MyAds} />
                 <Route exact path='/' component={Dashboard} />
-                <Route exact path='/:subCateg/:categ' component={Dashboard} />                
                 
+                <Route exact path='/:subCateg/:categ' component={Dashboard} />
+                <Route exact path='/:searchKeyWords/:subCateg/:categ' component={Dashboard} /> 
+                <Route exact path='/:id/search/:name' component={AdDetail} />             
+                <Route exact path='/any/any/search/:searchKeyWords' component={Dashboard} />
 
-                <Route exact path='/:id/search/:name' component={AdDetail} />
+                
                 
                 {/* <Redirect path="/" to="/1"/> */}
               {/* </Switch> */}

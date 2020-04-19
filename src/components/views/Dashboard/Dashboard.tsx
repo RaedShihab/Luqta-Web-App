@@ -25,7 +25,7 @@ import {
   Typography,
   Snackbar,
 } from "@material-ui/core";
-import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -203,11 +203,10 @@ const AntSwitch = withStyles((theme: Theme) =>
 
 const Dashboard: React.FC = (props) => {
 
-  const { t, match, location} : any = props
+  const { t, match, location, history} : any = props
 
   // const historyState = history.location.state
   const {params} : any = match
-
   // current page
   const page :any = ()=> {
     let page
@@ -218,9 +217,10 @@ const Dashboard: React.FC = (props) => {
   }
   const [clickedPage, setClickedPage] = React.useState(1)
   const [lastPage, setLastPage] = React.useState(1)
+  const [totalAds, setTotalAds] = React.useState(0)
   // const [redirect, setRedirect] = useState(false);
 
-  const [selectedCategory, setSelectedCategory]: any = useState(params === {} ? null : params.categ);
+  // const [selectedCategory, setSelectedCategory]: any = useState(params === {} ? null : params.categ);
   
   const [selectedSubCategory, setSelectedSubCategory]: any = useState(params === {} ? null : params.categ);
 
@@ -269,47 +269,47 @@ const Dashboard: React.FC = (props) => {
   };
   //get categ by id:
   const getAdsByCategId = (id: any, page: any) => {
-    console.log(id)
-    setSearchLoading(true)
+    console.log(id, page)
     setShowPagination(true)
-    Axios.get(searchKeyWords === ''?`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`: `/ads?query=${searchKeyWords}&category_id=${id}&page=1&par_page=200`)
+    Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
+    // Axios.get(searchKeyWords === ''?`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`: `/ads?query=${searchKeyWords}&category_id=${id}&page=1&par_page=200`)
     .then(res => {
-      console.log(res.data.meta.last_page)
       setLastPage(res.data.meta.last_page)
       setAds(res.data.data)
-      setSearchLoading(false)
       setGettingAds(false)
     })
     .catch(err => {
       console.log(err.response)
       setMessage(t('something_went_wrong_please_try_again'))
       setGettingAds(false)
-      setSearchLoading(false)
       setOpen(true)
     })
   };
 
-  const [searchKeyWords, setSearchKeyWords] = React.useState('')
-  const [searchResults, setSearchResults] = React.useState('')
-  const [searchLoading, setSearchLoading] = React.useState(false)
+  const [searchKeyWords, setSearchKeyWords] = React.useState(params.searchKeyWords? params.searchKeyWords : "ارض")
   const [showPagination, setShowPagination] = React.useState(false)
   //get all:
-  const getAds = () => {
-    setSearchLoading(true)
-    console.log(params)
-    Axios.get(searchKeyWords !== ''? `/ads?query=${searchKeyWords}&page=1&par_page=200` : `/ads?page=${page()===undefined? 1 : page()}&per_page=${4}`)
+  const getAdsBySearch = () => {
+    console.log(searchKeyWords)
+    console.log(id)
+    Axios.get(id? `/ads?query=${searchKeyWords}&category_id=${id}&page=${isNaN(page())? 1 : page()}&per_page=${10}`
+    :
+      `/ads?query=${searchKeyWords}&page=${isNaN(page())? 1 : page()}&per_page=${10}`)
     .then((res: { data: any; })=> {
-      searchKeyWords !== ''  && setSearchResults(res.data.meta.total)
+      console.log(res.data.meta.total)
+      setTotalAds(res.data.meta.total)
       setAds(res.data.data)
       setLastPage(res.data.meta.last_page)
-      setSearchLoading(false)
       setGettingAds(false)
+      searchKeyWords === "ارض"?
+      setShowPagination(false)
+      :
+      setShowPagination(true)
     })
     .catch(err => {
       console.log(err.response)
       setMessage(t('something_went_wrong_please_try_again'))
       setGettingAds(false)
-      setSearchLoading(false)
       setOpen(true)
     })
   }
@@ -337,31 +337,26 @@ const Dashboard: React.FC = (props) => {
   const[ads, setAds] = React.useState([])
   const[gettingAds, setGettingAds] = React.useState(false)
 
-  const id :any = localStorage.getItem("categId")
+  const id :any = location.state
   useEffect(() => {
-    // console.log(parseInt(page()))
+    console.log(params)
     setClickedPage(parseInt(page()))
     setGettingAds(true)
-    setLabelWidth(inputLabel.current!.offsetWidth);
+    // setLabelWidth(inputLabel.current!.offsetWidth);
     //get ads:
-    params.categ !== undefined?
+    params.categ && !params.searchKeyWords?
     getAdsByCategId(id, parseInt(page()))
       :
-    getAds()
-  }, []);
+      getAdsBySearch()
+  }, [params]);
 
   const handlePageNumber = (e: any, value: any) => {
-    setPage(value)
-    // if(historyState !== undefined) {
-    //   history.push({pathname:`/${params.subCateg}/${params.categ}/${value}`, state: {id: historyState.id}})
-    //   window.location.reload(false)
-    // }
-    // if(historyState === undefined) {
-    //   setRedirect(true)
-    //   setPage(value)
-    //   history.push(`/?page=${value}`)
-    //   window.location.reload(false)
-    // }
+    // console.log(id)
+    // setPage(value)
+    if(id && !params.searchKeyWords) history.push({pathname:`/${params.subCateg}/${params.categ}?page=${value}` , state: id})
+    if(id &&  params.searchKeyWords)  history.push({pathname: `/${params.searchKeyWords}/${params.subCateg}/${params.categ}?page=${value}` , state: id})
+    if(!id)  history.push({pathname: `/any/any/search/${params.searchKeyWords}?page=${value}`})
+    history.go(0)
   }
 
   const muitheme = useTheme();
@@ -450,22 +445,25 @@ const Dashboard: React.FC = (props) => {
                             className={classes.iconButton + " categoryCss"}
                             aria-label="search"
                             onClick={()=>
-                              params.categ !== undefined?
-                              getAdsByCategId(id, parseInt(page()))
+                              // params.categ !== undefined?
+                              // getAdsByCategId(id, parseInt(page()))
+                              //   :
+                              {
+                                id?
+                                history.push({pathname:`/${searchKeyWords}/${params.subCateg}/${params.categ}`, state: id})
                                 :
-                              getAds()}
+                              history.push(`/any/any/search/${searchKeyWords}`)
+                            }
+                            }
                           >
-                           {searchLoading?
-                           <CircularProgress/>
-                           :
-                           <SearchIcon />}
+                           <SearchIcon />
                           </IconButton>}
                           {/* <InputBase
                             className={classes.inputCSS}
                             placeholder="Search for anything.."
                             inputProps={{ "aria-label": "search google maps" }}
                           /> */}
-                          <Search  setSearchKeyWords={setSearchKeyWords}/>
+                          <Search searchKeyWords={searchKeyWords}  setSearchKeyWords={setSearchKeyWords}/>
                         </div>
     
                         <div className={classes.searchbox + " display-flex"}>
@@ -489,11 +487,7 @@ const Dashboard: React.FC = (props) => {
                         <Menu
                           menuAnchor={menuAnchor}
                           setMenuAnchor={setMenuAnchor}
-                          selectedCategory={selectedCategory}
-                          setSelectedCategory={setSelectedCategory}
-                          selectedSubCategory={selectedSubCategory}
                           setSelectedSubCategory={setSelectedSubCategory}
-                          getAdsByCategId={getAdsByCategId}
                         />
                       ) : null}
     
@@ -538,7 +532,9 @@ const Dashboard: React.FC = (props) => {
                     </div>
     
                     <div className={classNames("cardbuttoncss")}>
-                     {searchResults !== '' && <div className={classNames("cardbutton")}>
+                     <div className={classNames("cardbutton")}>
+                        {
+                        showPagination &&
                         <Button
                           type="button"
                           fullWidth
@@ -546,9 +542,10 @@ const Dashboard: React.FC = (props) => {
                           variant="contained"
                           color="primary"
                         >
-                          {t("search_results")} {searchResults}
+                          {t("search_results")} {totalAds}
                         </Button>
-                      </div>}
+                        }
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -684,16 +681,15 @@ const Dashboard: React.FC = (props) => {
                     <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> {t("save_search")}</Button>
                   </Grid>
                 </Grid>
-                {/* {
+                {
                   ads.length > 0
-                  && */}
+                  &&
                   <Grid container spacing={2} direction="row">
                   <Grid item lg={12} md={12} xs={12}>
-                    <Link
-                    component='a'
-                    underline='none'
-                    href={params.categ !== undefined? `/${params.subCateg}/${params.categ}?page=${pagee}` : `/?page=${pagee}`}
-                    >
+                    {/* <Link
+                    to={params.categ !== undefined? `/${params.subCateg}/${params.categ}?page=${pagee}` : `/?page=${pagee}`}
+                    component={anchor}
+                    > */}
                     {showPagination && <Pagination 
                       // defaultPage={isNaN(page)? 1 : parseInt(page())}
                       defaultPage={isNaN(clickedPage)? 1 : clickedPage}
@@ -704,9 +700,9 @@ const Dashboard: React.FC = (props) => {
                       boundaryCount={10}  
                       onChange={handlePageNumber}
                       />}
-                    </Link>
+                    {/* </Link> */}
                   </Grid>
-                </Grid>
+                </Grid>}
               </Grid>
             </Grid>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

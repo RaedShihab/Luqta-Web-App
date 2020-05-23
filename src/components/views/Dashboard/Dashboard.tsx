@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -19,15 +20,19 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  Icon
+  // Icon,
+  CircularProgress,
+  Typography,
+  Snackbar,
 } from "@material-ui/core";
+import {Link} from 'react-router-dom';
+import MuiAlert from '@material-ui/lab/Alert';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import AppsIcon from "@material-ui/icons/Apps";
 import KeyboardArrowDownOutlinedIcon from "@material-ui/icons/KeyboardArrowDownOutlined";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
@@ -41,14 +46,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListingProduct from "../ListingProduct/ListingProduct";
 import ListingAds from "../ListingAds/ListingAds";
 import Pagination from '@material-ui/lab/Pagination';
-import Drawer from '@material-ui/core/Drawer';
 import Search from './search';
 import Menu from "../Category/CategoryMenu";
 import CategoryDrawarMenu from "../Category/ResCategoryMenu";
 import SearchCategoryDrawarMenu from "../Category/ResSearchCategoryMenu";
-import { category } from '../Category/Categoty';
 import "../../../App.css";
 import "./Dashboard.css";
+import {Axios} from '../../apiServecis/axiosConfig';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,7 +115,14 @@ const useStyles = makeStyles((theme: Theme) =>
     divider: {
       height: "auto",
       width: "2px"
-    }
+    },
+    loading: {
+      textAlign: 'center'
+    },
+    link : {
+      textDecoration: "none"
+    },
+    sorryMessage: {textAlign: 'center', fontWeight: 'bold'}
   })
 );
 
@@ -190,10 +201,28 @@ const AntSwitch = withStyles((theme: Theme) =>
   })
 )(Switch);
 
-const Dashboard: React.FC = () => {
-  const [selectedCategory, setSelectedCategory]: any = useState(null);
+const Dashboard: React.FC = (props) => {
+
+  const { t, match, location, history} : any = props
+
+  // const historyState = history.location.state
+  const {params} : any = match
+  // current page
+  const page :any = ()=> {
+    let page
+    return page = location.search[location.search.length-2] === '=' ?
+      location.search[location.search.length-1]
+     :
+     location.search[location.search.length-2]+location.search[location.search.length-1]
+  }
+  const [clickedPage, setClickedPage] = React.useState(1)
+  const [lastPage, setLastPage] = React.useState(1)
+  const [totalAds, setTotalAds] = React.useState(0)
+  // const [redirect, setRedirect] = useState(false);
+
+  // const [selectedCategory, setSelectedCategory]: any = useState(params === {} ? null : params.categ);
   
-  const [selectedSubCategory, setSelectedSubCategory]: any = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory]: any = useState(params === {} ? null : params.categ);
 
   const [value, setValue] = useState("Offers");
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -211,7 +240,7 @@ const Dashboard: React.FC = () => {
 
   const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(false);
   const [openResSearchCategorySubMenu, setOpenSearchResCategorySubMenu] = React.useState(false);
-  const [isResFilter, setIsResFilter] = React.useState(false);
+  // const [isResFilter, setIsResFilter] = React.useState(false);
 
  
 
@@ -238,324 +267,455 @@ const Dashboard: React.FC = () => {
     let ele: any = document.getElementById("seachCategory"); 
     setMenuAnchor(ele);
   };
+  //get categ by id:
+  const getAdsByCategId = (id: any, page: any) => {
+    console.log(id, page)
+    setShowPagination(true)
+    Axios.get(`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`)
+    // Axios.get(searchKeyWords === ''?`/ads?category_id=${id}&page=${isNaN(page)? 1 : page}&per_page=${15}`: `/ads?query=${searchKeyWords}&category_id=${id}&page=1&par_page=200`)
+    .then(res => {
+      setLastPage(res.data.meta.last_page)
+      setAds(res.data.data)
+      setGettingAds(false)
+    })
+    .catch(err => {
+      console.log(err.response)
+      setMessage(t('something_went_wrong_please_try_again'))
+      setGettingAds(false)
+      setOpen(true)
+    })
+  };
+
+  const [searchKeyWords, setSearchKeyWords] = React.useState(params.searchKeyWords? params.searchKeyWords : "ارض")
+  const [showPagination, setShowPagination] = React.useState(false)
+  //get all:
+  const getAdsBySearch = () => {
+    console.log(searchKeyWords)
+    console.log(id)
+    Axios.get(id? `/ads?query=${searchKeyWords}&category_id=${id}&page=${isNaN(page())? 1 : page()}&per_page=${10}`
+    :
+      `/ads?query=${searchKeyWords}&page=${isNaN(page())? 1 : page()}&per_page=${10}`)
+    .then((res: { data: any; })=> {
+      console.log(res.data.meta.total)
+      setTotalAds(res.data.meta.total)
+      setAds(res.data.data)
+      setLastPage(res.data.meta.last_page)
+      setGettingAds(false)
+      searchKeyWords === "ارض"?
+      setShowPagination(false)
+      :
+      setShowPagination(true)
+    })
+    .catch(err => {
+      console.log(err.response)
+      setMessage(t('something_went_wrong_please_try_again'))
+      setGettingAds(false)
+      setOpen(true)
+    })
+  }
+
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const [open, setOpen] = React.useState(false);
+  const [pagee, setPage] = React.useState(1);
+
+  const handleClose = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   const [sortBy, setSortBy] = React.useState("Most Recent");
 
   const inputLabel = React.useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
+
+  const [message, setMessage] = React.useState('')
+  const[ads, setAds] = React.useState([])
+  const[gettingAds, setGettingAds] = React.useState(false)
+
+  const id :any = location.state
   useEffect(() => {
-    setLabelWidth(inputLabel.current!.offsetWidth);
-  }, []);
+    console.log(params)
+    setClickedPage(parseInt(page()))
+    setGettingAds(true)
+    // setLabelWidth(inputLabel.current!.offsetWidth);
+    //get ads:
+    params.categ && !params.searchKeyWords?
+    getAdsByCategId(id, parseInt(page()))
+      :
+      getAdsBySearch()
+  }, [params]);
+
+  const handlePageNumber = (e: any, value: any) => {
+    // console.log(id)
+    // setPage(value)
+    if(id && !params.searchKeyWords) history.push({pathname:`/${params.subCateg}/${params.categ}?page=${value}` , state: id})
+    if(id &&  params.searchKeyWords)  history.push({pathname: `/${params.searchKeyWords}/${params.subCateg}/${params.categ}?page=${value}` , state: id})
+    if(!id)  history.push({pathname: `/any/any/search/${params.searchKeyWords}?page=${value}`})
+    history.go(0)
+  }
 
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
   const classes = useStyles();
 
-
-  return (
-    <MuiThemeProvider theme={theme}>
-      {!fullScreen ? (
-        <>
-          <div className={classNames("backColorCss")}>
-            <div className={classNames("backColorInnerCss")}></div>
-          </div>
-          <Container
-            fixed
-            className="display-flex"
-            style={{ alignItems: "center" }}
-          >
-            <Card className={classes.card}>
-              <CardContent className={classes.cardRoot}>
-                <div>
-                  <FormControl className={classes.formcontrol}>
-                    <RadioGroup
-                      row={true}
-                      aria-label="Offers"
-                      name="offers"
-                      value={value}
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel
-                        value="Offers"
-                        style={{ marginLeft: "0px", color: "#134B8E" }}
-                        control={
-                          <CustomRadioButton className={classes.radiocss} />
-                        }
-                        label="Offers"
-                      />
-                      <FormControlLabel
-                        value="Requests"
-                        style={{ marginLeft: "0px", color: "#134B8E" }}
-                        control={<CustomRadioButton />}
-                        
-                        label="Requests"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-
-                  <div style={{ display: "flex", cursor: "pointer" }} id="seachCategory">
-                    <div
-                      className={classes.categoryLink + " categoryCss"}
-                      onClick={openCategoryMenu}
-                    >
-                      {!selectedSubCategory ? <>
-                        {!selectedCategory ? (
-                          <AppsIcon style={{ marginRight: "5px" }} />
-                        ) : <Icon>{selectedCategory.icon}</Icon>} 
-                          &nbsp;&nbsp;
-                        <span style={{ flexGrow: 1 }}>
-                          {!selectedCategory ? "Categories" : selectedCategory.name.en}
-                        </span>
-                        </>
-                        : 
-                          <span style={{ flexGrow: 1 }}>
-                            {!selectedSubCategory ? "Categories" : selectedSubCategory.name.en}
-                          </span>
-                       }
-
-                      <KeyboardArrowDownOutlinedIcon />
-                    </div>
-
-                    <Divider
-                      className={classes.divider}
-                      orientation="vertical"
-                    />
-
-                    <div className={classes.searchbox + " display-flex"}>
-                      <IconButton
-                        type="submit"
-                        className={classes.iconButton + " categoryCss"}
-                        aria-label="search"
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                      {/* <InputBase
-                        className={classes.inputCSS}
-                        placeholder="Search for anything.."
-                        inputProps={{ "aria-label": "search google maps" }}
-                      /> */}
-                      <Search />
-                    </div>
-
-                    <div className={classes.searchbox + " display-flex"}>
-                      <IconButton
-                        type="submit"
-                        className={classes.iconButton}
-                        aria-label="search"
-                      >
-                        <LocationOnOutlinedIcon />
-                      </IconButton>
-                      <InputBase
-                        style={{ paddingLeft:"10px", paddingRight:"10px", }}
-                        className={classes.inputCSS + " categoryCss display-flex-grow-1"}
-                        placeholder="Saisissez une ville et un rayon"
-                        inputProps={{ "aria-label": "search google maps" }}
-                      />
-                    </div>
-                  </div>
-
-                  {openMenu ? (
-                    <Menu
-                      menuAnchor={menuAnchor}
-                      setMenuAnchor={setMenuAnchor}
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
-                      selectedSubCategory={selectedSubCategory}
-                      setSelectedSubCategory={setSelectedSubCategory}
-                    />
-                  ) : null}
-
-                  <div style={{ display: "flex" }}>
-                    <div style={{ flex: 1 }}>
-                      {value === "Offers" ? (
-                        <>
+  if(gettingAds) {
+    return <div className={classes.loading}><CircularProgress size={60}/></div>
+  }
+  else{
+    // if(redirect) {
+    //   return <Redirect to={`/?page=${pagee}`}/>
+    // }
+      return (
+        <MuiThemeProvider theme={theme}>
+          {!fullScreen ? (
+            <>
+              <div className={classNames("backColorCss")}>
+                <div className={classNames("backColorInnerCss")}></div>
+              </div>
+              <Container
+                fixed
+                className="display-flex"
+                style={{ alignItems: "center" }}
+              >
+                <Card className={classes.card}>
+                  <CardContent className={classes.cardRoot}>
+                    <div>
+                      <FormControl className={classes.formcontrol}>
+                        <RadioGroup
+                          row={true}
+                          aria-label="Offers"
+                          name="offers"
+                          value={value}
+                          onChange={handleChange}
+                        >
                           <FormControlLabel
-                            style={{ marginLeft: "0px", marginRight: "0px", color: "#555E67" }}
+                            value="Offers"
+                            style={{ marginLeft: "0px", color: "#134B8E" }}
                             control={
-                              <AntSwitch
-                                checked={state.checkedC}
-                                style={{ marginRight: "8px" }}
-                                onChange={handleSwitchChange("checkedC")}
-                                value="checkedC"
-                              />
+                              <CustomRadioButton className={classes.radiocss} />
                             }
-                            label="See also the ads available for delivery"
+                            label={t("offers")}
                           />
-
+                          <FormControlLabel
+                            value="Requests"
+                            style={{ marginLeft: "0px", color: "#134B8E" }}
+                            control={<CustomRadioButton />}
+                            
+                            label={t("requests")}
+                          />
+                        </RadioGroup>
+                      </FormControl>
+    
+                      <div style={{ display: "flex", cursor: "pointer" }} id="seachCategory">
+                        <div
+                          className={classes.categoryLink + " categoryCss"}
+                          onClick={openCategoryMenu}
+                        >
+                          {/* {!selectedSubCategory ? <>
+                            {!selectedCategory ? (
+                              <AppsIcon style={{ marginRight: "5px" }} />
+                            ) : <Icon>{selectedCategory.icon}</Icon>}
+                              &nbsp;&nbsp;
+                            <span style={{ flexGrow: 1 }}>
+                              {!selectedCategory ? "Categories" : selectedCategory}
+                            </span>
+                            </>
+                            :  */}
+                              <span style={{ flexGrow: 1 }}>
+                                {!selectedSubCategory ? t("categories" ): selectedSubCategory}
+                              </span>
+                           {/* } */}
+                          <KeyboardArrowDownOutlinedIcon />
+                        </div>
+    
+                        <Divider
+                          className={classes.divider}
+                          orientation="vertical"
+                        />
+    
+                        <div className={classes.searchbox + " display-flex"}>
+                          {searchKeyWords&& <IconButton
+                            type="submit"
+                            className={classes.iconButton + " categoryCss"}
+                            aria-label="search"
+                            onClick={()=>
+                              // params.categ !== undefined?
+                              // getAdsByCategId(id, parseInt(page()))
+                              //   :
+                              {
+                                id?
+                                history.push({pathname:`/${searchKeyWords}/${params.subCateg}/${params.categ}`, state: id})
+                                :
+                              history.push(`/any/any/search/${searchKeyWords}`)
+                            }
+                            }
+                          >
+                           <SearchIcon />
+                          </IconButton>}
+                          {/* <InputBase
+                            className={classes.inputCSS}
+                            placeholder="Search for anything.."
+                            inputProps={{ "aria-label": "search google maps" }}
+                          /> */}
+                          <Search searchKeyWords={searchKeyWords}  setSearchKeyWords={setSearchKeyWords}/>
+                        </div>
+    
+                        <div className={classes.searchbox + " display-flex"}>
+                          <IconButton
+                            type="submit"
+                            className={classes.iconButton}
+                            aria-label="search"
+                          >
+                            <LocationOnOutlinedIcon />
+                          </IconButton>
+                          <InputBase
+                            style={{ paddingLeft:"10px", paddingRight:"10px", }}
+                            className={classes.inputCSS + " categoryCss display-flex-grow-1"}
+                            placeholder="Saisissez une ville et un rayon"
+                            inputProps={{ "aria-label": "search google maps" }}
+                          />
+                        </div>
+                      </div>
+    
+                      {openMenu ? (
+                        <Menu
+                          menuAnchor={menuAnchor}
+                          setMenuAnchor={setMenuAnchor}
+                          setSelectedSubCategory={setSelectedSubCategory}
+                        />
+                      ) : null}
+    
+                      <div style={{ display: "flex" }}>
+                        <div style={{ flex: 1 }}>
+                          {value === "Offers" ? (
+                            <>
+                              <FormControlLabel
+                                style={{ marginLeft: "0px", marginRight: "0px", color: "#555E67" }}
+                                control={
+                                  <AntSwitch
+                                    checked={state.checkedC}
+                                    style={{ marginRight: "8px" }}
+                                    onChange={handleSwitchChange("checkedC")}
+                                    value="checkedC"
+                                  />
+                                }
+                                label={t("See also the ads available for delivery")}
+                              />
+    
+                              <IconButton
+                                className={classes.iconButton}
+                                color="primary"
+                                aria-label="search"
+                              >
+                                <HelpOutlinedIcon />
+                              </IconButton>
+                            </>
+                          ) : null}
+                        </div>
+                        <div>
                           <IconButton
                             className={classes.iconButton}
                             color="primary"
                             aria-label="search"
                           >
-                            <HelpOutlinedIcon />
+                            <NotificationsIcon style={{ color: "#134B8E" }} />
                           </IconButton>
-                        </>
-                      ) : null}
+                          <span style={{ color: "#7985A2", fontSize: "12px", fontWeight:500, marginRight: "10px" }}>{t("save_search")}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <IconButton
-                        className={classes.iconButton}
-                        color="primary"
-                        aria-label="search"
-                      >
-                        <NotificationsIcon style={{ color: "#134B8E" }} />
-                      </IconButton>
-                      <span style={{ color: "#7985A2", fontSize: "12px", fontWeight:500, marginRight: "10px" }}>Save Search</span>
+    
+                    <div className={classNames("cardbuttoncss")}>
+                     <div className={classNames("cardbutton")}>
+                        {
+                        showPagination &&
+                        <Button
+                          type="button"
+                          fullWidth
+                          size="large"
+                          variant="contained"
+                          color="primary"
+                        >
+                          {t("search_results")} {totalAds}
+                        </Button>
+                        }
+                      </div>
                     </div>
-                  </div>
-                </div>
-
-                <div className={classNames("cardbuttoncss")}>
-                  <div className={classNames("cardbutton")}>
-                    <Button
-                      type="button"
-                      fullWidth
-                      size="large"
-                      variant="contained"
-                      color="primary"
-                    >
-                      Search (1,143,764 results)
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </Container>
+              <Toolbar variant="regular" />
+            </>
+          ) : null}
+          {fullScreen ? 
+          <Container fixed className="" style={{ alignItems: "center" }}>
+            <Grid container spacing={2} style={{ width: "100%", margin: "auto" }}>
+              <Grid item xs={12}>
+              <Button onClick={() => { setOpenResCategorySubMenu(true)}} variant="contained" color="primary" style={{ textTransform: "none" }}>Categories</Button>
+              &nbsp;&nbsp;&nbsp;
+              <Button onClick={() => setOpenSearchResCategorySubMenu(true)} variant="contained" color="primary" style={{ textTransform: "none" }}>Filter</Button>
+              <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
+              <SearchCategoryDrawarMenu classes={classes} openResSearchCategorySubMenu={openResSearchCategorySubMenu} setOpenResSearchCategorySubMenu={setOpenSearchResCategorySubMenu} />
+              </Grid>
+              </Grid>
           </Container>
-          <Toolbar variant="regular" />
-        </>
-      ) : null}
-      {fullScreen ? 
-      <Container fixed className="" style={{ alignItems: "center" }}>
-        <Grid container spacing={2} style={{ width: "100%", margin: "auto" }}>
-          <Grid item xs={12}>
-          <Button onClick={() => { setOpenResCategorySubMenu(true)}} variant="contained" color="primary" style={{ textTransform: "none" }}>Categories</Button>
-          &nbsp;&nbsp;&nbsp;
-          <Button onClick={() => setOpenSearchResCategorySubMenu(true)} variant="contained" color="primary" style={{ textTransform: "none" }}>Filter</Button>
-          <CategoryDrawarMenu openResCategorySubMenu={openResCategorySubMenu} setOpenResCategorySubMenu={setOpenResCategorySubMenu} />
-          <SearchCategoryDrawarMenu classes={classes} openResSearchCategorySubMenu={openResSearchCategorySubMenu} setOpenResSearchCategorySubMenu={setOpenSearchResCategorySubMenu} />
-          </Grid>
-          </Grid>
-      </Container>
-      : null }
-      <Container fixed className="" style={{ alignItems: "center" }}>
-        <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
-          <Grid item xs={12}>
-            <span className="Announcement">Announcements: All of France</span>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
-            <span className="AnnouncementLabel">Ads:</span> &nbsp;
-            <span className="AnnouncementNumber">1,140,253</span>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
-            <Checkbox
-              size="small"
-              style={{ padding: "0px", background: "#fff" }}
-              className="mr-10"
-              value={checkedIndividual}
-              color="primary"
-              onChange={(event: any) => {
-                setCheckedIndividual(event.target.checked);
-              }}
-            />
-            <span className="AnnouncementLabel">Individuals</span> &nbsp;
-            <span className="AnnouncementNumber">1,043,873</span>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
-            <Checkbox
-              size="small"
-              style={{ padding: "0px", background: "#fff" }}
-              className="mr-10"
-              value={checkedProfessional}
-              color="primary"
-              onChange={(event: any) => {
-                setCheckedProfessional(event.target.checked);
-              }}
-            />
-            <span className="AnnouncementLabel">Professionals</span> &nbsp;
-            <span className="AnnouncementNumber">96,380</span>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
-            <Checkbox
-              size="small"
-              style={{ padding: "0px", background: "#fff" }}
-              className="mr-10"
-              value={checkedUrgent}
-              color="primary"
-              onChange={(event: any) => {
-                setCheckedUrgent(event.target.checked);
-              }}
-            />
-            <span className="AnnouncementLabel">
-              <StarIcon style={{ padding: "0px", color: "#134B8E" }} />
-            </span>{" "}
-            &nbsp;
-            <span className="AnnouncementNumber">Urgent</span>
-          </Grid>
-          <Grid item xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
-            <FormControl variant="outlined" size="small">
-              <InputLabel
-                ref={inputLabel}
-                id="demo-simple-select-outlined-label"
-              >
-                Sort
-              </InputLabel>
-              <Select
-                value={sortBy}
-                onChange={(e: any) => {
-                  setSortBy(e.target.value);
-                }}
-                labelWidth={labelWidth}
-              >
-                <MenuItem value={"Most Recent"}>Most Recent</MenuItem>
-                <MenuItem value={20}>Most Recent</MenuItem>
-                <MenuItem value={30}>Most Recent</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <br />
-        <Grid container spacing={1} direction="row">
-          <Grid item lg={8} md={8} xs={12}>
-            <Grid container spacing={2} direction="row">
-              {["", "", "", ""].map((prod: any, index: any) => {
-                return (
-                  <Grid key={index} item lg={12} md={12} xs={12}>
-                    <ListingProduct />
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Grid>
-          <Grid item lg={4} md={4} xs={12}>
-            <Grid container spacing={2} direction="row">
-              {["", ""].map((ad: any, index: any) => {
-                return (
-                  <Grid key={index} item lg={12} md={12} xs={12}>
-                    <ListingAds />
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} direction="row" className="mt-10" style={{ marginBottom: "50px" }}>
-          <Grid item lg={8} md={8} xs={12}>
-            <Grid container spacing={2} direction="row">
-              <Grid item lg={12} md={12} xs={12}>
-                <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> Save Search</Button>
+          : null }
+          <Container fixed className="" style={{ alignItems: "center" }}>
+            <Grid container spacing={2} style={{ width: "90%", margin: "auto" }}>
+              <Grid item xs={12}>
+                <span className="Announcement">Announcements: Best of Jordan</span>
+              </Grid>
+              <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
+                <span className="AnnouncementLabel">Ads:</span> &nbsp;
+                <span className="AnnouncementNumber">1,140,253</span>
+              </Grid>
+              <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
+                <Checkbox
+                  size="small"
+                  style={{ padding: "0px", background: "#fff" }}
+                  className="mr-10"
+                  value={checkedIndividual}
+                  color="primary"
+                  onChange={(event: any) => {
+                    setCheckedIndividual(event.target.checked);
+                  }}
+                />
+                <span className="AnnouncementLabel">Individuals</span> &nbsp;
+                <span className="AnnouncementNumber">1,043,873</span>
+              </Grid>
+              <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
+                <Checkbox
+                  size="small"
+                  style={{ padding: "0px", background: "#fff" }}
+                  className="mr-10"
+                  value={checkedProfessional}
+                  color="primary"
+                  onChange={(event: any) => {
+                    setCheckedProfessional(event.target.checked);
+                  }}
+                />
+                <span className="AnnouncementLabel">Professionals</span> &nbsp;
+                <span className="AnnouncementNumber">96,380</span>
+              </Grid>
+              <Grid item lg={4} md={4} xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
+                <Checkbox
+                  size="small"
+                  style={{ padding: "0px", background: "#fff" }}
+                  className="mr-10"
+                  value={checkedUrgent}
+                  color="primary"
+                  onChange={(event: any) => {
+                    setCheckedUrgent(event.target.checked);
+                  }}
+                />
+                <span className="AnnouncementLabel">
+                  <StarIcon style={{ padding: "0px", color: "#134B8E" }} />
+                </span>{" "}
+                &nbsp;
+                <span className="AnnouncementNumber">Urgent</span>
+              </Grid>
+              <Grid item xs={12} className="display-flex align-center" style={{ flexBasis: "auto" }}>
+                <FormControl variant="outlined" size="small">
+                  <InputLabel
+                    ref={inputLabel}
+                    id="demo-simple-select-outlined-label"
+                  >
+                    Sort
+                  </InputLabel>
+                  <Select
+                    value={sortBy}
+                    onChange={(e: any) => {
+                      setSortBy(e.target.value);
+                    }}
+                    labelWidth={labelWidth}
+                  >
+                    <MenuItem value={"Most Recent"}>Most Recent</MenuItem>
+                    <MenuItem value={20}>Most Recent</MenuItem>
+                    <MenuItem value={30}>Most Recent</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
-            <Grid container spacing={2} direction="row">
-              <Grid item lg={12} md={12} xs={12}>
-                <Pagination count={19} color="primary" shape="rounded" boundaryCount={10}  />
+            <br />
+            <Grid container spacing={1} direction="row">
+              <Grid item lg={8} md={8} xs={12}>
+                {
+                  ads.length > 0 ? 
+                  <Grid container spacing={2} direction="row">
+                  {ads.map((prod: any, index: any) => {
+                    return (
+                      <Grid key={index} item lg={12} md={12} xs={12}>
+                       <ListingProduct ad={prod} />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+                :
+                <div className={classes.sorryMessage}>
+                  <Typography color='primary' variant='h6'>{t("Sorry_we_could_not_find_anything")}</Typography>
+                 </div>
+                }
+              </Grid>
+              <Grid item lg={4} md={4} xs={12}>
+                <Grid container spacing={2} direction="row">
+                  {["", ""].map((ad: any, index: any) => {
+                    return (
+                      <Grid key={index} item lg={12} md={12} xs={12}>
+                        <ListingAds />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </Container>
-    </MuiThemeProvider>
-  );
+            <Grid container spacing={2} direction="row" className="mt-10" style={{ marginBottom: "50px" }}>
+              <Grid item lg={8} md={8} xs={12}>
+                <Grid container spacing={2} direction="row">
+                  <Grid item lg={12} md={12} xs={12}>
+                    <Button style={{ width: "100%", textTransform:"none" }} size="large" variant="contained" color="primary"> <NotificationsIcon /> {t("save_search")}</Button>
+                  </Grid>
+                </Grid>
+                {
+                  ads.length > 0
+                  &&
+                  <Grid container spacing={2} direction="row">
+                  <Grid item lg={12} md={12} xs={12}>
+                    {/* <Link
+                    to={params.categ !== undefined? `/${params.subCateg}/${params.categ}?page=${pagee}` : `/?page=${pagee}`}
+                    component={anchor}
+                    > */}
+                    {showPagination && <Pagination 
+                      // defaultPage={isNaN(page)? 1 : parseInt(page())}
+                      defaultPage={isNaN(clickedPage)? 1 : clickedPage}
+                      count={lastPage}
+                      shape="rounded"
+                      color="primary"
+                      hidePrevButton hideNextButton
+                      boundaryCount={10}  
+                      onChange={handlePageNumber}
+                      />}
+                    {/* </Link> */}
+                  </Grid>
+                </Grid>}
+              </Grid>
+            </Grid>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="error">
+                <Typography style={{margin: '0px 10px'}}>
+                {message}
+                </Typography>
+              </Alert>
+            </Snackbar>
+          </Container>
+        </MuiThemeProvider>
+      );
+  }
 };
 
-export default Dashboard;
+export default withTranslation('/dashboard/dashboard')(Dashboard);

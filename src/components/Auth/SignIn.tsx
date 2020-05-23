@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { MuiThemeProvider, createMuiTheme, Button, CssBaseline, TextField, Link, Grid, Typography, Container, useMediaQuery } from '@material-ui/core';
+import {Formik, ErrorMessage} from 'formik';
+import { withTranslation } from "react-i18next";
+import * as Yup from 'yup';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { MuiThemeProvider, createMuiTheme, Button, CssBaseline, TextField, Link, Grid, Typography, Container, useMediaQuery, CircularProgress, Snackbar } from '@material-ui/core';
 import { Link as Rlink } from "react-router-dom";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -11,6 +16,7 @@ import {
   withStyles,
   useTheme
 } from "@material-ui/core/styles";
+import MuiAlert from '@material-ui/lab/Alert';
 import classNames from 'classnames';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -21,7 +27,7 @@ import GoogleIcon from '../../assets/google-favicon.png';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 // import { promisify } from 'util';
-
+import {userActions} from './Actions/userAcion';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,6 +109,10 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: "#2CC0F9"
       }
+    },
+    errMessage: {
+      color: 'red',
+      marginBottom: 5
     }
   })
 );
@@ -151,15 +161,30 @@ export const styles = (theme: Theme) =>
     }
   }))(Button);
 
-const SignIn: React.FC = () => {
+  interface MyFormValues {
+    email: string;
+    password: string;
+  }
+
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+const SignIn: React.FC = (props) => {
+  
 // class MySignInc extends React.Component<RouteComponentProps<any>, {}> {
   // state = { 'siteId': '', username: '', password: '', loading: false, goToDashboard: false }
+  const { dispatch, loggingIn, alertType, i18n, t } : any = props;
+  const {language} : any = i18n;
 
+  // console.log('alertType', alertType)
   const classes = useStyles();
   const muitheme = useTheme();
-  const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));  
+  const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
 
-  const [direction, setDirection] = React.useState("ltr");
+
+
+  const [direction, setDirection] = React.useState(language ==="ar"?"rtl" : "ltr");
 
   const theme = React.useMemo(
     () =>
@@ -200,203 +225,265 @@ const SignIn: React.FC = () => {
   );
 
   const updateMirrorView = () => {
-    if (direction === "ltr") 
-        setDirection("rtl");
-    else  
-        setDirection("ltr");
+    i18n.changeLanguage(language === 'ar'? 'en': 'ar')
+    setDirection(direction === "rtl" ? "ltr": "rtl")
   }
+  
 
   useEffect(() => {
+    console.log(props)
+    dispatch(userActions.logout());
     if (direction) {
       let body: any = document.getElementsByTagName("body");
       body[0].style.direction = direction;
     }
-  }, [direction])  
+  }, [direction])
+
+  const [open, setOpen] = React.useState(alertType);
+
+  // const handleClose = (event: any, reason: any) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+
+  //   // setOpen(false);
+  // };
+
+  const initialValues: MyFormValues = { email: '', password: '' };
+
+ const validateYupSchema = Yup.object().shape<MyFormValues>({
+    email: Yup.string().email().required ('email_is_required'),
+    password: Yup.string().required('password_is_required')
+  })
 
     return (
       <MuiThemeProvider theme={theme}>
-      <AppBar position="fixed"
-       className={classNames(
-        classes.root,
-        fullScreen && classes.smAppbar
-      )}>
-        <Container
-          fixed={false}
-          className="display-flex"
-          style={{ alignItems: "center", maxWidth: "100%" }}
-        >
-          <Toolbar style={{ flexGrow: 1 }}>
-            <img src={"./brand.svg"} onClick={() => updateMirrorView()} className={classes.logo} alt="luqta" />
-          </Toolbar>
-            <Toolbar
-              className="display-flex-grow-1"
-              style={{ justifyContent: "flex-end" }}
+        <Formik
+        initialValues={initialValues}
+        onSubmit={(values) => {
+          console.log(values)
+          
+          if (values) {
+            console.log(values)
+              dispatch(userActions.login(values.email, values.password));
+              setOpen(alertType)
+              // history.push('/')
+              }
+
+        }}
+
+        validationSchema={validateYupSchema}
+
+        render= {
+          (props)=> {
+            return <React.Fragment>
+                   <AppBar position="fixed"
+     className={classNames(
+      classes.root,
+      fullScreen && classes.smAppbar
+    )}>
+      <Container
+        fixed={false}
+        className="display-flex"
+        style={{ alignItems: "center", maxWidth: "100%" }}
+      >
+        <Toolbar style={{ flexGrow: 1 }}>
+          <img src={"./brand.svg"} onClick={() => updateMirrorView()} className={classes.logo} alt="luqta" />
+        </Toolbar>
+          <Toolbar
+            className="display-flex-grow-1"
+            style={{ justifyContent: "flex-end" }}
+          >
+             <nav>
+            <CustomButton
+              variant="contained"
+              size="large"
+              color="primary"
+              href="/signup"
             >
-               <nav>
-              <CustomButton
-                variant="contained"
-                size="large"
-                color="primary"
-                href="/signup"
-              >
-                 Sign Up
-              </CustomButton>
-              </nav>
-            </Toolbar>          
-        </Container>
-      </AppBar>
-      <Toolbar variant="dense"  className={classNames( fullScreen && classes.smAppbar)} />
-        <Container style={{ alignItems: "center", maxWidth: "100%" }}>
+               Sign Up
+            </CustomButton>
+            </nav>
+          </Toolbar>          
+      </Container>
+    </AppBar>
+    <Toolbar variant="dense"  className={classNames( fullScreen && classes.smAppbar)} />
+      <Container style={{ alignItems: "center", maxWidth: "100%" }}>
+        <CssBaseline />
+        {! fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
+        <Grid container spacing={2}>
+          <Grid item lg={5} md={6} xs={12}>
+            <Grid item lg={12} md={12} xs={12} className="display-flex">
+            <Container component="main" maxWidth="xs" style={{ display:"inline-table" ,width: !fullScreen ? "68%" : "100%" }}>
           <CssBaseline />
-          {! fullScreen && <Toolbar variant="dense" style={{ minHeight: "50px" }} />}
-          <Grid container spacing={2}>
-            <Grid item lg={5} md={6} xs={12}>
-              <Grid item lg={12} md={12} xs={12} className="display-flex">
-              <Container component="main" maxWidth="xs" style={{ display:"inline-table" ,width: !fullScreen ? "68%" : "100%" }}>
-            <CssBaseline />
-            <div>
-              <Typography component="h1" variant="h5" className="luqta-title">
-              Welcome to Luqta!
-              </Typography>
+          <div>
+            <Typography component="h1" variant="h5" className="luqta-title">
+            {t("welcome_to_luqta")}
+            </Typography>
 
-              <form noValidate>
-              <Button
-                  type="button"
-                  fullWidth
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  className={classNames(classes.socialLoginBtn, classes.googleLoginBtn)}
-                  // disabled={this.state.loading}
-                  // onClick={() => { this.chkLogin() }}
-                >
-                  <div style={{ width: "100%" }}>
-                    <img src={GoogleIcon} style={{ float:"left" }} alt="google"/>
-                    <div> Login with Google</div>
+            <form onSubmit={props.handleSubmit}>
+            {/* <form noValidate> */}
+            <Button
+                type="button"
+                fullWidth
+                size="large"
+                variant="contained"
+                color="primary"
+                className={classNames(classes.socialLoginBtn, classes.googleLoginBtn)}
+                // disabled={this.state.loading}
+                // onClick={() => { this.chkLogin() }}
+              >
+                <div style={{ width: "100%" }}>
+                  <img src={GoogleIcon} style={{ float:"left" }} alt="google"/>
+                   <div>{t("signin_google")}</div>
+              </div>
+            </Button>
+            <Button
+                type="button"
+                fullWidth
+                size="large"
+                variant="contained"
+                color="primary"
+                className={classNames(classes.socialLoginBtn, classes.fbLoginBtn)}
+                // disabled={this.state.loading}
+                // onClick={() => { this.chkLogin() }}
+              >
+                <div style={{ width: "100%" }}>
+                  <FacebookIcon style={{ float:"left" }} />
+                   <div>{t("signin_facebook")}</div>
                 </div>
-              </Button>
-              <Button
-                  type="button"
-                  fullWidth
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  className={classNames(classes.socialLoginBtn, classes.fbLoginBtn)}
-                  // disabled={this.state.loading}
-                  // onClick={() => { this.chkLogin() }}
-                >
-                  <div style={{ width: "100%" }}>
-                    <FacebookIcon style={{ float:"left" }} />
-                    <div>Login with Facebook</div>
-                  </div>
-              </Button>
-              <Button
-                  type="button"
-                  size="large"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classNames(classes.socialLoginBtn, classes.twitterLoginBtn)}
-                  // disabled={this.state.loading}
-                  // onClick={() => { this.chkLogin() }}
-                >
-                  <div style={{ width: "100%" }}>
-                    <TwitterIcon style={{ float:"left" }} />
-                    <div>Login with Twitter</div>
-                  </div>
-              </Button>
-              <h2 className="textwithline"><span> or </span></h2>
-                <TextField
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                  // required
-                  fullWidth
-                  id="username"
-                  label="Email or Phone"
-                  placeholder="Email or Phone"
-                  name="username"
-                  autoComplete="email"
-                  // onChange={this.handleInputChange}
-                  autoFocus
+            </Button>
+            <Button
+                type="button"
+                size="large"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classNames(classes.socialLoginBtn, classes.twitterLoginBtn)}
+                // disabled={this.state.loading}
+                // onClick={() => { this.chkLogin() }}
+              >
+                <div style={{ width: "100%" }}>
+                  <TwitterIcon style={{ float:"left" }} />
+                  <div>{t("signin_twitter")}</div>
+                </div>
+            </Button>
+            <h2 className="textwithline"><span> {t("or")} </span></h2>
+              <TextField
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                margin="normal"
+                // required
+                fullWidth
+                // id="username"
+                label={t("email_or_Phone")}
+                placeholder={t("email_or_Phone")}
+                name="email"
+                autoComplete="email"
+                onChange={props.handleChange}
+                // onChange={this.handleInputChange}
+                autoFocus
+              />
+                <div className={classes.errMessage}>
+                  <ErrorMessage  name="email"/>
+                </div>
+              <TextField
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                margin="normal"
+                // required
+                placeholder={t("password")}
+                fullWidth
+                name="password"
+                label={t("password")}
+                type="password"
+                // id="password"
+                autoComplete="current-password"
+                onChange={props.handleChange}
+                // onChange={this.handleInputChange}
+                // onKeyDown={this.handleKeyDown}
+              />
+                <div className={classes.errMessage}>
+                  <ErrorMessage  name="password"/>
+                </div>
+              <div className="display-flex align-center" style={{ marginBottom: "20px" }}>
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label={t("remember_me")}
+                  style={{ float: "left", color: "#134B8E", }}
                 />
-                <TextField
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                  // required
-                  placeholder="password"
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  // onChange={this.handleInputChange}
-                  // onKeyDown={this.handleKeyDown}
-                />
-                <div className="display-flex align-center" style={{ marginBottom: "20px" }}>
+                <Link href="#" className="forgatePwd" variant="body2" style={{ flexGrow: 1, textAlign: "end" }}>
+                  {t("forget_password")}
+                </Link>
+              </div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                size="large"
+                className="signbtncss"
+                // disabled={this.state.loading}
+                // onClick={() => { this.chkLogin() }}
+              >
+                {
+                  loggingIn ?
+                  <CircularProgress style={{color: 'white'}}/> 
+                  :
+                  t('signin')
+              }
+            </Button>
+            <Snackbar open={alertType === "alert-danger"} autoHideDuration={6000}>
+                <Alert severity="error">
+                  <div style={{margin: '0px 5px'}}>{t("please_check_data")}</div> 
+                </Alert>
+            </Snackbar>
+              <div className="display-flex" style={{ justifyContent: "center", marginBottom: "20px" }}>
                   <FormControlLabel
+                    control={<Checkbox value="remember"  color="primary" />}
+                    label={t("i_accept")}
+                    style={{ fontSize: "12px", color: "#555E67" }}
+                  />                
+                <FormControlLabel
                     control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                    style={{ float: "left", color: "#134B8E", }}
+                    label={t("notification")}
+                    style={{ fontSize: "12px", color: "#555E67" }}
                   />
-                  <Link href="#" className="forgatePwd" variant="body2" style={{ flexGrow: 1, textAlign: "end" }}>
-                    Forgot password?
-                  </Link>
-                </div>
-                <Button
-                  type="button"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  className="signbtncss"
-                  // disabled={this.state.loading}
-                  // onClick={() => { this.chkLogin() }}
-                >
-                  Sign In
-              </Button>
-                <div className="display-flex" style={{ justifyContent: "center", marginBottom: "20px" }}>
-                    <FormControlLabel
-                      control={<Checkbox value="remember"  color="primary" />}
-                      label="I accept terms and condition"
-                      style={{ fontSize: "12px", color: "#555E67" }}
-                    />                
-                  <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Notification"
-                      style={{ fontSize: "12px", color: "#555E67" }}
-                    />
-                </div>
+              </div>
 
-                <div style={{ textAlign: "center", fontFamily: "Roboto", fontSize: "13px", fontWeight: 400 }}>
-                  <span style={{ color: "#8E8E8E" }}>Don't have an account?</span> <Rlink to="/signup" style={{ color: "#134B8E" }}>Sign up</Rlink>
-                </div>
+              <div style={{ textAlign: "center", fontFamily: "Roboto", fontSize: "13px", fontWeight: 400 }}>
+            <span style={{ color: "#8E8E8E" }}>{t("dont_have_account")}</span> <Rlink to="/signup" style={{ color: "#134B8E" }}>{t("signup")}</Rlink>
+              </div>
               </form>
-            </div>
-        </Container>
+            {/* </form> */}
+          </div>
+      </Container>
+          </Grid>
+        </Grid>
+        {!fullScreen ?
+          <Grid item lg={7} md={6} xs={12}>
+          <Grid item lg={12} md={12} xs={12}>
+              {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "55px" }} />}
+              <img src={SigInImg}  style={{ width: "100%" }} alt="luqta-signin"/>
             </Grid>
           </Grid>
-          {!fullScreen ?
-            <Grid item lg={7} md={6} xs={12}>
+          : null}
+      </Grid>
+      <Grid container>
             <Grid item lg={12} md={12} xs={12}>
-                {!  fullScreen && <Toolbar variant="dense" style={{ minHeight: "55px" }} />}
-                <img src={SigInImg}  style={{ width: "100%" }} alt="luqta-signin"/>
-              </Grid>
+                <Copyright />
             </Grid>
-            : null}
-        </Grid>
-        <Grid container>
-              <Grid item lg={12} md={12} xs={12}>
-                  <Copyright />
-              </Grid>
-            </Grid>
-      </Container>
+          </Grid>
+    </Container>
+            </React.Fragment> 
+           
+          }
+        }
+        />
     </MuiThemeProvider>
     );  
 }
@@ -410,4 +497,24 @@ function Copyright() {
     </Typography>
   );
 }
-export default withRoot(withStyles(styles)(SignIn));
+
+function mapStateToProps(state: {
+   authentication: { loggingIn: any, loggedIn: any }
+   alert: {type : any;}
+  }
+  ) {
+  // const { loggingIn } = state.authentication;
+  return {
+      loggingIn: state.authentication.loggingIn,
+      loggedIn: state.authentication.loggedIn,
+      alertType: state.alert.type
+  };
+}
+
+const connectedSignIn : any = compose(
+  withStyles(styles),
+  withTranslation("auth/auth"),
+  connect(mapStateToProps),
+)(SignIn);
+
+export default withRoot(connectedSignIn);

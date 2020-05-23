@@ -1,4 +1,6 @@
 import React from "react";
+import {Link} from 'react-router-dom'
+import { withTranslation, WithTranslation } from "react-i18next";
 import {
   createStyles,
   makeStyles,
@@ -118,23 +120,23 @@ const theme = createMuiTheme({
   }
 });
 
-interface ISidebarProps {
+interface ISidebarProps extends WithTranslation {
   leftDrawerOpen: any;
   setLeftDrawerOpen: any;
   direction: any;
   setDirection: any;
+  t: any;
 }
 
-const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, direction, setDirection }) => {
+const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, direction, setDirection, t, i18n }) => {
   const classes = useStyles();
   const muitheme = useTheme();
   const fullScreen = useMediaQuery(muitheme.breakpoints.down("sm"));
-  
+  const {language} = i18n
   const updateMirrorView = () => {
-    if (direction === "ltr") 
-        setDirection("rtl");
-    else  
-        setDirection("ltr");
+    window.location.reload(false)
+    i18n.changeLanguage(language === 'ar'? 'en': 'ar')
+    setDirection(direction==="ltr"? "rtl": "ltr")
   }
 
   return (
@@ -155,14 +157,22 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               color="primary"
               aria-label="Open drawer"
               onClick={() => setLeftDrawerOpen(!leftDrawerOpen)}
-              style={{ marginLeft: -12, marginRight: 20 }}
+              // style={{ marginLeft: -12, marginRight: 20 }}
             >
               <MenuIcon />
-            </IconButton> 
+            </IconButton>
             : null }
-            <img src={"./brand.svg"} className={classes.logo} alt="luqta" onClick={() => { 
-               updateMirrorView();
-              }} />
+            <img src={"../../../brand.svg"} className={classes.logo} alt="luqta"/>
+              <IconButton
+              style={{margin: '0 10px'}}
+                onClick={() => {
+                  updateMirrorView();
+                 }}
+              >
+                <p style={{fontSize: 15, color: 'blue', padding: '0 6px'}}>
+                  {language === "ar"? "English" : "عربيّة"}
+                  </p>
+              </IconButton>
             {!fullScreen ? (
               <CustomButton
                 variant="contained"
@@ -171,7 +181,7 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
                 href="#contained-buttons"
                 style={{ marginRight: "40px"}}
               >
-                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; Post and ad
+                <AddBoxOutlinedIcon className={classes.IconCss} /> &nbsp; {t("post_and_ad")}
               </CustomButton>
             ) : null}
           </Toolbar>
@@ -192,7 +202,11 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
               </div>
               <div className={classes.otherIcons}>
                 <CustomLinkButton>
+                  <Link
+                  to='/myads'
+                  >
                   <FavoriteBorderIcon className={classes.IconCss} />
+                  </Link>
                 </CustomLinkButton>
               </div>
               <div className={classes.otherIcons}>
@@ -213,4 +227,4 @@ const Header: React.FC<ISidebarProps> = ({ leftDrawerOpen, setLeftDrawerOpen, di
   );
 };
 
-export default Header;
+export default withTranslation("/dashboard/dashboard")(Header);

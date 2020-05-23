@@ -1,13 +1,22 @@
 .rescardContent {
     padding: 8px !important;
 }
-.adcardheader {
+.adcardheaderLtr {
     border-left: 4px solid #FF002A;
     opacity: 1;
 }
+.adcardheaderRtl {
+    border-right: 4px solid #FF002A;
+    opacity: 1;
+}
+.adcardheaderLtr > h6 {
+    margin-left: 30px;
+}
+.adcardheaderRtl > h6 {
+    margin-right: 30px;
+}
 .adcardheader > h6 {
     color: #676D80;
-    margin-left: 30px;
     font-size: 24px;
     font-weight: 500;
     letter-spacing: 0.8px;
@@ -18,7 +27,8 @@
     width: 30px;
 }
 .resadcardheader h6 {
-    line-height: 1.25;
+    /* line-height: 1.25; */
+    line-height: 2
 }
 .adcardheader > span {
     margin: 0 12px !important;
@@ -177,7 +187,7 @@
     align-items: center;
     /* margin: 5px 40px 5px 40px; */
     padding: 5px;
-    height: 50px;
+    /* height: 50px; */
     background: #F9F9F9 0% 0% no-repeat padding-box;
 }
 .adBoxLeftCol {
@@ -185,18 +195,20 @@
     width: 140px;
     font-size: 14px;
     letter-spacing: 0;
-    color: #293341;
+    color: #000000;
     font-family: Roboto;
     font-weight: 500;
 }
 .adBoxRightCol {
-    width: 140px;
+    /* width: 140px; */
+    width: 500px;
     font-size: 14px;
     letter-spacing: 0;
-    color: #293341;
+    color: #000000;
     font-family: Roboto;
     font-weight: 500;
-    opacity: 0.49;
-    text-align: left;
-    margin-left: 25px;
+    /* opacity: 1; */
+    /* text-align: left; */
+    /* margin-left: 25px; */
+    /* margin-top: 9px; */
 }

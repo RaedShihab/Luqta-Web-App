@@ -1,0 +1,17 @@
+{
+    "ALL_CATEGORIES": "كل التصنيفات",
+    "categories" : "التصنيفات",
+    "post_and_ad" : "اضافة إعلان",
+    "top_brands": "الأعلى طلبا",
+    "search": "بحث",
+    "offers" : "عروض",
+    "requests" : "طلبات",
+    "See also the ads available for delivery": "انظر أيضا لطلبات الديليفري",
+    "save_search" : "حفظ البحث",
+    "search_results": "نتائج البحت",
+    "city" : "المدينة",
+    "category" : "التصنيف",
+    "something_went_wrong_please_try_again" : "حدث خطأ ما, الرجاء حاول مجدداً",
+    "Sorry_we_could_not_find_anything" : "عذراً, لم يتم العثور على أي إعلان",
+    "user_didnt_add_phone" : "المستخدم لم يقم بوضع رقم هاتفه"
+}

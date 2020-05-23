@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -7,8 +8,8 @@ import {
   Theme,
   useTheme
 } from "@material-ui/core/styles";
+import Link from '@material-ui/core/Link';
 import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -18,11 +19,13 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import Product from "../../../assets/product.png";
+import noImg from "../../../assets/no_img_big2.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import CallIcon from "@material-ui/icons/Call";
 import Avatar from '@material-ui/core/Avatar';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import "./Listing.css";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "auto",
       display: "block",
       maxWidth: "100%",
-      maxHeight: "100%"
+      maxHeight: "100%",
     },
     iconButton: {
       color: "#fff",
@@ -68,14 +71,29 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IListingProduct {
+interface IListingProduct extends WithTranslation {
   myAds?: boolean;
+  ad?: any;
+  t: any;
 }
-const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
+const ListingProduct: React.FC<IListingProduct> = ({ myAds = false, ad, t}) => {
   const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [dispImage, setDispImage]: any = useState(false);
+  const [showPhone, setShowPhone] = React.useState(false);
+
+  function Alert(props : any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handlePhoneShow = (event: any, reason: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowPhone(false);
+  };
+
   return (
     <div className={classes.root}>
       <Card className={classes.cardHover} onMouseOver={() => { setDispImage(true);  }} onMouseLeave={() => { setDispImage(false);  }}>
@@ -83,17 +101,28 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
           <Grid container spacing={2}>
             <Grid item lg={3} md={3} xs={4}>
               <ButtonBase style={{ width: "auto", position: "relative" }} >
-                <img className={classes.img} alt="listProduct" src={Product} />
+                <Link
+                  underline="none"
+                  component="a"
+                  href={`/${ad.id}/search/${ad.title}`}
+                  >
+                <img className={classes.img} alt="listProduct" src={ad.images === null||ad.images === undefined ? noImg: ad.images.image} />
+                </Link>
                 <span className={dispImage ? "topLeft" : "display-none"}>
-                  <Icon className={"circle-icon "}>
+                  {/* <Icon className={"circle-icon "}>
                     near_me
-                  </Icon>
+                  </Icon> */}
                   </span>
               </ButtonBase>
             </Grid>
             <Grid item lg={9} md={9} xs={8} sm container>
               <Grid item xs={12}>
-                <Grid item xs={12}>
+               <Link
+                  underline="none"
+                  component="a"
+                  href={`/${ad.id}/search/${ad.title}`}
+               >
+               <Grid item xs={12}>
                   <div
                     className={classNames(
                       !fullScreen && "cardheader display-flex",
@@ -105,14 +134,14 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                         style={{ fontWeight: 500 }}
                         variant="subtitle1"
                       >
-                        New house open view not overlooked
+                        {ad.title}
                       </Typography>
                     </div>
                     <Typography
                       variant="subtitle1"
                       style={{ color: "#FF0033" }}
                     >
-                      $31,000 - $35,000
+                      {ad.price}
                     </Typography>
                   </div>
                 </Grid>
@@ -123,7 +152,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                 >
                   <span className="display-flex align-center">
                     <AccessTimeIcon style={{ height: "16px", width: "16px" }} />{" "}
-                    &nbsp;&nbsp; 12:00 AM
+                    &nbsp;&nbsp; {ad.created_at}
                   </span>
                 </div>
                 <br />
@@ -135,9 +164,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                       <Typography
                         variant="caption"
                         color="textSecondary"
-                        className="locationInfo"
+                        // className="locationInfo"
                       >
-                        City:
+                        {t("city")}:
                       </Typography>
                     </div>
                   </Grid>
@@ -149,7 +178,8 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     >
                       <LocationOnIcon />
                     </Typography>
-                    <span className="locationName"> Amman </span>
+                    <span className="locationName"> {ad.city.name} </span>
+                    {ad.district!== null && <span className="locationName"> {'| '+ad.district.name} </span>}
                   </Grid>
                 </Grid>
                 <Grid container>
@@ -160,9 +190,9 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                       <Typography
                         variant="caption"
                         color="textSecondary"
-                        className="locationInfo"
+                        // className="locationInfo"
                       >
-                        Category:
+                        {t("category")}:
                       </Typography>
                     </div>
                   </Grid>
@@ -174,9 +204,12 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     >
                       <DriveEtaIcon />
                     </Typography>
-                    <span className="locationName"> Car for sale </span>
+                    <span className="locationName"> {ad.category.name} </span>
+                    {ad.model !== null && <span className="locationName"> {'| '+ad.model.name} </span>}
+                    {ad.brand !== null && <span className="locationName"> {'| '+ad.brand.name} </span>}
                   </Grid>
                 </Grid>
+               </Link>
                 {!myAds ? 
                   <Grid container style={{ marginTop: "10px" }} direction="row">
                     <Grid item lg={1} md={2} xs={3}>
@@ -192,7 +225,7 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
                     </Grid>
                     {!fullScreen && <Box m={2} />}
                     <Grid item lg={1} md={2} xs={3}>
-                      <IconButton className={classes.iconButton}>
+                      <IconButton onClick={()=>{setShowPhone(!showPhone)}} className={classes.iconButton}>
                         <CallIcon />
                       </IconButton>
                     </Grid>
@@ -205,10 +238,17 @@ const ListingProduct: React.FC<IListingProduct> = ({ myAds = false }) => {
               </Grid>
             </Grid>
           </Grid>
+              <Snackbar open={showPhone} onClose={handlePhoneShow} autoHideDuration={3000}>
+                <Alert onClose={handlePhoneShow} severity="info">
+                  <Typography style={{margin: '0px 10px'}}>
+                  {ad.owner.phone_number===undefined? t("user_didnt_add_phone") : ad.owner.phone_number}
+                  </Typography>
+                </Alert>
+            </Snackbar>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default ListingProduct;
+export default withTranslation("/dashboard/dashboard")(ListingProduct);

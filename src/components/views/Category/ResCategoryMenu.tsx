@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import Popover from '@material-ui/core/Popover';
-import { MenuContent } from '../styles/Elements';
-import { Theme, createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import {  Grid, createMuiTheme, Icon, Divider } from '@material-ui/core';
-import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, Icon, Divider } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Drawer from '@material-ui/core/Drawer';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { category } from './Categoty';
-
+import {Axios} from '../../apiServecis/axiosConfig'
+import { Link } from '@material-ui/core';
 
 // const useStyles = makeStyles((theme: Theme) =>
 //     createStyles({
@@ -68,29 +70,54 @@ interface IMenuProps {
 //   const [isResFilter, setIsResFilter] = React.useState(false);
 //   const [resCategoryMenu, setResCategoryMenu] = React.useState(false);
 
-  const side = 'right';
   type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
-  const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
-    event: React.KeyboardEvent | React.MouseEvent,
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-	}
+//   const toggleDrawer = (side: DrawerSide, open: boolean, type = "category") => (
+//     event: React.KeyboardEvent | React.MouseEvent,
+//   ) => {
+//     if (
+//       event.type === 'keydown' &&
+//       ((event as React.KeyboardEvent).key === 'Tab' ||
+//         (event as React.KeyboardEvent).key === 'Shift')
+//     ) {
+//       return;
+// 	}
     // if (type === "category") {
     //   setIsResFilter(false);
     // } else {
     //   setIsResFilter(true);
     // }
     // setResCategoryMenu(open);
-  };
+//   };
 //   const [openResCategorySubMenu, setOpenResCategorySubMenu] = React.useState(true);
 
-
 const CategoryDrawarMenu:  React.FC<IMenuProps> = ({ openResCategorySubMenu, setOpenResCategorySubMenu }) => {
+
+	const [expanded, setExpanded] = React.useState('');
+	const [open, setOpen] = useState(false);
+	const [childCateg, setChildCateg] = useState([]);
+	const [categories, setCategories] = useState([]);
+
+	const getChildCateg = (id:any) => (event:any, newExpanded:any) => {
+			setOpen(true)
+			Axios.get(`/categories/${id}/children`)
+		    .then(res => {
+			console.log(res.data.data)
+			setChildCateg(res.data.data);
+			setOpen(false)
+		})
+		.catch(err => console.log(err.response))
+		// }
+		setExpanded(newExpanded ? id : false);
+	  };
+
+useEffect(() => {
+	Axios.get(`/categories`)
+	.then(res=> {
+		setCategories(res.data.data)
+	})
+	.catch(err => console.log(err.response))
+}, []);
+
 	return (
 		<MuiThemeProvider theme={theme}>
 		<Drawer anchor="right" open={openResCategorySubMenu} onClose={() => setOpenResCategorySubMenu(false)}>
@@ -108,31 +135,53 @@ const CategoryDrawarMenu:  React.FC<IMenuProps> = ({ openResCategorySubMenu, set
 			</ListItem>
 			<Divider />
 			{
-				category.categories.data.map((cate: any, index: any) => {
+				categories.map((cate: any, index: any) => {
 					return (
 						<React.Fragment key={index}>
- 
-							<ListItem button  onClick={() => setOpenResCategorySubMenu(false)}>
+							<ExpansionPanel expanded={expanded === cate.id} onChange={getChildCateg(cate.id)}>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon />}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+									>
+										<Typography variant='h6'>{cate.name}</Typography>
+									</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<Collapse in={openResCategorySubMenu} timeout="auto" unmountOnExit>
+									{!open? <List component="span" disablePadding>
+									{
+										childCateg.map((categ: any, index: any) => {
+											// let subCategory: any = category.subcategories.data.find((x: any) => x.id === subCate.toString());
+											return(
+											<ListItem
+											key={index} button onClick={() => {
+												setOpenResCategorySubMenu(false)
+												localStorage.setItem('categId', categ.id)
+												}}>
+												<Link
+													component= "a"
+													underline="none"
+													href={`/${categ.name}/${cate.name}`}
+												>
+													<ListItemText primary={categ.name} />
+												</Link>
+											</ListItem>)
+										})
+									}
+									</List>:
+									<CircularProgress/>
+									}
+									</Collapse>
+							   </ExpansionPanelDetails>
+							</ExpansionPanel>
+
+							{/* <ListItem button  onClick={() => setOpenResCategorySubMenu(false)}>
 								<ListItemIcon>
 								<Icon>{cate.icon}</Icon>
 								</ListItemIcon>
-								<ListItemText primary={cate.name.en} />
-							</ListItem>
-							<Divider />
-							<Collapse in={openResCategorySubMenu} timeout="auto" unmountOnExit>
-								<List component="span" disablePadding>
-								{
-									cate.subcategories.map((subCate: any, index: any) => {
-										let subCategory: any = category.subcategories.data.find((x: any) => x.id === subCate.toString());
-										return(
-										<ListItem key={index} button onClick={() => setOpenResCategorySubMenu(false)}>
-										<ListItemText primary={subCategory.name.en} />
-										</ListItem>)
-									})
-								}
-								</List>
-							</Collapse>
-							<Divider />
+								<ListItemText primary={cate.name} />
+							</ListItem> */}
+							{/* <Divider /> */}
 							</React.Fragment>
 					);
 				})

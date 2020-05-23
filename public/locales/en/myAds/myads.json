@@ -1,0 +1,22 @@
+{
+    "my_ads" : "My Ads",
+    "my_comunity" : "My Comunity",
+    "profile" : "Profile",
+    "notifications" : "Notifications",
+    "chat" : "Chat",
+    "your_wallet_balance" : "Your Wallet Balance",
+    "enter_wallet_ammount" : "Enter amount to be added in wallet",
+    "have_promocode" : "Have promo code?",
+    "search_in_myads" : "Search inside my ads",
+    "categories" : "Categories",
+    "search": "Search",
+    "Active": "Active",
+    "premium": "Premium",
+    "inactive": "Inactive",
+    "deleted" : "Deleted",
+    "sort_by" : "Sort By",
+    "selectAll" : "Select All Ads",
+    "edit": "Edit",
+    "remove": "Remove",
+    "something_went_wrong_please_try_again" : "Somthing went wrong, Please try again"
+}
